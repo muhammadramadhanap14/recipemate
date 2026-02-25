@@ -66,17 +66,17 @@ class AccountView extends StatelessWidget {
               )),
               Obx(() => customText(
                 text: "UserID: ${accountViewModel.userId.value}",
-                fontSize: DimensText.subHeaderTextAccount(context),
+                fontSize: DimensText.accountNameText(context),
                 color: Colors.black,
               )),
               Obx(() => customText(
                 text: '',
-                fontSize: DimensText.subHeaderTextAccount(context),
+                fontSize: DimensText.accountNameText(context),
                 color: Colors.black,
               )),
               Obx(() => customText(
                 text: accountViewModel.appVersion.value,
-                fontSize: DimensText.subHeaderTextAccount(context),
+                fontSize: DimensText.accountNameText(context),
                 color: Colors.black.withValues(alpha: 0.5),
               )),
             ],
@@ -94,7 +94,7 @@ class AccountView extends StatelessWidget {
               children: [
                 customText(
                   text: ConstantVar.stAccountActivities,
-                  fontSize: DimensText.subHeaderTextAccount(context),
+                  fontSize: DimensText.accountNameText(context),
                   fontWeight: FontWeight.bold,
                 ),
 
@@ -104,7 +104,7 @@ class AccountView extends StatelessWidget {
 
                 customText(
                   text: ConstantVar.stLastLogin,
-                  fontSize: DimensText.subHeaderTextAccount(context),
+                  fontSize: DimensText.accountNameText(context),
                   fontWeight: FontWeight.bold,
                 ),
 
@@ -112,7 +112,7 @@ class AccountView extends StatelessWidget {
 
                 Obx(() => customText(
                   text: accountViewModel.lastLoginDate.value,
-                  fontSize: DimensText.subHeaderTextAccount(context),
+                  fontSize: DimensText.accountNameText(context),
                 )),
 
                 const Divider(thickness: 1),
@@ -120,7 +120,7 @@ class AccountView extends StatelessWidget {
 
                 Obx(() => customText(
                   text: accountViewModel.lastLoginTime.value,
-                  fontSize: DimensText.subHeaderTextAccount(context),
+                  fontSize: DimensText.accountNameText(context),
                 )),
 
                 const Divider(thickness: 1),
@@ -131,7 +131,7 @@ class AccountView extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: customElevatedButton(
                       fontColor: Colors.black,
-                      fontSize: DimensText.miniButtonText(context),
+                      fontSize: DimensText.buttonSmallText(context),
                       icon: const Icon(Icons.logout, color: Colors.black),
                       backgroundColor: HexColor(ColorVar.grayButton),
                       foregroundColor: HexColor(ColorVar.grayButton),

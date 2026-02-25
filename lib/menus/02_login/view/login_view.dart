@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:recipemate/utils/dimens_text.dart';
 import '../../../repository/api_repository.dart';
-import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/color_var.dart';
+import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../view_model/login_view_model.dart';
 
@@ -25,6 +26,7 @@ class LoginView extends StatelessWidget {
 
     RecipeMateAppUtil.init(context);
 
+    final double logoSize = RecipeMateAppUtil.screenWidth * 0.45;
     return Scaffold(
       backgroundColor: HexColor(ColorVar.bgAppColor),
       body: SafeArea(
@@ -35,127 +37,89 @@ class LoginView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.06),
-
-              Container(
-                width: RecipeMateAppUtil.screenWidth * 0.22,
-                height: RecipeMateAppUtil.screenWidth * 0.22,
-                decoration: BoxDecoration(
-                  color: HexColor(ColorVar.appColor),
-                  borderRadius: BorderRadius.circular(
-                    RecipeMateAppUtil.screenWidth * 0.08,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: HexColor(ColorVar.appColor).withValues(alpha: 0.35),
-                      blurRadius: 30,
-                      offset: const Offset(0, 12),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.restaurant,
-                  color: Colors.white,
-                  size: RecipeMateAppUtil.screenWidth * 0.11,
-                ),
+              Image.asset(
+                "assets/images/ic_logo_recipemate.png",
+                width: logoSize,
+                height: logoSize,
+                fit: BoxFit.contain,
               ),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.035),
-
-              RichText(
-                text: TextSpan(
-                  style: TextStyle(
-                    fontSize: RecipeMateAppUtil.screenWidth * 0.055,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
-                  ),
-                  children: [
-                    const TextSpan(text: 'Recipe'),
-                    TextSpan(
-                      text: 'Mate',
-                      style: TextStyle(
-                        color: HexColor(ColorVar.appColor),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.025),
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
 
               customText(
                 text: 'Welcome Back',
-                fontSize: RecipeMateAppUtil.screenWidth * 0.075,
+                fontSize: DimensText.superHeaderText(context),
                 fontWeight: FontWeight.w800,
-                color: Colors.black,
+                fontFamily: 'times_new_roman_med_italic',
+                color: HexColor(ColorVar.black),
+                textAlign: TextAlign.center
               ),
-
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.007),
 
               customText(
-                text: 'Your smart kitchen assistant awaits.',
-                fontSize: RecipeMateAppUtil.screenWidth * 0.030,
-                fontWeight: FontWeight.w600,
+                text: "Your smart kitchen assistant awaits.",
+                fontSize: DimensText.captionText(context),
+                fontWeight: FontWeight.w500,
                 color: HexColor(ColorVar.bgGray8),
                 textAlign: TextAlign.center,
-                isSoftWrap: true,
               ),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.045),
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
 
               Align(
                 alignment: Alignment.centerLeft,
                 child: customText(
-                  text: 'EMAIL ADDRESS',
-                  fontSize: RecipeMateAppUtil.screenWidth * 0.02,
+                  text: "EMAIL ADDRESS",
+                  fontSize: DimensText.microText(context),
                   fontWeight: FontWeight.w700,
                   color: HexColor(ColorVar.appColor),
                 ),
               ),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.008),
+              SizedBox(height: 8),
 
               customTextFormField(
                 hintText: 'alex@example.com',
                 prefixIcon: Icon(
-                  Icons.email,
+                  Icons.email_rounded,
                   color: HexColor(ColorVar.appColor),
                 ),
                 enableFillColor: ColorVar.widgetOrCardBgColor,
                 isBorderSide: false,
-                doubleVerticalPadding: RecipeMateAppUtil.screenHeight * 0.020,
-                doubleHorizontalPadding: RecipeMateAppUtil.screenWidth * 0.05,
-                doubleTextSize: RecipeMateAppUtil.screenWidth * 0.04,
+                doubleVerticalPadding: 18,
+                doubleHorizontalPadding: 16,
+                doubleTextSize: DimensText.captionText(context),
                 context: context,
                 onChanged: vm.setNik,
                 focusNode: FocusNode(),
               ),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
+              SizedBox(height: 18),
 
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment:
+                MainAxisAlignment.spaceBetween,
                 children: [
                   customText(
-                    text: 'PASSWORD',
-                    fontSize: RecipeMateAppUtil.screenWidth * 0.02,
+                    text: "PASSWORD",
+                    fontSize: DimensText.microText(context),
                     fontWeight: FontWeight.w700,
                     color: HexColor(ColorVar.appColor),
                   ),
                   customText(
-                    text: 'FORGOT?',
-                    fontSize: RecipeMateAppUtil.screenWidth * 0.02,
+                    text: "FORGOT?",
+                    fontSize: DimensText.microText(context),
                     fontWeight: FontWeight.w600,
                     color: HexColor(ColorVar.bgGray8),
                   ),
                 ],
               ),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.008),
+              SizedBox(height: 8),
 
               Obx(() => customTextFormField(
-                hintText: '••••••••',
+                hintText: "••••••••",
                 prefixIcon: Icon(
                   Icons.lock,
                   color: HexColor(ColorVar.appColor),
@@ -165,20 +129,20 @@ class LoginView extends StatelessWidget {
                   vm.isObscureText.value
                       ? Icons.visibility_off
                       : Icons.visibility,
-                  color: HexColor(ColorVar.bgGray8),
                 ),
                 onSuffixClick: vm.setObscureTextPass,
                 enableFillColor: ColorVar.widgetOrCardBgColor,
                 isBorderSide: false,
-                doubleVerticalPadding: RecipeMateAppUtil.screenHeight * 0.020,
-                doubleHorizontalPadding: RecipeMateAppUtil.screenWidth * 0.05,
-                doubleTextSize: RecipeMateAppUtil.screenWidth * 0.04,
+                doubleVerticalPadding: 18,
+                doubleHorizontalPadding: 16,
+                doubleTextSize: DimensText.captionText(context),
                 context: context,
                 onChanged: vm.setPass,
                 focusNode: FocusNode(),
-              )),
+                ),
+              ),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.025),
+              SizedBox(height: 20),
 
               Obx(() => SizedBox(
                 width: double.infinity,
@@ -186,81 +150,134 @@ class LoginView extends StatelessWidget {
                   onPressed: vm.isValidButton.value ? vm.onLoginPressed : null,
                   backgroundColor: HexColor(ColorVar.appColor),
                   sideColor: HexColor(ColorVar.appColor),
-                  borderRadius: RecipeMateAppUtil.screenWidth * 0.06,
-                  text: 'Sign In',
-                  icon: const Icon(Icons.arrow_forward_rounded),
+                  borderRadius: 16,
+                  text: "Sign In",
+                  icon: const Icon(Icons.arrow_forward),
                   fontSize: RecipeMateAppUtil.screenWidth * 0.04,
                   fontColor: Colors.white,
                   fontWeight: FontWeight.bold,
-                  padding: EdgeInsets.symmetric(
-                    vertical: RecipeMateAppUtil.screenHeight * 0.012,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16)
                 ),
               )),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.025),
+              SizedBox(height: 20),
 
               Row(
                 children: [
-                  Expanded(child: Divider(color: HexColor(ColorVar.borderColor1))),
+                  Expanded(
+                    child: Divider(
+                      thickness: 1,
+                      color: HexColor(ColorVar.borderColor1),
+                    ),
+                  ),
+
                   Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: RecipeMateAppUtil.screenWidth * 0.03,
+                      horizontal: RecipeMateAppUtil.screenWidth * 0.04,
                     ),
                     child: customText(
-                      text: 'OR CONTINUE WITH',
-                      fontSize: RecipeMateAppUtil.screenWidth * 0.03,
+                      text: "OR CONTINUE WITH",
+                      fontSize: DimensText.captionText(context),
+                      fontWeight: FontWeight.w600,
                       color: HexColor(ColorVar.bgGray8),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  Expanded(child: Divider(color: HexColor(ColorVar.borderColor1))),
+
+                  Expanded(
+                    child: Divider(
+                      thickness: 1,
+                      color: HexColor(ColorVar.borderColor1),
+                    ),
+                  ),
                 ],
               ),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
+              SizedBox(height: 20),
 
               Row(
                 children: [
                   Expanded(
-                    child: customOutlinedButton(
-                      onPressed: () {},
-                      borderColor: HexColor(ColorVar.borderColor1),
-                      borderRadius: RecipeMateAppUtil.screenWidth * 0.08,
-                      text: 'G',
-                      fontColor: Colors.transparent,
+                    child: GestureDetector(
+                      onTap: () {
+                        // TODO: Google login
+                      },
+                      child: Container(
+                        height: RecipeMateAppUtil.screenHeight * 0.065,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(
+                            color: HexColor(ColorVar.borderColor1),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Center(
+                          child: Image.asset(
+                            "assets/images/ic_google.png",
+                            height: RecipeMateAppUtil.screenHeight * 0.032,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
+
                   SizedBox(width: RecipeMateAppUtil.screenWidth * 0.04),
+
                   Expanded(
-                    child: customOutlinedButton(
-                      onPressed: () {},
-                      borderColor: HexColor(ColorVar.borderColor1),
-                      borderRadius: RecipeMateAppUtil.screenWidth * 0.08,
-                      text: '',
-                      fontColor: Colors.black,
+                    child: GestureDetector(
+                      onTap: () {
+                        // TODO: Apple login
+                      },
+                      child: Container(
+                        height: RecipeMateAppUtil.screenHeight * 0.065,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(
+                            color: HexColor(ColorVar.borderColor1),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Center(
+                          child: Image.asset(
+                            "assets/images/ic_apple.png",
+                            height: RecipeMateAppUtil.screenHeight * 0.032,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
 
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.06),
+              SizedBox(height: 95),
 
-              RichText(
-                text: TextSpan(
-                  text: "Don't have an account? ",
-                  style: TextStyle(
-                    color: HexColor(ColorVar.bgGray8),
-                    fontSize: RecipeMateAppUtil.screenWidth * 0.035,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: 'Sign Up',
-                      style: TextStyle(
-                        color: HexColor(ColorVar.appColor),
-                        fontWeight: FontWeight.bold,
-                      ),
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: RecipeMateAppUtil.screenHeight * 0.02,
+                  top: RecipeMateAppUtil.screenHeight * 0.01,
+                ),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: "Don't have an account? ",
+                    style: TextStyle(
+                      color: HexColor(ColorVar.bgGray8),
+                      fontSize: DimensText.captionText(context),
                     ),
-                  ],
+                    children: [
+                      TextSpan(
+                        text: "Sign Up",
+                        style: TextStyle(
+                          color: HexColor(ColorVar.appColor),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

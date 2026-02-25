@@ -87,7 +87,7 @@ class ViewDialogUtil {
                               },
                               text: positiveTitle,
                               backgroundColor: HexColor(ColorVar.appColor),
-                              fontSize: DimensText.miniButtonText(context),
+                              fontSize: DimensText.buttonSmallText(context),
                               douWidth: 105,
                               douHeight: 40
                           ),

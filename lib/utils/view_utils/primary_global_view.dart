@@ -65,7 +65,7 @@ Widget customTextFormField({
           contentPadding: EdgeInsets.symmetric(vertical: doubleVerticalPadding,
               horizontal: doubleHorizontalPadding),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.0),
+            borderRadius: BorderRadius.circular(12.0),
             borderSide: isBorderSide
                 ? BorderSide(color: HexColor(ColorVar.bgGray8))
                 : BorderSide.none,
