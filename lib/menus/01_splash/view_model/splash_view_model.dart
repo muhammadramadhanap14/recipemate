@@ -6,8 +6,11 @@ import '../../../utils/constant_var.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 
 class SplashViewModel extends GetxController {
-  final isLoading = false.obs;
   final BuildContext context;
+  final startIconAnimation = false.obs;
+  final startTextAnimation = false.obs;
+  final isLoading = false.obs;
+  final splashDuration = const Duration(milliseconds: 3500);
 
   SplashViewModel({
     required this.context,
@@ -16,30 +19,37 @@ class SplashViewModel extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Future.microtask(() async {
-      await initCheckConnection();
+    _startSplashSequence();
+  }
+
+  Future<void> _startSplashSequence() async {
+    Future.delayed(const Duration(milliseconds: 400), () {
+      startIconAnimation.value = true;
     });
+    Future.delayed(const Duration(milliseconds: 700), () {
+      startTextAnimation.value = true;
+    });
+    await initCheckConnection();
   }
 
   Future<void> initCheckConnection() async {
     final valConnection = await RecipeMateAppUtil.checkConnection();
     if (valConnection) {
       isLoading.value = true;
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(splashDuration);
+      Get.offAllNamed('/login');
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ViewDialogUtil().showOneButtonActionDialog(
-            ConstantVar.stNoConnectionMessage,
-            ConstantVar.backBtnTitle,
-            ConstantVar.noConnectionGif,
-            context,
-            null, (dynamic) {});
+          ConstantVar.stNoConnectionMessage,
+          ConstantVar.backBtnTitle,
+          ConstantVar.noConnectionGif,
+          context,
+          null,
+              (dynamic) {},
+        );
       });
     }
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

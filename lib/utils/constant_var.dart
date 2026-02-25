@@ -1,5 +1,5 @@
 class ConstantVar {
-  static const String appNameForMenu = "RECIPEMATE";
+  static const String appNameForMenu = "RecipeMate";
 
   //time format
   static const String stTimeFormat = "HH:mm:ss";

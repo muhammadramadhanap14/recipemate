@@ -12,7 +12,7 @@ class ApiRepository {
 
   ApiRepository() {
     BaseOptions options = BaseOptions(
-        baseUrl: ConstantUrl.recipemateUrl,
+        // baseUrl: ConstantUrl.recipemateUrl,
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(minutes: 4),
         receiveTimeout: const Duration(minutes: 4));
