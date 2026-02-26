@@ -182,8 +182,7 @@ class RegisterView extends StatelessWidget {
                               sideColor: HexColor(ColorVar.appColor),
                               borderRadius: 16,
                               text: "Sign Up",
-                              icon: const Icon(Icons.arrow_forward),
-                              fontSize: RecipeMateAppUtil.screenWidth * 0.04,
+                              fontSize: DimensText.buttonText(context),
                               fontColor: Colors.white,
                               fontWeight: FontWeight.bold,
                               padding: const EdgeInsets.symmetric(vertical: 16)

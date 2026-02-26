@@ -51,7 +51,7 @@ class LoginViewModel extends GetxController {
       }
       /// TODO Replace with real login API when backend ready
       await _mockLoginFlow();
-      Get.offNamed('/home');
+      Get.offNamed('/preference_food_satu');
 
     }
     catch (e) {
