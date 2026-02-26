@@ -33,6 +33,7 @@ Widget customTextFormField({
   void Function()? onSuffixClick,
   Icon? suffixIcon,
   bool isSuffixIcon = false,
+  bool obscureText = false,
   required FocusNode focusNode,
 }) {
   return MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
@@ -48,6 +49,7 @@ Widget customTextFormField({
         textInputAction: textInputAction,
         onFieldSubmitted: onFieldSubmitted,
         textAlign: textAlign ?? TextAlign.start,
+        obscureText: obscureText,
         style: TextStyle(
           fontSize: doubleTextSize == 0.0 ? 16.0 : doubleTextSize, // Fallback to 16.0 if 0.0
           color: isEnable ? HexColor(enableTextColor) : HexColor(disableTextColor), // Fallback to opaque black

@@ -2,20 +2,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:recipemate/menus/03_register/view_model/register_view_model.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/color_var.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
-import '../view_model/login_view_model.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+class RegisterView extends StatelessWidget {
+  const RegisterView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final LoginViewModel vm = Get.put(
-      LoginViewModel(
+    final RegisterViewModel vm = Get.put(
+      RegisterViewModel(
         apiRepository: Get.find<ApiRepository>(),
         context: context,
       ),
@@ -58,16 +58,16 @@ class LoginView extends StatelessWidget {
                         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
 
                         customText(
-                          text: 'Welcome Back',
-                          fontSize: DimensText.superHeaderText(context),
-                          fontWeight: FontWeight.w800,
-                          fontFamily: 'times_new_roman_med_italic',
-                          color: HexColor(ColorVar.black),
-                          textAlign: TextAlign.center
+                            text: 'Create Account',
+                            fontSize: DimensText.superHeaderText(context),
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'times_new_roman_med_italic',
+                            color: HexColor(ColorVar.black),
+                            textAlign: TextAlign.center
                         ),
 
                         customText(
-                          text: "Your smart kitchen assistant awaits.",
+                          text: "Start your smart cooking journey today.",
                           fontSize: DimensText.captionText(context),
                           fontWeight: FontWeight.w500,
                           color: HexColor(ColorVar.bgGray8),
@@ -75,6 +75,36 @@ class LoginView extends StatelessWidget {
                         ),
 
                         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
+
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: customText(
+                            text: "FULL NAME",
+                            fontSize: DimensText.microText(context),
+                            fontWeight: FontWeight.w700,
+                            color: HexColor(ColorVar.appColor),
+                          ),
+                        ),
+
+                        SizedBox(height: 8),
+
+                        customTextFormField(
+                          hintText: 'Alex Darmono',
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: HexColor(ColorVar.appColor),
+                          ),
+                          enableFillColor: ColorVar.widgetOrCardBgColor,
+                          isBorderSide: false,
+                          doubleVerticalPadding: 18,
+                          doubleHorizontalPadding: 16,
+                          doubleTextSize: DimensText.captionText(context),
+                          context: context,
+                          onChanged: vm.setFullname,
+                          focusNode: FocusNode(),
+                        ),
+
+                        SizedBox(height: 18),
 
                         Align(
                           alignment: Alignment.centerLeft,
@@ -106,23 +136,14 @@ class LoginView extends StatelessWidget {
 
                         SizedBox(height: 18),
 
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            customText(
-                              text: "PASSWORD",
-                              fontSize: DimensText.microText(context),
-                              fontWeight: FontWeight.w700,
-                              color: HexColor(ColorVar.appColor),
-                            ),
-                            customText(
-                              text: "FORGOT?",
-                              fontSize: DimensText.microText(context),
-                              fontWeight: FontWeight.w600,
-                              color: HexColor(ColorVar.bgGray8),
-                            ),
-                          ],
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: customText(
+                            text: "PASSWORD",
+                            fontSize: DimensText.microText(context),
+                            fontWeight: FontWeight.w700,
+                            color: HexColor(ColorVar.appColor),
+                          ),
                         ),
 
                         SizedBox(height: 8),
@@ -149,24 +170,23 @@ class LoginView extends StatelessWidget {
                           obscureText: vm.isObscureText.value,
                           onChanged: vm.setPassword,
                           focusNode: FocusNode(),
-                          ),
-                        ),
+                        )),
 
                         SizedBox(height: 20),
 
                         Obx(() => SizedBox(
                           width: double.infinity,
                           child: customElevatedButton(
-                            onPressed: vm.isValidButton.value ? vm.onLoginPressed : null,
-                            backgroundColor: HexColor(ColorVar.appColor),
-                            sideColor: HexColor(ColorVar.appColor),
-                            borderRadius: 16,
-                            text: "Sign In",
-                            icon: const Icon(Icons.arrow_forward),
-                            fontSize: RecipeMateAppUtil.screenWidth * 0.04,
-                            fontColor: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            padding: const EdgeInsets.symmetric(vertical: 16)
+                              onPressed: vm.isValidButton.value ? vm.onLoginPressed : null,
+                              backgroundColor: HexColor(ColorVar.appColor),
+                              sideColor: HexColor(ColorVar.appColor),
+                              borderRadius: 16,
+                              text: "Sign Up",
+                              icon: const Icon(Icons.arrow_forward),
+                              fontSize: RecipeMateAppUtil.screenWidth * 0.04,
+                              fontColor: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              padding: const EdgeInsets.symmetric(vertical: 16)
                           ),
                         )),
 
@@ -180,20 +200,20 @@ class LoginView extends StatelessWidget {
                           child: RichText(
                             textAlign: TextAlign.center,
                             text: TextSpan(
-                              text: "Don't have an account? ",
+                              text: "Already have an account? ",
                               style: TextStyle(
                                 color: HexColor(ColorVar.bgGray8),
                                 fontSize: DimensText.captionText(context),
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Sign Up",
+                                  text: "Sign In",
                                   style: TextStyle(
                                     color: HexColor(ColorVar.appColor),
                                     fontWeight: FontWeight.bold,
                                   ),
                                   recognizer: TapGestureRecognizer()..onTap = () {
-                                    Get.offNamed('/register');
+                                    Get.offNamed('/login');
                                   },
                                 ),
                               ],
