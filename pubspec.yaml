@@ -66,6 +66,11 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+flutter_icons:
+  ios: true
+  android: true
+  image_path: "assets/images/cover_logo_recipemate.png"
+
 # The following section is specific to Flutter packages.
 flutter:
 
