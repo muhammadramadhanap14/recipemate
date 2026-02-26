@@ -91,7 +91,7 @@ class LoginView extends StatelessWidget {
                 doubleHorizontalPadding: 16,
                 doubleTextSize: DimensText.captionText(context),
                 context: context,
-                onChanged: vm.setNik,
+                onChanged: vm.setUsername,
                 focusNode: FocusNode(),
               ),
 
@@ -130,14 +130,14 @@ class LoginView extends StatelessWidget {
                       ? Icons.visibility_off
                       : Icons.visibility,
                 ),
-                onSuffixClick: vm.setObscureTextPass,
+                onSuffixClick: vm.togglePasswordVisibility,
                 enableFillColor: ColorVar.widgetOrCardBgColor,
                 isBorderSide: false,
                 doubleVerticalPadding: 18,
                 doubleHorizontalPadding: 16,
                 doubleTextSize: DimensText.captionText(context),
                 context: context,
-                onChanged: vm.setPass,
+                onChanged: vm.setPassword,
                 focusNode: FocusNode(),
                 ),
               ),
@@ -228,7 +228,7 @@ class LoginView extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        // TODO: Apple login
+                        // TODO: Apple login or other
                       },
                       child: Container(
                         height: RecipeMateAppUtil.screenHeight * 0.065,

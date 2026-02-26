@@ -19,72 +19,120 @@ class LoginViewModel extends GetxController {
   final isValidButton = false.obs;
   final isObscureText = true.obs;
 
-  void setNik(String value) {
+  void setUsername(String value) {
     username.value = value.trim();
     _validate();
   }
 
-  void setPass(String value) {
+  void setPassword(String value) {
     password.value = value;
     _validate();
   }
 
-  void _validate() {
-    isValidButton.value =
-        username.value.isNotEmpty && password.value.length >= 4;
-  }
-
-  void setObscureTextPass() {
+  void togglePasswordVisibility() {
     isObscureText.value = !isObscureText.value;
   }
 
-  Future<void> onLoginPressed() async {
-    errMessage.value = '';
-    isLoading.value = true;
-
-    final hasConnection = await RecipeMateAppUtil.checkConnection();
-    if (!hasConnection) {
-      isLoading.value = false;
-      errMessage.value = 'No internet connection';
-      return;
-    }
-
-    await loginTrc(username.value, password.value, context);
+  void _validate() {
+    /// TODO replace with real validation
+    isValidButton.value = username.value.isNotEmpty && password.value.length >= 4;
   }
 
-  Future<void> loginTrc(String nik, String pass, BuildContext context) async {
+  Future<void> onLoginPressed() async {
+    if (isLoading.value) return;
+    errMessage.value = '';
+    isLoading.value = true;
     try {
-      final handset = await RecipeMateAppUtil.getUniqueDeviceId();
-
-      final response = await apiRepository.postApiLogin(
-        nik,
-        pass,
-        handset
-      );
-
-      if (response == null) {
-        _fail('Internal server error');
+      /// TODO Check internet connection
+      final hasConnection = await RecipeMateAppUtil.checkConnection();
+      if (!hasConnection) {
+        _fail('No internet connection');
         return;
       }
-
-      // final loginResponse = LoginResponse.fromJson(jsonDecode(response));
-      //
-      // if (loginResponse.code != ConstantVar.intSuccess ||
-      //     loginResponse.datas?.isEmpty != false) {
-      //   _fail(loginResponse.message ?? 'Login failed');
-      //   return;
-      // }
-      
-      // TODO Save data user to local DB
-
+      /// TODO Replace with real login API when backend ready
+      await _mockLoginFlow();
       Get.offNamed('/home');
-    } catch (e) {
+
+    }
+    catch (e) {
       _fail(e.toString());
+    }
+    finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> _mockLoginFlow() async {
+    /// TODO Remove this when backend ready
+
+    await Future.delayed(
+      const Duration(seconds: 2),
+    );
+
+    /// TODO:
+    /// Replace with real API call:
+    ///
+    /// final handset =
+    ///   await RecipeMateAppUtil.getUniqueDeviceId();
+    ///
+    /// final response =
+    ///   await apiRepository.postApiLogin(
+    ///      username.value,
+    ///      password.value,
+    ///      handset,
+    ///   );
+    ///
+    /// TODO Parse response
+    ///
+    /// TODO Validate response code
+    ///
+    /// TODO Extract user data
+    ///
+    /// TODO Save to local storage
+    ///
+    /// Example:
+    /// await LocalStorage.saveUser(user);
+
+
+    /// TODO:
+    /// Example local save using SharedPreferences / SQLite
+    ///
+    /// await LocalStorage.saveLoginSession(
+    ///   username: username.value,
+    ///   token: "dummy_token",
+    /// );
+  }
+
+  Future<void> loginTrc() async {
+    try {
+      final handset = await RecipeMateAppUtil.getUniqueDeviceId();
+      final response = await apiRepository.postApiLogin(
+        username.value,
+        password.value,
+        handset,
+      );
+      /// TODO Parse JSON
+      ///
+      /// Example:
+      ///
+      /// final loginResponse =
+      ///    LoginResponse.fromJson(response);
+      ///
+      /// if (!loginResponse.success)
+      ///    throw Exception(loginResponse.message);
+
+      /// TODO Save user to local DB
+      ///
+      /// await UserLocalRepository.saveUser(
+      ///   loginResponse.user,
+      /// );
+    }
+    catch (e) {
+      rethrow;
     }
   }
 
   void _fail(String message) {
-    isLoading.value = false;
     errMessage.value = message;
   }
 }
