@@ -10,7 +10,6 @@ import '../view_model/home_nav_view_model.dart';
 class HomeNavView extends StatelessWidget {
   const HomeNavView({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     final HomeNavViewModel viewModel = Get.put(HomeNavViewModel());

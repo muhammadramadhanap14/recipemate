@@ -10,8 +10,6 @@ import '../view_model/preference_food_view_model.dart';
 class PreferenceFoodDuaView extends StatelessWidget {
   PreferenceFoodDuaView({super.key});
 
-  final PreferenceFoodViewModel vm = Get.find<PreferenceFoodViewModel>();
-
   final items = <_FoodItem>[
     _FoodItem("Vegan", Icons.eco),
     _FoodItem("Keto", Icons.fitness_center),
@@ -25,6 +23,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final PreferenceFoodViewModel viewModel = Get.put(PreferenceFoodViewModel());
     RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       RecipeMateAppUtil.lockToPortrait();
@@ -43,15 +42,15 @@ class PreferenceFoodDuaView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              _buildProgress(context),
+              _buildProgress(context, viewModel),
               const SizedBox(height: 24),
-              _buildTitle(context),
+              _buildTitle(context, viewModel),
               const SizedBox(height: 24),
               Expanded(
-                child: _buildGrid(),
+                child: _buildGrid(context, viewModel),
               ),
               const SizedBox(height: 16),
-              _buildContinueButton(context),
+              _buildNextButton(context, viewModel),
               const SizedBox(height: 20),
             ],
           ),
@@ -60,7 +59,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
     );
   }
 
-  Widget _buildProgress(BuildContext context) {
+  Widget _buildProgress(BuildContext context, PreferenceFoodViewModel viewModel) {
     return Column(
       children: [
         Row(
@@ -98,7 +97,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext context) {
+  Widget _buildTitle(BuildContext context, PreferenceFoodViewModel viewModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -123,7 +122,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
     );
   }
 
-  Widget _buildGrid() {
+  Widget _buildGrid(BuildContext context, PreferenceFoodViewModel viewModel) {
     return GridView.builder(
       itemCount: items.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -135,9 +134,9 @@ class PreferenceFoodDuaView extends StatelessWidget {
       itemBuilder: (_, index) {
         final item = items[index];
         return Obx(() {
-          final bool selected = vm.selectedDietary.contains(item.label);
+          final bool selected = viewModel.selectedDietary.contains(item.label);
           return GestureDetector(
-            onTap: () => vm.toggleDietary(item.label),
+            onTap: () => viewModel.toggleDietary(item.label),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               decoration: BoxDecoration(
@@ -191,16 +190,16 @@ class PreferenceFoodDuaView extends StatelessWidget {
     );
   }
 
-  Widget _buildContinueButton(BuildContext context) {
+  Widget _buildNextButton(BuildContext context, PreferenceFoodViewModel viewModel) {
     return Obx(() {
       return SizedBox(
         width: double.infinity,
         child: customElevatedButton(
-          onPressed: vm.isStep2Valid ? () => Get.toNamed('/preference_food_tiga') : null,
+          onPressed: viewModel.isStep2Valid ? () => Get.toNamed('/preference_food_tiga') : null,
           backgroundColor: HexColor(ColorVar.appColor),
           sideColor: HexColor(ColorVar.appColor),
           borderRadius: 16,
-          text: "Continue",
+          text: "Next",
           fontSize: DimensText.buttonText(context),
           fontColor: Colors.white,
           fontWeight: FontWeight.bold,

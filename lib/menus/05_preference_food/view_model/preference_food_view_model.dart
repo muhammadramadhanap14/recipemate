@@ -4,24 +4,26 @@ class PreferenceFoodViewModel extends GetxController {
 
   final RxString name = ''.obs;
   final RxString age = ''.obs;
+  final RxString height = ''.obs;
+  final RxString weight = ''.obs;
   final RxList<String> selectedDietary = <String>[].obs;
-  final RxList<String> selectedFavoriteCategories = <String>[].obs;
+  final RxList<String> selectedStyleDietary = <String>[].obs;
   final RxBool isLoading = false.obs;
 
-  void setName(String value) {
-    name.value = value;
-  }
+  void setName(String value) => name.value = value;
+  void setAge(String value) => age.value = value;
+  void setHeight(String value) => height.value = value;
+  void setWeight(String value) => weight.value = value;
 
-  void setAge(String value) {
-    age.value = value;
-  }
-
+  // Step 1
   bool get isStep1Valid {
-    return name.value.isNotEmpty && age.value.isNotEmpty;
+    return name.value.isNotEmpty && age.value.isNotEmpty && height.value.isNotEmpty && weight.value.isNotEmpty;
   }
 
+  // Step 2
   List<String> get dietaryList => selectedDietary;
-
+  bool isDietarySelected(String item) => selectedDietary.contains(item);
+  bool get isStep2Valid => selectedDietary.isNotEmpty;
   void toggleDietary(String item) {
     if (selectedDietary.contains(item)) {
       selectedDietary.remove(item);
@@ -30,59 +32,27 @@ class PreferenceFoodViewModel extends GetxController {
     }
   }
 
-  bool isDietarySelected(String item) {
-    return selectedDietary.contains(item);
-  }
-
-  bool get isStep2Valid {
-    return selectedDietary.isNotEmpty;
-  }
-
-  List<String> get favoriteList => selectedFavoriteCategories;
-
-  void toggleFavorite(String item) {
-    if (selectedFavoriteCategories.contains(item)) {
-      selectedFavoriteCategories.remove(item);
+  // Step 3
+  List<String> get styleDietaryList => selectedStyleDietary;
+  bool isStyleDietarySelected(String item) => selectedStyleDietary.contains(item);
+  bool get isStep3Valid => selectedStyleDietary.isNotEmpty;
+  void toggleStyleDietary(String item) {
+    if (selectedStyleDietary.contains(item)) {
+      selectedStyleDietary.remove(item);
     } else {
-      selectedFavoriteCategories.add(item);
+      selectedStyleDietary.add(item);
     }
-  }
-
-  bool isFavoriteSelected(String item) {
-    return selectedFavoriteCategories.contains(item);
-  }
-
-  bool get isStep3Valid {
-    return selectedFavoriteCategories.isNotEmpty;
   }
 
   Future<void> finishOnboarding() async {
     isLoading.value = true;
     try {
-      /// nanti simpan SQLite disini
-      final String finalName = name.value;
-      final String finalAge = age.value;
-
-      final List<String> dietary =
-      selectedDietary.toList();
-
-      final List<String> favorites = selectedFavoriteCategories.toList();
-
-      /// simulasi delay
-      await Future.delayed(
-        const Duration(milliseconds: 800),
-      );
-
-      /// navigate ke home
+      //TODO logic simpan all data ke local
+      await Future.delayed(const Duration(milliseconds: 800));
       Get.offAllNamed('/home');
-    }
-    catch (e) {
-      Get.snackbar(
-        "Error",
-        "Failed to finish onboarding",
-      );
-    }
-    finally {
+    } catch (e) {
+      Get.snackbar("Error", "Failed to finish onboarding");
+    } finally {
       isLoading.value = false;
     }
   }
