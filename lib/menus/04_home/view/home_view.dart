@@ -50,13 +50,13 @@ class HomeView extends StatelessWidget {
                       text: "Hi, ${homeViewModel.nameUser.value} ...",
                       fontSize: DimensText.headerText(context), // Adjusted font size
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: HexColor(ColorVar.white),
                     )),
                     SizedBox(height: RecipeMateAppUtil.screenHeight * 0.005),
                     customText(
                       text: "Welcome !",
                       fontSize: DimensText.superHeaderText(context), // Adjusted font size
-                      color: Colors.white,
+                      color: HexColor(ColorVar.white),
                     ),
                   ],
                 ),

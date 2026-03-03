@@ -163,7 +163,7 @@ class LoginView extends StatelessWidget {
                             borderRadius: 16,
                             text: "Sign In",
                             fontSize: DimensText.buttonText(context),
-                            fontColor: Colors.white,
+                            fontColor: HexColor(ColorVar.white),
                             fontWeight: FontWeight.bold,
                             padding: const EdgeInsets.symmetric(vertical: 16)
                           ),

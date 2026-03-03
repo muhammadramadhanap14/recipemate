@@ -39,7 +39,7 @@ class HomeNavView extends StatelessWidget {
             ],
             initialActiveIndex: viewModel.selectedIndex.value,
             backgroundColor: HexColor(ColorVar.appColor),
-            activeColor: Colors.white,
+            activeColor: HexColor(ColorVar.white),
             color: HexColor(ColorVar.appColor),
             onTap: (index) => viewModel.changePage(index),
           )),
@@ -66,7 +66,7 @@ class HomeNavView extends StatelessWidget {
           padding: EdgeInsets.all(isSelected ? 6 : 0),
           decoration: BoxDecoration(
             color: isSelected
-                ? Colors.white
+                ? HexColor(ColorVar.white)
                 : Colors.transparent,
             shape: BoxShape.circle,
           ),
@@ -76,7 +76,7 @@ class HomeNavView extends StatelessWidget {
             height: 30,
             color: isSelected
                 ? HexColor(ColorVar.appColor)
-                : Colors.white,
+                : HexColor(ColorVar.white),
             colorBlendMode: BlendMode.modulate,
           ),
         ),

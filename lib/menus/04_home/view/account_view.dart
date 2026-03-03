@@ -53,7 +53,7 @@ class AccountView extends StatelessWidget {
                 child: ClipOval(
                   child: Image.asset(
                     "assets/images/ic_icon_profile.png",
-                    color: Colors.black,
+                    color: HexColor(ColorVar.black),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -67,17 +67,17 @@ class AccountView extends StatelessWidget {
               Obx(() => customText(
                 text: "UserID: ${accountViewModel.userId.value}",
                 fontSize: DimensText.accountNameText(context),
-                color: Colors.black,
+                color: HexColor(ColorVar.black),
               )),
               Obx(() => customText(
                 text: '',
                 fontSize: DimensText.accountNameText(context),
-                color: Colors.black,
+                color: HexColor(ColorVar.black),
               )),
               Obx(() => customText(
                 text: accountViewModel.appVersion.value,
                 fontSize: DimensText.accountNameText(context),
-                color: Colors.black.withValues(alpha: 0.5),
+                color: HexColor(ColorVar.black).withValues(alpha: 0.5),
               )),
             ],
           ),
@@ -130,9 +130,9 @@ class AccountView extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: customElevatedButton(
-                      fontColor: Colors.black,
+                      fontColor: HexColor(ColorVar.black),
                       fontSize: DimensText.buttonSmallText(context),
-                      icon: const Icon(Icons.logout, color: Colors.black),
+                      icon: Icon(Icons.logout, color: HexColor(ColorVar.black)),
                       backgroundColor: HexColor(ColorVar.grayButton),
                       foregroundColor: HexColor(ColorVar.grayButton),
                       sideColor: HexColor(ColorVar.grayButton),
