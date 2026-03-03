@@ -136,10 +136,10 @@ class PreferenceFoodTigaView extends StatelessWidget {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: HexColor(ColorVar.white),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: selected ? HexColor(ColorVar.appColor) : const Color(0xFFE5E7EB),
+                  color: selected ? HexColor(ColorVar.appColor) : HexColor(ColorVar.white),
                   width: selected ? 2 : 1,
                 ),
                 boxShadow: [
@@ -160,7 +160,7 @@ class PreferenceFoodTigaView extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: selected
                           ? HexColor(ColorVar.appColor).withValues(alpha: 0.1)
-                          : const Color(0xFFF3F4F6),
+                          : HexColor(ColorVar.white),
                     ),
                     child: Icon(
                       item.icon,
@@ -174,7 +174,7 @@ class PreferenceFoodTigaView extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: selected ? FontWeight.bold : FontWeight.w500,
-                      color: const Color(0xFF111827),
+                      color: HexColor(ColorVar.black),
                     ),
                   ),
                 ],
@@ -197,7 +197,7 @@ class PreferenceFoodTigaView extends StatelessWidget {
             borderRadius: 16,
             text: "Finish!",
             fontSize: DimensText.buttonText(context),
-            fontColor: Colors.white,
+            fontColor: HexColor(ColorVar.white),
             fontWeight: FontWeight.bold,
             padding: const EdgeInsets.symmetric(vertical: 18)),
       );
