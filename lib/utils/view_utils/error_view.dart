@@ -6,6 +6,7 @@ import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 import '../color_var.dart';
 import '../constant_var.dart';
 import '../dimens_text.dart';
+import '../recipemate_app_util.dart';
 
 class ErrorView extends StatelessWidget {
   final String errorMessage;
@@ -14,25 +15,29 @@ class ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: HexColor(ColorVar.white),
-        appBar: AppBar(
-          backgroundColor: HexColor(ColorVar.appColor),
-          centerTitle: true,
-          title: Container(
-            margin: const EdgeInsets.only(left: 18.0),
-            child: customText(
-              text: ConstantVar.menuErrorReport,
-              fontSize: DimensText.headerMenusText(context),
-              color: HexColor(ColorVar.black),
-              fontFamily: 'inter_regular',
-            ),
+    RecipeMateAppUtil.init(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      RecipeMateAppUtil.lockToPortrait();
+    });
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: HexColor(ColorVar.white),
+      appBar: AppBar(
+        backgroundColor: HexColor(ColorVar.appColor),
+        centerTitle: true,
+        title: Container(
+          margin: const EdgeInsets.only(left: 18.0),
+          child: customText(
+            text: ConstantVar.menuErrorReport,
+            fontSize: DimensText.headerMenusText(context),
+            color: HexColor(ColorVar.black),
+            fontFamily: 'inter_regular',
           ),
-          leading: const SizedBox.shrink(),
         ),
-        body: SafeArea(child: errorContent(context)),
-      );
+        leading: const SizedBox.shrink(),
+      ),
+      body: SafeArea(child: errorContent(context)),
+    );
   }
 
   Widget errorContent(BuildContext context) {

@@ -33,7 +33,6 @@ void main() {
     });
   };
 
-
   // Set Dart's zone error handler
   runZonedGuarded(
         () {
@@ -80,9 +79,6 @@ class RecipemateApp extends StatelessWidget {
         GetPage(name: '/preference_food_satu', page: () => PreferenceFoodSatuView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
         GetPage(name: '/preference_food_dua', page: () => PreferenceFoodDuaView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
         GetPage(name: '/preference_food_tiga', page: () => PreferenceFoodTigaView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-
-        //BACK TO FORM
-        GetPage(name: '/back_to_home', page: () => const HomeNavView() , transition: Transition.leftToRightWithFade, transitionDuration: const Duration(milliseconds: 600)),
       ],
     );
   }
