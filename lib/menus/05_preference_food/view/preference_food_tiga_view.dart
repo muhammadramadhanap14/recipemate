@@ -169,13 +169,11 @@ class PreferenceFoodTigaView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    item.label,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: selected ? FontWeight.bold : FontWeight.w500,
-                      color: HexColor(ColorVar.black),
-                    ),
+                  customText(
+                    text: item.label,
+                    fontSize: DimensText.bodySmallText(context),
+                    fontWeight: selected ? FontWeight.bold : FontWeight.w500,
+                    color: HexColor(ColorVar.black),
                   ),
                 ],
               ),

@@ -24,14 +24,12 @@ class EmptyViewUtil extends StatelessWidget {
           Image.asset('assets/images/ic_no_data.webp',
               width: 200, height: 120),
           const SizedBox(height: 30),
-          Text(
-            ConstantVar.stNotFound,
-            style: TextStyle(
-              fontSize: DimensText.headerText(context),
-              color: Colors.black,
-              fontFamily: 'inter_bold',
-            ),
-            textScaler: TextScaler.noScaling,
+          customText(
+            text: ConstantVar.stNotFound,
+            fontSize: DimensText.headerText(context),
+            color: HexColor(ColorVar.black),
+            fontFamily: 'inter_bold',
+            intMaxLine: null
           ),
         ],
       ),

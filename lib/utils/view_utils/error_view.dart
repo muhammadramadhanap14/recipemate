@@ -16,7 +16,7 @@ class ErrorView extends StatelessWidget {
   Widget build(BuildContext context) {
       return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
+        backgroundColor: HexColor(ColorVar.white),
         appBar: AppBar(
           backgroundColor: HexColor(ColorVar.appColor),
           centerTitle: true,
@@ -25,7 +25,7 @@ class ErrorView extends StatelessWidget {
             child: customText(
               text: ConstantVar.menuErrorReport,
               fontSize: DimensText.headerMenusText(context),
-              color: Colors.black,
+              color: HexColor(ColorVar.black),
               fontFamily: 'inter_regular',
             ),
           ),

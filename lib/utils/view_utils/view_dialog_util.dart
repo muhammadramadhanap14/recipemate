@@ -45,7 +45,7 @@ class ViewDialogUtil {
             return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0)),
-              backgroundColor: Colors.white,
+              backgroundColor: HexColor(ColorVar.white),
               child: Container(
                 width: screenWidth * 0.7,
                 padding: const EdgeInsets.all(15.0),
@@ -58,7 +58,7 @@ class ViewDialogUtil {
                     customText(
                       text: content,
                       textAlign: TextAlign.center,
-                      color: Colors.black,
+                      color: HexColor(ColorVar.black),
                       isSoftWrap: true,
                       intMaxLine: 3,
                       fontSize: DimensText.subHeaderText(context),
@@ -73,8 +73,8 @@ class ViewDialogUtil {
                                 Navigator.of(context).pop();
                               },
                               text: negativeTitle,
-                              borderColor: Colors.grey,
-                              fontColor: Colors.grey,
+                              borderColor: HexColor(ColorVar.bgGray72),
+                              fontColor: HexColor(ColorVar.bgGray72),
                               fontSize: DimensText.buttonText(context),
                           ),
                         ),
@@ -117,7 +117,7 @@ class ViewDialogUtil {
             return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0)),
-              backgroundColor: Colors.white,
+              backgroundColor: HexColor(ColorVar.white),
               child: Container(
                 width: screenWidth * 0.7,
                 padding: const EdgeInsets.all(15.0),
@@ -130,7 +130,7 @@ class ViewDialogUtil {
                     customText(
                       text: content,
                       textAlign: TextAlign.center,
-                      color: Colors.black,
+                      color: HexColor(ColorVar.black),
                       isSoftWrap: true,
                       intMaxLine: 3,
                       fontSize: DimensText.subHeaderText(context),
@@ -140,7 +140,7 @@ class ViewDialogUtil {
                       alignment: Alignment.bottomRight,
                       child: customTextButton(
                           text: btnTitle,
-                          fontColor: Colors.black,
+                          fontColor: HexColor(ColorVar.black),
                           fontSize: DimensText.buttonText(context),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -176,7 +176,7 @@ class ViewDialogUtil {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
-            backgroundColor: Colors.white,
+            backgroundColor: HexColor(ColorVar.white),
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               height: 355,
@@ -197,7 +197,7 @@ class ViewDialogUtil {
                       child: customText(
                           text: titleDialog,
                           fontSize: 18,
-                          color: Colors.white,
+                          color: HexColor(ColorVar.white),
                           fontFamily: 'inter_bold'
                       ),
                     ),
@@ -253,7 +253,7 @@ class ViewDialogUtil {
                                 child: customText(
                                   text: model.column2,
                                   fontSize: 14,
-                                  color: Colors.black,
+                                  color: HexColor(ColorVar.black),
                                   fontFamily:'inter_regular'
                                 ),
                               ),
@@ -272,13 +272,13 @@ class ViewDialogUtil {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        fillColor: Colors.red,
+                        fillColor: HexColor(ColorVar.redText),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: customText(
                             text: ConstantVar.stCancelTitle,
-                            color: Colors.white,
+                            color: HexColor(ColorVar.white),
                             fontSize: DimensText.buttonText(context),
                             fontFamily: 'inter_regular'
                         ),
