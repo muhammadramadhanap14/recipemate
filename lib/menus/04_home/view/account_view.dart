@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/color_var.dart';
-import '../../../utils/constant_var.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../view_model/account_view_model.dart';
@@ -13,149 +12,198 @@ class AccountView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AccountViewModel accountViewModel = Get.put(
-      //TODO ambil dari DB Lokasl
-        AccountViewModel(
-          dataSessionUtil: null
-        ));
-
+    final AccountViewModel viewModel = Get.put(AccountViewModel());
+    RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
     });
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: _initViewAccount(context, accountViewModel),
-    );
-  }
-
-  Widget _initViewAccount(BuildContext context, AccountViewModel accountViewModel) {
-    RecipeMateAppUtil.init(context);
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          color: HexColor(ColorVar.bgGrayDataTable),
-          padding: EdgeInsets.only(
-            top: RecipeMateAppUtil.screenHeight * 0.04,
-            bottom: RecipeMateAppUtil.screenHeight * 0.03,
+      backgroundColor: HexColor(ColorVar.bgAppColor),
+      appBar: AppBar(
+        backgroundColor: HexColor(ColorVar.bgAppColor),
+        centerTitle: true,
+        title: customText(
+          text: "Account",
+          fontSize: DimensText.headerMenusText(context),
+          fontWeight: FontWeight.bold,
+          color: HexColor(ColorVar.black),
+        ),
+        automaticallyImplyLeading: false,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: RecipeMateAppUtil.screenWidth * 0.06,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: RecipeMateAppUtil.screenWidth * 0.22,
-                height: RecipeMateAppUtil.screenWidth * 0.22,
-                decoration: BoxDecoration(
-                  color: HexColor(ColorVar.appColor),
-                  shape: BoxShape.circle,
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.025),
+              _buildProfileHeader(context, viewModel),
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
+              _buildMenuItem(
+                context: context,
+                icon: Icons.language,
+                title: "Language",
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    customText(
+                      text: "English",
+                      fontSize: DimensText.captionText(context),
+                      color: HexColor(ColorVar.bgGray8),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_down, 
+                      color: HexColor(ColorVar.bgGray8),
+                      size: RecipeMateAppUtil.screenWidth * 0.05,
+                    ),
+                  ],
                 ),
-                child: ClipOval(
-                  child: Image.asset(
-                    "assets/images/ic_icon_profile.png",
-                    color: HexColor(ColorVar.black),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                onTap: () {},
               ),
-              const SizedBox(height: 12),
-              Obx(() => customText(
-                text: accountViewModel.userName.value,
-                fontSize: DimensText.headerText(context),
-                fontWeight: FontWeight.bold,
-              )),
-              Obx(() => customText(
-                text: "UserID: ${accountViewModel.userId.value}",
-                fontSize: DimensText.accountNameText(context),
-                color: HexColor(ColorVar.black),
-              )),
-              Obx(() => customText(
-                text: '',
-                fontSize: DimensText.accountNameText(context),
-                color: HexColor(ColorVar.black),
-              )),
-              Obx(() => customText(
-                text: accountViewModel.appVersion.value,
-                fontSize: DimensText.accountNameText(context),
-                color: HexColor(ColorVar.black).withValues(alpha: 0.5),
-              )),
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+              _buildMenuItem(
+                context: context,
+                icon: Icons.dark_mode,
+                title: "Dark Mode",
+                trailing: Obx(() => Switch(
+                  value: viewModel.isDarkMode.value,
+                  activeTrackColor: HexColor(ColorVar.appColor).withValues(alpha: 0.3),
+                  activeThumbColor: HexColor(ColorVar.appColor),
+                  onChanged: viewModel.toggleDarkMode,
+                )),
+              ),
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+              _buildMenuItem(
+                context: context,
+                icon: Icons.logout,
+                title: "Logout",
+                titleColor: HexColor(ColorVar.appColor),
+                iconColor: HexColor(ColorVar.appColor),
+                trailing: Icon(
+                  Icons.chevron_right, 
+                  color: HexColor(ColorVar.bgGray8),
+                  size: RecipeMateAppUtil.screenWidth * 0.06,
+                ),
+                onTap: () => viewModel.logoutDialog(context),
+              ),
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
             ],
           ),
         ),
+      ),
+    );
+  }
 
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-              vertical: RecipeMateAppUtil.screenHeight * 0.02,
+  Widget _buildProfileHeader(BuildContext context, AccountViewModel vm) {
+    final double profileSize = RecipeMateAppUtil.screenWidth * 0.35;
+
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Container(
+              width: profileSize,
+              height: profileSize,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: HexColor(ColorVar.appColor).withValues(alpha: 0.1), 
+                  width: RecipeMateAppUtil.screenWidth * 0.01,
+                ),
+              ),
+              child: const CircleAvatar(
+                backgroundImage: AssetImage("assets/images/ic_icon_profile.png"),
+                backgroundColor: Colors.transparent,
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                customText(
-                  text: ConstantVar.stAccountActivities,
-                  fontSize: DimensText.accountNameText(context),
-                  fontWeight: FontWeight.bold,
-                ),
-
-                const SizedBox(height: 4),
-                const Divider(thickness: 1),
-                const SizedBox(height: 14),
-
-                customText(
-                  text: ConstantVar.stLastLogin,
-                  fontSize: DimensText.accountNameText(context),
-                  fontWeight: FontWeight.bold,
-                ),
-
-                const SizedBox(height: 12),
-
-                Obx(() => customText(
-                  text: accountViewModel.lastLoginDate.value,
-                  fontSize: DimensText.accountNameText(context),
-                )),
-
-                const Divider(thickness: 1),
-                const SizedBox(height: 12),
-
-                Obx(() => customText(
-                  text: accountViewModel.lastLoginTime.value,
-                  fontSize: DimensText.accountNameText(context),
-                )),
-
-                const Divider(thickness: 1),
-                const Spacer(),
-
-                // Logout Btn
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: customElevatedButton(
-                      fontColor: HexColor(ColorVar.black),
-                      fontSize: DimensText.buttonSmallText(context),
-                      icon: Icon(Icons.logout, color: HexColor(ColorVar.black)),
-                      backgroundColor: HexColor(ColorVar.grayButton),
-                      foregroundColor: HexColor(ColorVar.grayButton),
-                      sideColor: HexColor(ColorVar.grayButton),
-                      onPressed: () {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          accountViewModel.logoutDialog(
-                            ConstantVar.stConfirmLogout,
-                            ConstantVar.confirmLogout,
-                            ConstantVar.backBtnTitle,
-                            ConstantVar.confirmGif,
-                            context,
-                          );
-                        });
-                      },
-                      text: ConstantVar.logoutBtn
+            Positioned(
+              bottom: RecipeMateAppUtil.screenWidth * 0.01,
+              right: RecipeMateAppUtil.screenWidth * 0.01,
+              child: Container(
+                padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.015),
+                decoration: BoxDecoration(
+                  color: HexColor(ColorVar.appColor),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white, 
+                    width: RecipeMateAppUtil.screenWidth * 0.005,
                   ),
                 ),
-                const SizedBox(height: 20),
-              ],
+                child: Icon(
+                  Icons.edit, 
+                  color: Colors.white, 
+                  size: RecipeMateAppUtil.screenWidth * 0.04,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
+        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+        Obx(() => customText(
+          text: vm.userName.value,
+          fontSize: DimensText.subHeaderLargeText(context),
+          fontWeight: FontWeight.w900,
+          color: HexColor(ColorVar.black),
+        )),
+        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.002),
+        Obx(() => customText(
+          text: vm.userId.value,
+          fontWeight: FontWeight.w400,
+          fontSize: DimensText.captionText(context),
+          color: HexColor(ColorVar.bgGray8),
+        )),
       ],
+    );
+  }
+
+  Widget _buildMenuItem({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required Widget trailing,
+    Color? titleColor,
+    Color? iconColor,
+    VoidCallback? onTap,
+  }) {
+    final double borderRadius = RecipeMateAppUtil.screenWidth * 0.04;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: RecipeMateAppUtil.screenWidth * 0.04, 
+          vertical: RecipeMateAppUtil.screenHeight * 0.015,
+        ),
+        decoration: BoxDecoration(
+          color: HexColor(ColorVar.widgetOrCardBgColor).withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.01),
+              child: Icon(
+                icon,
+                color: iconColor ?? HexColor(ColorVar.subTextColor),
+                size: RecipeMateAppUtil.screenWidth * 0.065,
+              ),
+            ),
+            SizedBox(width: RecipeMateAppUtil.screenWidth * 0.04),
+            Expanded(
+              child: customText(
+                text: title,
+                fontSize: DimensText.bodySmallText(context),
+                fontWeight: FontWeight.w600,
+                color: titleColor ?? HexColor(ColorVar.black),
+              ),
+            ),
+            trailing,
+          ],
+        ),
+      ),
     );
   }
 }
