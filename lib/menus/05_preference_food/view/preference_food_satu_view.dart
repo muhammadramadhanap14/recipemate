@@ -18,6 +18,9 @@ class PreferenceFoodSatuView extends StatelessWidget {
       RecipeMateAppUtil.lockToPortrait();
     });
 
+    final double screenW = RecipeMateAppUtil.screenWidth;
+    final double screenH = RecipeMateAppUtil.screenHeight;
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -30,30 +33,33 @@ class PreferenceFoodSatuView extends StatelessWidget {
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: RecipeMateAppUtil.screenWidth * 0.06,
+                      horizontal: screenW * 0.06,
                     ),
                     child: IntrinsicHeight(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 20),
-                          _buildProgress(context),
-                          const SizedBox(height: 24),
-                          _buildTitle(context),
-                          const SizedBox(height: 32),
+                          SizedBox(height: screenH * 0.025),
+                          _buildProgress(context, screenW, screenH),
+                          SizedBox(height: screenH * 0.03),
+                          _buildTitle(context, screenH),
+                          SizedBox(height: screenH * 0.04),
                           
-                          _buildInputLabel(context, "SHORT NAME"),
+                          _buildInputLabel(context, "SHORT NAME", screenW, screenH),
                           customTextFormField(
                             hintText: 'e.g. Alex Dards',
                             context: context,
                             onChanged: viewModel.setName,
                             enableFillColor: ColorVar.white,
                             focusNode: FocusNode(),
+                            doubleVerticalPadding: screenH * 0.02,
+                            doubleHorizontalPadding: screenW * 0.04,
+                            doubleTextSize: DimensText.captionText(context),
                           ),
                           
-                          const SizedBox(height: 20),
+                          SizedBox(height: screenH * 0.025),
                           
-                          _buildInputLabel(context, "AGE"),
+                          _buildInputLabel(context, "AGE", screenW, screenH),
                           customTextFormField(
                             hintText: 'e.g. 25',
                             context: context,
@@ -61,9 +67,12 @@ class PreferenceFoodSatuView extends StatelessWidget {
                             enableFillColor: ColorVar.white,
                             keyboardType: TextInputType.number,
                             focusNode: FocusNode(),
+                            doubleVerticalPadding: screenH * 0.02,
+                            doubleHorizontalPadding: screenW * 0.04,
+                            doubleTextSize: DimensText.captionText(context),
                           ),
                           
-                          const SizedBox(height: 20),
+                          SizedBox(height: screenH * 0.025),
                           
                           Row(
                             children: [
@@ -71,7 +80,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildInputLabel(context, "HEIGHT (CM)"),
+                                    _buildInputLabel(context, "HEIGHT (CM)", screenW, screenH),
                                     customTextFormField(
                                       hintText: '170',
                                       context: context,
@@ -79,16 +88,19 @@ class PreferenceFoodSatuView extends StatelessWidget {
                                       enableFillColor: ColorVar.white,
                                       keyboardType: TextInputType.number,
                                       focusNode: FocusNode(),
+                                      doubleVerticalPadding: screenH * 0.02,
+                                      doubleHorizontalPadding: screenW * 0.04,
+                                      doubleTextSize: DimensText.captionText(context),
                                     ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 16),
+                              SizedBox(width: screenW * 0.04),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildInputLabel(context, "WEIGHT (KG)"),
+                                    _buildInputLabel(context, "WEIGHT (KG)", screenW, screenH),
                                     customTextFormField(
                                       hintText: '65',
                                       context: context,
@@ -96,6 +108,9 @@ class PreferenceFoodSatuView extends StatelessWidget {
                                       enableFillColor: ColorVar.white,
                                       keyboardType: TextInputType.number,
                                       focusNode: FocusNode(),
+                                      doubleVerticalPadding: screenH * 0.02,
+                                      doubleHorizontalPadding: screenW * 0.04,
+                                      doubleTextSize: DimensText.captionText(context),
                                     ),
                                   ],
                                 ),
@@ -104,9 +119,9 @@ class PreferenceFoodSatuView extends StatelessWidget {
                           ),
                           
                           const Spacer(),
-                          const SizedBox(height: 24),
-                          _buildNextButton(context, viewModel),
-                          const SizedBox(height: 20),
+                          SizedBox(height: screenH * 0.03),
+                          _buildNextButton(context, viewModel, screenW, screenH),
+                          SizedBox(height: screenH * 0.025),
                         ],
                       ),
                     ),
@@ -120,9 +135,9 @@ class PreferenceFoodSatuView extends StatelessWidget {
     );
   }
 
-  Widget _buildInputLabel(BuildContext context, String text) {
+  Widget _buildInputLabel(BuildContext context, String text, double screenW, double screenH) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8, left: 4),
+      padding: EdgeInsets.only(bottom: screenH * 0.01, left: screenW * 0.01),
       child: customText(
         text: text,
         fontSize: DimensText.microText(context),
@@ -132,7 +147,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
     );
   }
 
-  Widget _buildProgress(BuildContext context) {
+  Widget _buildProgress(BuildContext context, double screenW, double screenH) {
     return Column(
       children: [
         Row(
@@ -152,12 +167,12 @@ class PreferenceFoodSatuView extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: screenH * 0.01),
         ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(screenW * 0.025),
           child: LinearProgressIndicator(
             value: 0.33,
-            minHeight: 8,
+            minHeight: screenH * 0.01,
             backgroundColor: Colors.white,
             valueColor: AlwaysStoppedAnimation(HexColor(ColorVar.appColor)),
           ),
@@ -166,7 +181,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext context) {
+  Widget _buildTitle(BuildContext context, double screenH) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -177,7 +192,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
           color: HexColor(ColorVar.black),
           fontFamily: 'inter_bold',
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: screenH * 0.01),
         customText(
           text: "Help us personalize your experience by providing some basic information.",
           fontSize: DimensText.captionText(context),
@@ -189,7 +204,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
     );
   }
 
-  Widget _buildNextButton(BuildContext context, PreferenceFoodViewModel viewModel) {
+  Widget _buildNextButton(BuildContext context, PreferenceFoodViewModel viewModel, double screenW, double screenH) {
     return Obx(() {
       return SizedBox(
         width: double.infinity,
@@ -197,12 +212,12 @@ class PreferenceFoodSatuView extends StatelessWidget {
             onPressed: viewModel.isStep1Valid ? () => Get.toNamed('/preference_food_dua') : null,
             backgroundColor: HexColor(ColorVar.appColor),
             sideColor: HexColor(ColorVar.appColor),
-            borderRadius: 16,
+            borderRadius: screenW * 0.04,
             text: "Next",
             fontSize: DimensText.buttonText(context),
             fontColor: Colors.white,
             fontWeight: FontWeight.bold,
-            padding: const EdgeInsets.symmetric(vertical: 18)),
+            padding: EdgeInsets.symmetric(vertical: screenH * 0.022)),
       );
     });
   }

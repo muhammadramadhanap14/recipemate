@@ -29,6 +29,9 @@ class PreferenceFoodDuaView extends StatelessWidget {
       RecipeMateAppUtil.lockToPortrait();
     });
 
+    final double screenW = RecipeMateAppUtil.screenWidth;
+    final double screenH = RecipeMateAppUtil.screenHeight;
+
     return PopScope(
       canPop: true,
       child: Scaffold(
@@ -36,22 +39,22 @@ class PreferenceFoodDuaView extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: RecipeMateAppUtil.screenWidth * 0.06,
+            horizontal: screenW * 0.06,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
-              _buildProgress(context, viewModel),
-              const SizedBox(height: 24),
-              _buildTitle(context, viewModel),
-              const SizedBox(height: 24),
+              SizedBox(height: screenH * 0.025),
+              _buildProgress(context, viewModel, screenW, screenH),
+              SizedBox(height: screenH * 0.03),
+              _buildTitle(context, viewModel, screenH),
+              SizedBox(height: screenH * 0.03),
               Expanded(
-                child: _buildGrid(context, viewModel),
+                child: _buildGrid(context, viewModel, screenW, screenH),
               ),
-              const SizedBox(height: 16),
-              _buildNextButton(context, viewModel),
-              const SizedBox(height: 20),
+              SizedBox(height: screenH * 0.02),
+              _buildNextButton(context, viewModel, screenW, screenH),
+              SizedBox(height: screenH * 0.025),
             ],
           ),
         ),
@@ -59,7 +62,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
     );
   }
 
-  Widget _buildProgress(BuildContext context, PreferenceFoodViewModel viewModel) {
+  Widget _buildProgress(BuildContext context, PreferenceFoodViewModel viewModel, double screenW, double screenH) {
     return Column(
       children: [
         Row(
@@ -80,14 +83,14 @@ class PreferenceFoodDuaView extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 8),
+        SizedBox(height: screenH * 0.01),
 
         ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(screenW * 0.025),
           child: LinearProgressIndicator(
             value: 0.66,
-            minHeight: 8,
-            backgroundColor: HexColor(ColorVar.white),
+            minHeight: screenH * 0.01,
+            backgroundColor: HexColor(ColorVar.bgGray),
             valueColor: AlwaysStoppedAnimation(
                 HexColor(ColorVar.appColor)
             ),
@@ -97,7 +100,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext context, PreferenceFoodViewModel viewModel) {
+  Widget _buildTitle(BuildContext context, PreferenceFoodViewModel viewModel, double screenH) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -109,7 +112,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
           fontFamily: 'inter_bold'
         ),
 
-        SizedBox(height: 8),
+        SizedBox(height: screenH * 0.01),
 
         customText(
           text: "What are your favorite food types or dietary preferences?",
@@ -122,13 +125,13 @@ class PreferenceFoodDuaView extends StatelessWidget {
     );
   }
 
-  Widget _buildGrid(BuildContext context, PreferenceFoodViewModel viewModel) {
+  Widget _buildGrid(BuildContext context, PreferenceFoodViewModel viewModel, double screenW, double screenH) {
     return GridView.builder(
       itemCount: items.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
+        mainAxisSpacing: screenH * 0.02,
+        crossAxisSpacing: screenW * 0.04,
         childAspectRatio: 1.05,
       ),
       itemBuilder: (_, index) {
@@ -141,16 +144,16 @@ class PreferenceFoodDuaView extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               decoration: BoxDecoration(
                 color: HexColor(ColorVar.white),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(screenW * 0.04),
                 border: Border.all(
-                  color: selected ? HexColor(ColorVar.appColor) : HexColor(ColorVar.white),
+                  color: selected ? HexColor(ColorVar.appColor) : HexColor(ColorVar.bgGray),
                   width: selected ? 2 : 1,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
+                    blurRadius: screenW * 0.02,
+                    offset: Offset(0, screenH * 0.004),
                   ),
                 ],
               ),
@@ -158,21 +161,21 @@ class PreferenceFoodDuaView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 52,
-                    height: 52,
+                    width: screenW * 0.14,
+                    height: screenW * 0.14,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: selected
                           ? HexColor(ColorVar.appColor).withValues(alpha: 0.1)
-                          : HexColor(ColorVar.white),
+                          : HexColor(ColorVar.bgGray).withValues(alpha: 0.3),
                     ),
                     child: Icon(
                       item.icon,
-                      size: 26,
-                      color: selected ? HexColor(ColorVar.appColor) : HexColor(ColorVar.bgGray),
+                      size: screenW * 0.07,
+                      color: selected ? HexColor(ColorVar.appColor) : HexColor(ColorVar.bgGray8),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: screenH * 0.015),
                   customText(
                     text: item.label,
                     fontSize: DimensText.bodySmallText(context),
@@ -188,7 +191,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
     );
   }
 
-  Widget _buildNextButton(BuildContext context, PreferenceFoodViewModel viewModel) {
+  Widget _buildNextButton(BuildContext context, PreferenceFoodViewModel viewModel, double screenW, double screenH) {
     return Obx(() {
       return SizedBox(
         width: double.infinity,
@@ -196,12 +199,12 @@ class PreferenceFoodDuaView extends StatelessWidget {
           onPressed: viewModel.isStep2Valid ? () => Get.toNamed('/preference_food_tiga') : null,
           backgroundColor: HexColor(ColorVar.appColor),
           sideColor: HexColor(ColorVar.appColor),
-          borderRadius: 16,
+          borderRadius: screenW * 0.04,
           text: "Next",
           fontSize: DimensText.buttonText(context),
           fontColor: HexColor(ColorVar.white),
           fontWeight: FontWeight.bold,
-          padding: const EdgeInsets.symmetric(vertical: 18)),
+          padding: EdgeInsets.symmetric(vertical: screenH * 0.022)),
       );
     });
   }

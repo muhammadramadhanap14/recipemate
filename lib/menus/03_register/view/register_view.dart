@@ -14,6 +14,7 @@ class RegisterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RecipeMateAppUtil.init(context);
     final RegisterViewModel vm = Get.put(
       RegisterViewModel(
         apiRepository: Get.find<ApiRepository>(),
@@ -25,9 +26,10 @@ class RegisterView extends StatelessWidget {
       await RecipeMateAppUtil.lockToPortrait();
     });
 
-    RecipeMateAppUtil.init(context);
+    final double screenW = RecipeMateAppUtil.screenWidth;
+    final double screenH = RecipeMateAppUtil.screenHeight;
+    final double logoSize = screenW * 0.45;
 
-    final double logoSize = RecipeMateAppUtil.screenWidth * 0.45;
     return Scaffold(
       backgroundColor: HexColor(ColorVar.bgAppColor),
       body: SafeArea(
@@ -40,13 +42,13 @@ class RegisterView extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: RecipeMateAppUtil.screenWidth * 0.08,
+                    horizontal: screenW * 0.08,
                   ),
                   child: IntrinsicHeight(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                        SizedBox(height: screenH * 0.03),
 
                         Image.asset(
                           "assets/images/ic_logo_recipemate.png",
@@ -55,7 +57,7 @@ class RegisterView extends StatelessWidget {
                           fit: BoxFit.contain,
                         ),
 
-                        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                        SizedBox(height: screenH * 0.02),
 
                         customText(
                             text: 'Create Account',
@@ -74,7 +76,7 @@ class RegisterView extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
 
-                        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
+                        SizedBox(height: screenH * 0.05),
 
                         Align(
                           alignment: Alignment.centerLeft,
@@ -86,25 +88,26 @@ class RegisterView extends StatelessWidget {
                           ),
                         ),
 
-                        SizedBox(height: 8),
+                        SizedBox(height: screenH * 0.01),
 
                         customTextFormField(
                           hintText: 'Alex Darmono',
                           prefixIcon: Icon(
                             Icons.person,
                             color: HexColor(ColorVar.appColor),
+                            size: screenW * 0.06,
                           ),
                           enableFillColor: ColorVar.widgetOrCardBgColor,
                           isBorderSide: false,
-                          doubleVerticalPadding: 18,
-                          doubleHorizontalPadding: 16,
+                          doubleVerticalPadding: screenH * 0.022,
+                          doubleHorizontalPadding: screenW * 0.04,
                           doubleTextSize: DimensText.captionText(context),
                           context: context,
                           onChanged: vm.setFullname,
                           focusNode: FocusNode(),
                         ),
 
-                        SizedBox(height: 18),
+                        SizedBox(height: screenH * 0.022),
 
                         Align(
                           alignment: Alignment.centerLeft,
@@ -116,25 +119,26 @@ class RegisterView extends StatelessWidget {
                           ),
                         ),
 
-                        SizedBox(height: 8),
+                        SizedBox(height: screenH * 0.01),
 
                         customTextFormField(
                           hintText: 'alex@example.com',
                           prefixIcon: Icon(
                             Icons.email_rounded,
                             color: HexColor(ColorVar.appColor),
+                            size: screenW * 0.06,
                           ),
                           enableFillColor: ColorVar.widgetOrCardBgColor,
                           isBorderSide: false,
-                          doubleVerticalPadding: 18,
-                          doubleHorizontalPadding: 16,
+                          doubleVerticalPadding: screenH * 0.022,
+                          doubleHorizontalPadding: screenW * 0.04,
                           doubleTextSize: DimensText.captionText(context),
                           context: context,
                           onChanged: vm.setUsername,
                           focusNode: FocusNode(),
                         ),
 
-                        SizedBox(height: 18),
+                        SizedBox(height: screenH * 0.022),
 
                         Align(
                           alignment: Alignment.centerLeft,
@@ -146,25 +150,27 @@ class RegisterView extends StatelessWidget {
                           ),
                         ),
 
-                        SizedBox(height: 8),
+                        SizedBox(height: screenH * 0.01),
 
                         Obx(() => customTextFormField(
                           hintText: "••••••••",
                           prefixIcon: Icon(
                             Icons.lock,
                             color: HexColor(ColorVar.appColor),
+                            size: screenW * 0.06,
                           ),
                           isSuffixIcon: true,
                           suffixIcon: Icon(
                             vm.isObscureText.value
                                 ? Icons.visibility_off
                                 : Icons.visibility,
+                            size: screenW * 0.06,
                           ),
                           onSuffixClick: vm.togglePasswordVisibility,
                           enableFillColor: ColorVar.widgetOrCardBgColor,
                           isBorderSide: false,
-                          doubleVerticalPadding: 18,
-                          doubleHorizontalPadding: 16,
+                          doubleVerticalPadding: screenH * 0.022,
+                          doubleHorizontalPadding: screenW * 0.04,
                           doubleTextSize: DimensText.captionText(context),
                           context: context,
                           obscureText: vm.isObscureText.value,
@@ -172,7 +178,7 @@ class RegisterView extends StatelessWidget {
                           focusNode: FocusNode(),
                         )),
 
-                        SizedBox(height: 20),
+                        SizedBox(height: screenH * 0.025),
 
                         Obx(() => SizedBox(
                           width: double.infinity,
@@ -180,12 +186,14 @@ class RegisterView extends StatelessWidget {
                               onPressed: vm.isValidButton.value ? vm.onLoginPressed : null,
                               backgroundColor: HexColor(ColorVar.appColor),
                               sideColor: HexColor(ColorVar.appColor),
-                              borderRadius: 16,
+                              borderRadius: screenW * 0.04,
                               text: "Sign Up",
                               fontSize: DimensText.buttonText(context),
                               fontColor: HexColor(ColorVar.white),
                               fontWeight: FontWeight.bold,
-                              padding: const EdgeInsets.symmetric(vertical: 16)
+                              padding: EdgeInsets.symmetric(
+                                vertical: screenH * 0.02,
+                              ),
                           ),
                         )),
 
@@ -193,8 +201,8 @@ class RegisterView extends StatelessWidget {
 
                         Padding(
                           padding: EdgeInsets.only(
-                            top: RecipeMateAppUtil.screenHeight * 0.02,
-                            bottom: RecipeMateAppUtil.screenHeight * 0.02,
+                            top: screenH * 0.02,
+                            bottom: screenH * 0.02,
                           ),
                           child: RichText(
                             textAlign: TextAlign.center,
