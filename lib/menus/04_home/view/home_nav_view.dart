@@ -1,7 +1,7 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:recipemate/utils/constant_var.dart';
 
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/color_var.dart';
@@ -14,74 +14,136 @@ class HomeNavView extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeNavViewModel viewModel = Get.put(HomeNavViewModel());
     RecipeMateAppUtil.init(context);
-    return PopScope(child: PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (didPop, result) async {
-          if (didPop) return;
-          await viewModel.onWillPop();
-        },
-        child: Scaffold(
-          backgroundColor: HexColor(ColorVar.bgAppColor),
-          resizeToAvoidBottomInset: true,
-          bottomNavigationBar: Obx(() => ConvexAppBar(
-            height: RecipeMateAppUtil.screenHeight * 0.06,
-            items: [
-              _buildTabItem(
-                viewModel: viewModel,
-                index: 0,
-                asset: 'assets/images/ic_home.webp',
-              ),
-              _buildTabItem(
-                viewModel: viewModel,
-                index: 1,
-                asset: 'assets/images/ic_account.webp',
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await RecipeMateAppUtil.lockToPortrait();
+    });
+    
+    final double fabSize = RecipeMateAppUtil.screenWidth * 0.192;
+    final double barHeight = RecipeMateAppUtil.screenHeight * 0.098;
+    final double iconSizeCenter = RecipeMateAppUtil.screenWidth * 0.085;
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        await viewModel.onWillPop();
+      },
+      child: Scaffold(
+        backgroundColor: HexColor(ColorVar.bgAppColor),
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: Obx(() => viewModel.currentPage),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Container(
+          height: fabSize,
+          width: fabSize,
+          margin: EdgeInsets.only(top: RecipeMateAppUtil.screenHeight * 0.029),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: HexColor(ColorVar.appColor).withValues(alpha: 0.3),
+                blurRadius: RecipeMateAppUtil.screenWidth * 0.04,
+                spreadRadius: 2,
+                offset: Offset(0, RecipeMateAppUtil.screenHeight * 0.006),
               ),
             ],
-            initialActiveIndex: viewModel.selectedIndex.value,
+          ),
+          child: FloatingActionButton(
+            onPressed: () {
+              Get.snackbar(
+                "Info", 
+                "Fitur Generate Resep akan segera hadir!",
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: HexColor(ColorVar.appColor),
+                colorText: HexColor(ColorVar.white),
+              );
+            },
             backgroundColor: HexColor(ColorVar.appColor),
-            activeColor: HexColor(ColorVar.white),
-            color: HexColor(ColorVar.appColor),
-            onTap: (index) => viewModel.changePage(index),
-          )),
-          body: SafeArea(
-              child: Container(
-                color: HexColor(ColorVar.bgAppColor),
-                child: Obx(() => viewModel.currentPage)),
+            shape: CircleBorder(
+              side: BorderSide(
+                color: HexColor(ColorVar.white),
+                width: RecipeMateAppUtil.screenWidth * 0.01,
+              ),
+            ),
+            elevation: 0,
+            child: Icon(
+              Icons.auto_awesome,
+              color: HexColor(ColorVar.white),
+              size: iconSizeCenter,
+            ),
           ),
-        )
-      )
-    );
-  }
-
-  TabItem _buildTabItem({
-    required HomeNavViewModel viewModel,
-    required int index,
-    required String asset,
-  }) {
-    final isSelected = viewModel.selectedIndex.value == index;
-    return TabItem(
-      icon: Opacity(
-        opacity: isSelected ? 1.0 : 0.5,
-        child: Container(
-          padding: EdgeInsets.all(isSelected ? 6 : 0),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? HexColor(ColorVar.white)
-                : Colors.transparent,
-            shape: BoxShape.circle,
+        ),
+        bottomNavigationBar: BottomAppBar(
+          height: barHeight,
+          color: HexColor(ColorVar.white),
+          elevation: 20,
+          padding: EdgeInsets.symmetric(
+            horizontal: RecipeMateAppUtil.screenWidth * 0.04,
           ),
-          child: Image.asset(
-            asset,
-            width: 30,
-            height: 30,
-            color: isSelected
-                ? HexColor(ColorVar.appColor)
-                : HexColor(ColorVar.white),
-            colorBlendMode: BlendMode.modulate,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(
+                viewModel: viewModel,
+                index: 0,
+                icon: Icons.home_rounded,
+                label: ConstantVar.home,
+              ),
+              SizedBox(width: RecipeMateAppUtil.screenWidth * 0.12),
+              _buildNavItem(
+                viewModel: viewModel,
+                index: 1,
+                icon: Icons.person_rounded,
+                label: ConstantVar.akun,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
+  Widget _buildNavItem({
+    required HomeNavViewModel viewModel,
+    required int index,
+    required IconData icon,
+    required String label,
+  }) {
+    final double iconSize = RecipeMateAppUtil.screenWidth * 0.075;
+    final double fontSize = RecipeMateAppUtil.screenWidth * 0.032;
+
+    return Obx(() {
+      final isSelected = viewModel.selectedIndex.value == index;
+      final color = isSelected 
+        ? HexColor(ColorVar.appColor)
+        : HexColor(ColorVar.bgGray8);
+      
+      return GestureDetector(
+        onTap: () => viewModel.changePage(index),
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: color,
+              size: iconSize,
+            ),
+            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.005),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: fontSize,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
 }

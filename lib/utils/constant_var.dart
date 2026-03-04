@@ -28,6 +28,7 @@ class ConstantVar {
   static String menuErrorReport = "Error Report";
   static const String menuRecipeMateAi = "RecipeMate AI";
   static const String akun = 'Account';
+  static const String home = 'Home';
 
   //button
   static const String loginBtn = "LOG IN";

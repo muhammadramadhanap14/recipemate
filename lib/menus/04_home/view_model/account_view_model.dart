@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:recipemate/utils/constant_var.dart';
 
 import '../../../utils/view_utils/view_dialog_util.dart';
 
@@ -44,10 +45,10 @@ class AccountViewModel extends GetxController {
 
   void logoutDialog(BuildContext context) {
     ViewDialogUtil().showYesNoActionDialog(
-      "Are you sure you want to logout?",
-      "Logout",
-      "Cancel",
-      "assets/images/question.gif",
+      ConstantVar.stConfirmLogout,
+      ConstantVar.confirmLogout,
+      ConstantVar.stCancelTitle,
+      ConstantVar.confirmGif,
       null,
       context,
       (dynamic model) async {

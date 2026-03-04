@@ -115,7 +115,7 @@ class AccountView extends StatelessWidget {
                 ),
               ),
               child: const CircleAvatar(
-                backgroundImage: AssetImage("assets/images/ic_icon_profile.png"),
+                backgroundImage: AssetImage("assets/images/profile_pict_icon.png"),
                 backgroundColor: Colors.transparent,
               ),
             ),
@@ -128,13 +128,13 @@ class AccountView extends StatelessWidget {
                   color: HexColor(ColorVar.appColor),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.white, 
+                    color: HexColor(ColorVar.white),
                     width: RecipeMateAppUtil.screenWidth * 0.005,
                   ),
                 ),
                 child: Icon(
                   Icons.edit, 
-                  color: Colors.white, 
+                  color: HexColor(ColorVar.white),
                   size: RecipeMateAppUtil.screenWidth * 0.04,
                 ),
               ),
