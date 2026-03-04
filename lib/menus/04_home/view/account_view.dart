@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import '../../../utils/constant_var.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/color_var.dart';
 import '../../../utils/dimens_text.dart';
@@ -24,7 +25,7 @@ class AccountView extends StatelessWidget {
         backgroundColor: HexColor(ColorVar.bgAppColor),
         centerTitle: true,
         title: customText(
-          text: "Account",
+          text: ConstantVar.akun,
           fontSize: DimensText.headerMenusText(context),
           fontWeight: FontWeight.bold,
           color: HexColor(ColorVar.black),
