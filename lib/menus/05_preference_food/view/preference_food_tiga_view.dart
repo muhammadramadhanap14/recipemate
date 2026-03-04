@@ -192,7 +192,7 @@ class PreferenceFoodTigaView extends StatelessWidget {
       return SizedBox(
         width: double.infinity,
         child: customElevatedButton(
-            onPressed: viewModel.isStep3Valid ? () => Get.offAllNamed('/home_nav') : null,
+            onPressed: viewModel.isStep3Valid ? () => Get.offAllNamed('/home') : null,
             backgroundColor: HexColor(ColorVar.appColor),
             sideColor: HexColor(ColorVar.appColor),
             borderRadius: screenW * 0.04,
