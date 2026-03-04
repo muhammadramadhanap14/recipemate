@@ -53,7 +53,7 @@ class ViewDialogUtil {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 20),
-                    Image.asset('assets/images/$pictureParam', width: 150, height: 60),
+                    Image.asset('assets/images/$pictureParam', width: 160, height: 110),
                     const SizedBox(height: 15),
                     customText(
                       text: content,
@@ -125,15 +125,15 @@ class ViewDialogUtil {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 20),
-                    Image.asset('assets/images/$pictureParam', width: 150, height: 60),
+                    Image.asset('assets/images/$pictureParam', width: 160, height: 110),
                     const SizedBox(height: 15),
                     customText(
                       text: content,
                       textAlign: TextAlign.center,
                       color: HexColor(ColorVar.black),
                       isSoftWrap: true,
-                      intMaxLine: 3,
-                      fontSize: DimensText.subHeaderText(context),
+                      intMaxLine: null,
+                      fontSize: DimensText.bodyText(context),
                     ),
                     const SizedBox(height: 30),
                     Align(
@@ -141,7 +141,7 @@ class ViewDialogUtil {
                       child: customTextButton(
                           text: btnTitle,
                           fontColor: HexColor(ColorVar.black),
-                          fontSize: DimensText.buttonText(context),
+                          fontSize: DimensText.buttonSmallText(context),
                           onPressed: () {
                             Navigator.of(context).pop();
                             onClick(intentData);
