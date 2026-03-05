@@ -29,7 +29,7 @@ class SplashViewModel extends GetxController {
     Future.delayed(const Duration(milliseconds: 700), () {
       startTextAnimation.value = true;
     });
-    // await initCheckConnection();
+    await initCheckConnection();
   }
 
   Future<void> initCheckConnection() async {
