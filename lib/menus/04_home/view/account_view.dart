@@ -29,6 +29,7 @@ class AccountView extends StatelessWidget {
           fontSize: DimensText.headerMenusText(context),
           fontWeight: FontWeight.bold,
           color: HexColor(ColorVar.black),
+          fontFamily: 'times_new_roman_bold',
         ),
         automaticallyImplyLeading: false,
       ),
@@ -147,6 +148,7 @@ class AccountView extends StatelessWidget {
           fontSize: DimensText.subHeaderLargeText(context),
           fontWeight: FontWeight.w900,
           color: HexColor(ColorVar.black),
+          fontFamily: 'times_new_roman_bold'
         )),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.002),
         Obx(() => customText(

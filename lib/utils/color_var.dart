@@ -29,6 +29,7 @@ class ColorVar {
   static const String green6 = "#4AF966";
   static const String green1 = '#6FC750';
   static const String redText = "#F37027";
+  static const String red = "#F52B02";
   static const String yellow = "#E7FC00";
   static const String textBlue = "#3780AF";
   static const String bgDtlDataTable = "#F5F3F3";
