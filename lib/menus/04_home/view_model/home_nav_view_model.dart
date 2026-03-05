@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:recipemate/utils/color_var.dart';
 
 import '../view/account_view.dart';
 import '../view/home_view.dart';
@@ -32,8 +34,8 @@ class HomeNavViewModel extends GetxController {
         "Keluar Aplikasi",
         "Tekan sekali lagi untuk keluar",
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-        colorText: Get.theme.snackBarTheme.actionTextColor,
+        backgroundColor: HexColor(ColorVar.appColor),
+        colorText: HexColor(ColorVar.white),
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 2),
       );

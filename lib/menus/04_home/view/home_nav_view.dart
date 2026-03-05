@@ -52,13 +52,7 @@ class HomeNavView extends StatelessWidget {
           ),
           child: FloatingActionButton(
             onPressed: () {
-              Get.snackbar(
-                "Info", 
-                "Fitur Generate Resep akan segera hadir!",
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: HexColor(ColorVar.appColor),
-                colorText: HexColor(ColorVar.white),
-              );
+              Get.toNamed('/recipemate_ai');
             },
             backgroundColor: HexColor(ColorVar.appColor),
             shape: CircleBorder(
