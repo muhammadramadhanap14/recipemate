@@ -5,6 +5,7 @@ import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/05_preference_food/view/preference_food_dua_view.dart';
 import 'package:recipemate/menus/05_preference_food/view/preference_food_satu_view.dart';
 import 'package:recipemate/menus/05_preference_food/view/preference_food_tiga_view.dart';
+import 'package:recipemate/menus/06_recipemate_ai/view/recipemate_ai_view.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/view_utils/error_view.dart';
@@ -71,14 +72,15 @@ class RecipemateApp extends StatelessWidget {
       initialRoute: '/',
       getPages: [
         //GOTO FORM
-        GetPage(name: '/', page: () => const SplashView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-        GetPage(name: '/error', page: () => ErrorView(errorMessage: Get.arguments as String) , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-        GetPage(name: '/login', page: () => const LoginView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-        GetPage(name: '/register', page: () => const RegisterView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-        GetPage(name: '/home', page: () => const HomeNavView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-        GetPage(name: '/preference_food_satu', page: () => PreferenceFoodSatuView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-        GetPage(name: '/preference_food_dua', page: () => PreferenceFoodDuaView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-        GetPage(name: '/preference_food_tiga', page: () => PreferenceFoodTigaView() , transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+        GetPage(name: '/', page: () => const SplashView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+        GetPage(name: '/error', page: () => ErrorView(errorMessage: Get.arguments as String), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+        GetPage(name: '/login', page: () => const LoginView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+        GetPage(name: '/register', page: () => const RegisterView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+        GetPage(name: '/home', page: () => const HomeNavView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+        GetPage(name: '/preference_food_satu', page: () => PreferenceFoodSatuView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+        GetPage(name: '/preference_food_dua', page: () => PreferenceFoodDuaView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+        GetPage(name: '/preference_food_tiga', page: () => PreferenceFoodTigaView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+        GetPage(name: '/recipemate_ai', page: () => const RecipemateAiView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
       ],
     );
   }
