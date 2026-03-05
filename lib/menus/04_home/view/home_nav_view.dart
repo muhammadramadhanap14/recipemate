@@ -21,6 +21,7 @@ class HomeNavView extends StatelessWidget {
     final double fabSize = RecipeMateAppUtil.screenWidth * 0.192;
     final double barHeight = RecipeMateAppUtil.screenHeight * 0.098;
     final double iconSizeCenter = RecipeMateAppUtil.screenWidth * 0.085;
+    final bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return PopScope(
       canPop: false,
@@ -35,7 +36,7 @@ class HomeNavView extends StatelessWidget {
           child: Obx(() => viewModel.currentPage),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Container(
+        floatingActionButton: isKeyboardVisible ? null : Container(
           height: fabSize,
           width: fabSize,
           margin: EdgeInsets.only(top: RecipeMateAppUtil.screenHeight * 0.029),
@@ -69,7 +70,7 @@ class HomeNavView extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
+        bottomNavigationBar: isKeyboardVisible ? const SizedBox.shrink() : BottomAppBar(
           height: barHeight,
           color: HexColor(ColorVar.white),
           elevation: 20,
