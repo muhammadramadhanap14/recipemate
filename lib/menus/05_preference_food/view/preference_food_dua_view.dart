@@ -151,7 +151,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
+                    color: HexColor(ColorVar.black).withValues(alpha: 0.03),
                     blurRadius: screenW * 0.02,
                     offset: Offset(0, screenH * 0.004),
                   ),
