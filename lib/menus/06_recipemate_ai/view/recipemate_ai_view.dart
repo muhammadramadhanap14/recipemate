@@ -124,7 +124,7 @@ class RecipemateAiView extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchBar(BuildContext context, RecipemateAiViewModel vm) {
+  Widget _buildSearchBar(BuildContext context, RecipemateAiViewModel viewModel) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: RecipeMateAppUtil.screenWidth * 0.03, 
@@ -155,9 +155,9 @@ class RecipemateAiView extends StatelessWidget {
               spacing: RecipeMateAppUtil.screenWidth * 0.015,
               runSpacing: RecipeMateAppUtil.screenHeight * 0.005,
               children: [
-                ...vm.selectedIngredients.map((tag) => Chip(
+                ...viewModel.selectedIngredients.map((tag) => Chip(
                   label: customText(text: tag, fontSize: DimensText.captionText(context)),
-                  onDeleted: () => vm.removeIngredient(tag),
+                  onDeleted: () => viewModel.removeIngredient(tag),
                   backgroundColor: HexColor(ColorVar.bgGray8).withValues(alpha: 0.1),
                   deleteIcon: Icon(Icons.close, size: RecipeMateAppUtil.screenWidth * 0.035),
                   padding: EdgeInsets.zero,
@@ -170,7 +170,7 @@ class RecipemateAiView extends StatelessWidget {
                 SizedBox(
                   width: RecipeMateAppUtil.screenWidth * 0.15,
                   child: TextField(
-                    onChanged: (val) => vm.searchText.value = val,
+                    onChanged: (val) => viewModel.searchText.value = val,
                     decoration: const InputDecoration(
                       hintText: "Ba",
                       border: InputBorder.none,
@@ -193,7 +193,7 @@ class RecipemateAiView extends StatelessWidget {
     );
   }
 
-  Widget _buildSuggestions(BuildContext context, RecipemateAiViewModel vm) {
+  Widget _buildSuggestions(BuildContext context, RecipemateAiViewModel viewModel) {
     return Container(
       decoration: BoxDecoration(
         color: HexColor(ColorVar.white),
@@ -207,7 +207,7 @@ class RecipemateAiView extends StatelessWidget {
         ],
       ),
       child: Column(
-        children: vm.suggestions.map((item) {
+        children: viewModel.suggestions.map((item) {
           return ListTile(
             leading: CircleAvatar(
               backgroundColor: HexColor(ColorVar.bgGray8).withValues(alpha: 0.1),

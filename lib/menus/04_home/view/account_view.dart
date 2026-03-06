@@ -98,7 +98,7 @@ class AccountView extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader(BuildContext context, AccountViewModel vm) {
+  Widget _buildProfileHeader(BuildContext context, AccountViewModel viewModel) {
     final double profileSize = RecipeMateAppUtil.screenWidth * 0.35;
 
     return Column(
@@ -144,7 +144,7 @@ class AccountView extends StatelessWidget {
         ),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
         Obx(() => customText(
-          text: vm.userName.value,
+          text: viewModel.userName.value,
           fontSize: DimensText.subHeaderLargeText(context),
           fontWeight: FontWeight.w900,
           color: HexColor(ColorVar.black),
@@ -152,7 +152,7 @@ class AccountView extends StatelessWidget {
         )),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.002),
         Obx(() => customText(
-          text: vm.userId.value,
+          text: viewModel.userId.value,
           fontWeight: FontWeight.w400,
           fontSize: DimensText.captionText(context),
           color: HexColor(ColorVar.bgGray8),
