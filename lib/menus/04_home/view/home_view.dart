@@ -206,7 +206,7 @@ class HomeView extends StatelessWidget {
                   ),
                   child: customText(
                     text: "${recipe['match']}% MATCH",
-                    fontSize: 10,
+                    fontSize: DimensText.microText(context),
                     fontWeight: FontWeight.bold,
                     color: HexColor(ColorVar.white),
                   ),
@@ -227,9 +227,9 @@ class HomeView extends StatelessWidget {
                 right: RecipeMateAppUtil.screenWidth * 0.03,
                 child: Row(
                   children: [
-                    _buildCardBadge(Icons.access_time, recipe['time']),
-                    const SizedBox(width: 8),
-                    _buildCardBadge(Icons.star, recipe['rating'].toString()),
+                    _buildCardBadge(context, Icons.access_time, recipe['time']),
+                    SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+                    _buildCardBadge(context, Icons.star, recipe['rating'].toString()),
                   ],
                 ),
               ),
@@ -252,7 +252,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildCardBadge(IconData icon, String text) {
+  Widget _buildCardBadge(BuildContext context, IconData icon, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -262,8 +262,12 @@ class HomeView extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: HexColor(ColorVar.appColor), size: 12),
-          const SizedBox(width: 4),
-          customText(text: text, fontSize: 10, color: HexColor(ColorVar.white), fontWeight: FontWeight.bold),
+          SizedBox(width: RecipeMateAppUtil.screenWidth * 0.01),
+          customText(
+            text: text,
+            fontSize: DimensText.captionText(context),
+            color: HexColor(ColorVar.white),
+            fontWeight: FontWeight.bold),
         ],
       ),
     );
