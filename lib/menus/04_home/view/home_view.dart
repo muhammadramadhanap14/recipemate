@@ -61,7 +61,10 @@ class HomeView extends StatelessWidget {
             height: RecipeMateAppUtil.screenWidth * 0.13,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: HexColor(ColorVar.appColor), width: 2),
+              border: Border.all(
+                color: HexColor(ColorVar.appColor),
+                width: RecipeMateAppUtil.screenWidth * 0.005,
+              ),
               image: const DecorationImage(
                 image: AssetImage("assets/images/profile_pict_icon.png"),
                 fit: BoxFit.cover,
@@ -116,7 +119,11 @@ class HomeView extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.search, color: HexColor(ColorVar.appColor), size: RecipeMateAppUtil.screenWidth * 0.06),
+          Icon(
+            Icons.search,
+            color: HexColor(ColorVar.appColor),
+            size: RecipeMateAppUtil.screenWidth * 0.06,
+          ),
           SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),
           Expanded(
             child: TextField(
@@ -130,7 +137,11 @@ class HomeView extends StatelessWidget {
               ),
             ),
           ),
-          Icon(Icons.mic, color: HexColor(ColorVar.appColor), size: RecipeMateAppUtil.screenWidth * 0.06),
+          Icon(
+            Icons.mic,
+            color: HexColor(ColorVar.appColor),
+            size: RecipeMateAppUtil.screenWidth * 0.06,
+          ),
         ],
       ),
     );
@@ -179,91 +190,113 @@ class HomeView extends StatelessWidget {
     final double cardWidth = RecipeMateAppUtil.screenWidth * 0.65;
     final double borderRadius = RecipeMateAppUtil.screenWidth * 0.08;
 
-    return SizedBox(
-      width: cardWidth,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(borderRadius),
-                child: Image.network(
-                  recipe['image'],
-                  height: RecipeMateAppUtil.screenHeight * 0.35,
-                  width: cardWidth,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                top: RecipeMateAppUtil.screenHeight * 0.015,
-                left: RecipeMateAppUtil.screenWidth * 0.03,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: HexColor(ColorVar.appColor),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: customText(
-                    text: "${recipe['match']}% MATCH",
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: HexColor(ColorVar.white),
+    return GestureDetector(
+      onTap: () => Get.toNamed('/home_detail'),
+      child: SizedBox(
+        width: cardWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(borderRadius),
+                  child: Image.network(
+                    recipe['image'],
+                    height: RecipeMateAppUtil.screenHeight * 0.35,
+                    width: cardWidth,
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-              Positioned(
-                top: RecipeMateAppUtil.screenHeight * 0.015,
-                right: RecipeMateAppUtil.screenWidth * 0.03,
-                child: CircleAvatar(
-                  backgroundColor: HexColor(ColorVar.white),
-                  radius: 18,
-                  child: Icon(Icons.favorite, color: HexColor(ColorVar.red), size: 18),
+                Positioned(
+                  top: RecipeMateAppUtil.screenHeight * 0.015,
+                  left: RecipeMateAppUtil.screenWidth * 0.03,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: RecipeMateAppUtil.screenWidth * 0.025,
+                      vertical: RecipeMateAppUtil.screenHeight * 0.008,
+                    ),
+                    decoration: BoxDecoration(
+                      color: HexColor(ColorVar.appColor),
+                      borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.05),
+                    ),
+                    child: customText(
+                      text: "${recipe['match']}% MATCH",
+                      fontSize: DimensText.captionText(context),
+                      fontWeight: FontWeight.bold,
+                      color: HexColor(ColorVar.white),
+                    ),
+                  ),
                 ),
-              ),
-              Positioned(
-                bottom: RecipeMateAppUtil.screenHeight * 0.015,
-                left: RecipeMateAppUtil.screenWidth * 0.03,
-                right: RecipeMateAppUtil.screenWidth * 0.03,
-                child: Row(
-                  children: [
-                    _buildCardBadge(Icons.access_time, recipe['time']),
-                    const SizedBox(width: 8),
-                    _buildCardBadge(Icons.star, recipe['rating'].toString()),
-                  ],
+                Positioned(
+                  top: RecipeMateAppUtil.screenHeight * 0.015,
+                  right: RecipeMateAppUtil.screenWidth * 0.03,
+                  child: CircleAvatar(
+                    backgroundColor: HexColor(ColorVar.white),
+                    radius: RecipeMateAppUtil.screenWidth * 0.045,
+                    child: Icon(
+                      Icons.favorite,
+                      size: RecipeMateAppUtil.screenWidth * 0.045,
+                      color: HexColor(ColorVar.redStatus),
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-          customText(
-            text: recipe['title'],
-            fontSize: DimensText.bodyText(context),
-            fontWeight: FontWeight.bold,
-          ),
-          customText(
-            text: recipe['subtitle'],
-            fontSize: DimensText.captionText(context),
-            color: HexColor(ColorVar.appColor).withValues(alpha: 0.7),
-            fontWeight: FontWeight.w600,
-          ),
-        ],
+                Positioned(
+                  bottom: RecipeMateAppUtil.screenHeight * 0.015,
+                  left: RecipeMateAppUtil.screenWidth * 0.03,
+                  right: RecipeMateAppUtil.screenWidth * 0.03,
+                  child: Row(
+                    children: [
+                      _buildCardBadge(Icons.access_time, recipe['time']),
+                      SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+                      _buildCardBadge(Icons.star, recipe['rating'].toString()),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
+            customText(
+              text: recipe['title'],
+              fontSize: DimensText.bodyText(context),
+              fontWeight: FontWeight.bold,
+            ),
+            customText(
+              text: recipe['subtitle'],
+              fontSize: DimensText.captionText(context),
+              color: HexColor(ColorVar.appColor).withValues(alpha: 0.7),
+              fontWeight: FontWeight.w600,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildCardBadge(IconData icon, String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(
+        horizontal: RecipeMateAppUtil.screenWidth * 0.02,
+        vertical: RecipeMateAppUtil.screenHeight * 0.005,
+      ),
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.03),
       ),
       child: Row(
         children: [
-          Icon(icon, color: HexColor(ColorVar.appColor), size: 12),
-          const SizedBox(width: 4),
-          customText(text: text, fontSize: 10, color: HexColor(ColorVar.white), fontWeight: FontWeight.bold),
+          Icon(
+            icon,
+            color: HexColor(ColorVar.appColor),
+            size: RecipeMateAppUtil.screenWidth * 0.03,
+          ),
+          SizedBox(width: RecipeMateAppUtil.screenWidth * 0.01),
+          customText(
+            text: text,
+            fontSize: RecipeMateAppUtil.screenWidth * 0.025,
+            color: HexColor(ColorVar.white),
+            fontWeight: FontWeight.bold,
+          ),
         ],
       ),
     );
@@ -280,27 +313,33 @@ class HomeView extends StatelessWidget {
         itemBuilder: (context, index) {
           final item = vm.topSearching[index];
           final double avatarSize = RecipeMateAppUtil.screenWidth * 0.2;
-          return Column(
-            children: [
-              Container(
-                width: avatarSize,
-                height: avatarSize,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: HexColor(ColorVar.appColor).withValues(alpha: 0.1), width: 2),
-                  image: DecorationImage(
-                    image: NetworkImage(item['image']),
-                    fit: BoxFit.cover,
+          return GestureDetector(
+            onTap: () => Get.toNamed('/home_detail'),
+            child: Column(
+              children: [
+                Container(
+                  width: avatarSize,
+                  height: avatarSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: HexColor(ColorVar.appColor).withValues(alpha: 0.1),
+                      width: RecipeMateAppUtil.screenWidth * 0.005,
+                    ),
+                    image: DecorationImage(
+                      image: NetworkImage(item['image']),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
-              customText(
-                text: item['name'],
-                fontSize: DimensText.captionText(context),
-                fontWeight: FontWeight.bold,
-              ),
-            ],
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
+                customText(
+                  text: item['name'],
+                  fontSize: DimensText.captionText(context),
+                  fontWeight: FontWeight.bold,
+                ),
+              ],
+            ),
           );
         },
       ),
