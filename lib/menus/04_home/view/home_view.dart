@@ -172,7 +172,7 @@ class HomeView extends StatelessWidget {
 
   Widget _buildRecommendedList(BuildContext context, HomeViewModel viewModel) {
     return SizedBox(
-      height: RecipeMateAppUtil.screenHeight * 0.40,
+      height: RecipeMateAppUtil.screenHeight * 0.44,
       child: ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
         scrollDirection: Axis.horizontal,
