@@ -195,10 +195,10 @@ class ViewDialogUtil {
                     ),
                     child: Center(
                       child: customText(
-                          text: titleDialog,
-                          fontSize: 18,
-                          color: HexColor(ColorVar.white),
-                          fontFamily: 'inter_bold'
+                        text: titleDialog,
+                        fontSize: DimensText.bodyText(context),
+                        color: HexColor(ColorVar.white),
+                        fontFamily: 'inter_bold'
                       ),
                     ),
                   ),
@@ -238,10 +238,10 @@ class ViewDialogUtil {
                                   selectedClick(model);
                                 } else {
                                   getXSnackBar(
-                                      ConstantVar.stWarning,
-                                      'Mohon dipilih yang benar',
-                                      ColorVar.redStatus,
-                                      ColorVar.white);
+                                    ConstantVar.stWarning,
+                                    'Mohon dipilih yang benar',
+                                    ColorVar.redStatus,
+                                    ColorVar.white);
                                 }
                               },
                               child: Container(
@@ -252,7 +252,7 @@ class ViewDialogUtil {
                                     : Colors.transparent,
                                 child: customText(
                                   text: model.column2,
-                                  fontSize: 14,
+                                  fontSize: DimensText.bodySmallText(context),
                                   color: HexColor(ColorVar.black),
                                   fontFamily:'inter_regular'
                                 ),

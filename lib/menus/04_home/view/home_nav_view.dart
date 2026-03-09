@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:recipemate/utils/constant_var.dart';
+import 'package:recipemate/utils/dimens_text.dart';
 
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/color_var.dart';
@@ -81,6 +82,7 @@ class HomeNavView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(
+                context: context,
                 viewModel: viewModel,
                 index: 0,
                 icon: Icons.home_rounded,
@@ -88,6 +90,7 @@ class HomeNavView extends StatelessWidget {
               ),
               SizedBox(width: RecipeMateAppUtil.screenWidth * 0.12),
               _buildNavItem(
+                context: context,
                 viewModel: viewModel,
                 index: 1,
                 icon: Icons.person_rounded,
@@ -101,13 +104,13 @@ class HomeNavView extends StatelessWidget {
   }
 
   Widget _buildNavItem({
+    required BuildContext context,
     required HomeNavViewModel viewModel,
     required int index,
     required IconData icon,
     required String label,
   }) {
     final double iconSize = RecipeMateAppUtil.screenWidth * 0.075;
-    final double fontSize = RecipeMateAppUtil.screenWidth * 0.032;
 
     return Obx(() {
       final isSelected = viewModel.selectedIndex.value == index;
@@ -132,7 +135,7 @@ class HomeNavView extends StatelessWidget {
               label,
               style: TextStyle(
                 color: color,
-                fontSize: fontSize,
+                fontSize: DimensText.buttonMicroText(context),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               ),
             ),

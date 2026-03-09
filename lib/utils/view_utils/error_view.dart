@@ -51,18 +51,18 @@ class ErrorView extends StatelessWidget {
           topLeft: Radius.circular(20.0),
           topRight: Radius.circular(20.0),
         ),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.grey,
+            color: HexColor(ColorVar.bgGray8),
             blurRadius: 1,
-            offset: Offset(2, 3),
+            offset: const Offset(2, 3),
           )
         ],
       ),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const Icon(Icons.error_outline, color: Colors.red, size: 100),
+            Icon(Icons.error_outline, color: HexColor(ColorVar.red), size: 100),
             const SizedBox(height: 12),
             customText(
                 text: 'An error occurred:',

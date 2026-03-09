@@ -15,7 +15,7 @@ class RegisterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RecipeMateAppUtil.init(context);
-    final RegisterViewModel vm = Get.put(
+    final RegisterViewModel viewModel = Get.put(
       RegisterViewModel(
         apiRepository: Get.find<ApiRepository>(),
         context: context,
@@ -103,7 +103,7 @@ class RegisterView extends StatelessWidget {
                           doubleHorizontalPadding: screenW * 0.04,
                           doubleTextSize: DimensText.captionText(context),
                           context: context,
-                          onChanged: vm.setFullname,
+                          onChanged: viewModel.setFullname,
                           focusNode: FocusNode(),
                         ),
 
@@ -134,7 +134,7 @@ class RegisterView extends StatelessWidget {
                           doubleHorizontalPadding: screenW * 0.04,
                           doubleTextSize: DimensText.captionText(context),
                           context: context,
-                          onChanged: vm.setUsername,
+                          onChanged: viewModel.setUsername,
                           focusNode: FocusNode(),
                         ),
 
@@ -161,20 +161,20 @@ class RegisterView extends StatelessWidget {
                           ),
                           isSuffixIcon: true,
                           suffixIcon: Icon(
-                            vm.isObscureText.value
+                            viewModel.isObscureText.value
                                 ? Icons.visibility_off
                                 : Icons.visibility,
                             size: screenW * 0.06,
                           ),
-                          onSuffixClick: vm.togglePasswordVisibility,
+                          onSuffixClick: viewModel.togglePasswordVisibility,
                           enableFillColor: ColorVar.widgetOrCardBgColor,
                           isBorderSide: false,
                           doubleVerticalPadding: screenH * 0.022,
                           doubleHorizontalPadding: screenW * 0.04,
                           doubleTextSize: DimensText.captionText(context),
                           context: context,
-                          obscureText: vm.isObscureText.value,
-                          onChanged: vm.setPassword,
+                          obscureText: viewModel.isObscureText.value,
+                          onChanged: viewModel.setPassword,
                           focusNode: FocusNode(),
                         )),
 
@@ -183,7 +183,7 @@ class RegisterView extends StatelessWidget {
                         Obx(() => SizedBox(
                           width: double.infinity,
                           child: customElevatedButton(
-                              onPressed: vm.isValidButton.value ? vm.onLoginPressed : null,
+                              onPressed: viewModel.isValidButton.value ? viewModel.onLoginPressed : null,
                               backgroundColor: HexColor(ColorVar.appColor),
                               sideColor: HexColor(ColorVar.appColor),
                               borderRadius: screenW * 0.04,

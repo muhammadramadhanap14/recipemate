@@ -173,7 +173,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
           child: LinearProgressIndicator(
             value: 0.33,
             minHeight: screenH * 0.01,
-            backgroundColor: Colors.white,
+            backgroundColor: HexColor(ColorVar.white),
             valueColor: AlwaysStoppedAnimation(HexColor(ColorVar.appColor)),
           ),
         ),
@@ -215,7 +215,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
             borderRadius: screenW * 0.04,
             text: "Next",
             fontSize: DimensText.buttonText(context),
-            fontColor: Colors.white,
+            fontColor: HexColor(ColorVar.white),
             fontWeight: FontWeight.bold,
             padding: EdgeInsets.symmetric(vertical: screenH * 0.022)),
       );

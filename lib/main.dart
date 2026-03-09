@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
 import 'package:recipemate/menus/05_preference_food/view/preference_food_dua_view.dart';
@@ -8,6 +9,7 @@ import 'package:recipemate/menus/05_preference_food/view/preference_food_satu_vi
 import 'package:recipemate/menus/05_preference_food/view/preference_food_tiga_view.dart';
 import 'package:recipemate/menus/06_recipemate_ai/view/recipemate_ai_view.dart';
 import 'package:recipemate/repository/api_repository.dart';
+import 'package:recipemate/utils/color_var.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/view_utils/error_view.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -66,7 +68,7 @@ class RecipemateApp extends StatelessWidget {
       // navigatorObservers: [TalkerRouteObserver(talker)], // Correct way to pass talker instance
       // navigatorKey: navigatorKey,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        colorScheme: ColorScheme.fromSeed(seedColor: HexColor(ColorVar.white)),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         useMaterial3: true,
       ),

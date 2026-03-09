@@ -51,7 +51,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, HomeViewModel vm) {
+  Widget _buildHeader(BuildContext context, HomeViewModel viewModel) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
       child: Row(
@@ -83,7 +83,7 @@ class HomeView extends StatelessWidget {
                   color: HexColor(ColorVar.appColor).withValues(alpha: 0.6),
                 ),
                 Obx(() => customText(
-                  text: vm.userName.value,
+                  text: viewModel.userName.value,
                   fontSize: DimensText.headerMenusText(context),
                   fontWeight: FontWeight.bold,
                   fontFamily: 'times_new_roman_bold',
@@ -170,16 +170,16 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildRecommendedList(BuildContext context, HomeViewModel vm) {
+  Widget _buildRecommendedList(BuildContext context, HomeViewModel viewModel) {
     return SizedBox(
-      height: RecipeMateAppUtil.screenHeight * 0.44,
+      height: RecipeMateAppUtil.screenHeight * 0.40,
       child: ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
         scrollDirection: Axis.horizontal,
-        itemCount: vm.recommendedRecipes.length,
+        itemCount: viewModel.recommendedRecipes.length,
         separatorBuilder: (_, _) => SizedBox(width: RecipeMateAppUtil.screenWidth * 0.05),
         itemBuilder: (context, index) {
-          final recipe = vm.recommendedRecipes[index];
+          final recipe = viewModel.recommendedRecipes[index];
           return _buildRecommendedCard(context, recipe);
         },
       ),
@@ -273,14 +273,14 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildCardBadge(IconData icon, String text) {
+  Widget _buildCardBadge(BuildContext context, IconData icon, String text) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: RecipeMateAppUtil.screenWidth * 0.02,
         vertical: RecipeMateAppUtil.screenHeight * 0.005,
       ),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.5),
+        color: HexColor(ColorVar.black).withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.03),
       ),
       child: Row(
@@ -293,7 +293,7 @@ class HomeView extends StatelessWidget {
           SizedBox(width: RecipeMateAppUtil.screenWidth * 0.01),
           customText(
             text: text,
-            fontSize: RecipeMateAppUtil.screenWidth * 0.025,
+            fontSize: DimensText.captionText(context),
             color: HexColor(ColorVar.white),
             fontWeight: FontWeight.bold,
           ),
@@ -302,16 +302,16 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildTopSearchingList(BuildContext context, HomeViewModel vm) {
+  Widget _buildTopSearchingList(BuildContext context, HomeViewModel viewModel) {
     return SizedBox(
       height: RecipeMateAppUtil.screenHeight * 0.16,
       child: ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
         scrollDirection: Axis.horizontal,
-        itemCount: vm.topSearching.length,
+        itemCount: viewModel.topSearching.length,
         separatorBuilder: (_, _) => SizedBox(width: RecipeMateAppUtil.screenWidth * 0.05),
         itemBuilder: (context, index) {
-          final item = vm.topSearching[index];
+          final item = viewModel.topSearching[index];
           final double avatarSize = RecipeMateAppUtil.screenWidth * 0.2;
           return GestureDetector(
             onTap: () => Get.toNamed('/home_detail'),
