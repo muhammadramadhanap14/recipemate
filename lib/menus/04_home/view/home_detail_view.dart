@@ -157,7 +157,7 @@ class HomeDetailView extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.05),
       decoration: BoxDecoration(
-        color: HexColor(ColorVar.bgGrayDataTable).withValues(alpha: 0.5),
+        color: HexColor(ColorVar.bgGrayDataTable),
         borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.06),
       ),
       child: Column(

@@ -172,7 +172,7 @@ class HomeView extends StatelessWidget {
 
   Widget _buildRecommendedList(BuildContext context, HomeViewModel viewModel) {
     return SizedBox(
-      height: RecipeMateAppUtil.screenHeight * 0.44,
+      height: RecipeMateAppUtil.screenHeight * 0.41,
       child: ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
         scrollDirection: Axis.horizontal,
@@ -203,7 +203,7 @@ class HomeView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(borderRadius),
                   child: Image.network(
                     recipe['image'],
-                    height: RecipeMateAppUtil.screenHeight * 0.35,
+                    height: RecipeMateAppUtil.screenHeight * 0.32,
                     width: cardWidth,
                     fit: BoxFit.cover,
                   ),
