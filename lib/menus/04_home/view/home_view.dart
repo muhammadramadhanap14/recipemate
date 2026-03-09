@@ -247,9 +247,9 @@ class HomeView extends StatelessWidget {
                   right: RecipeMateAppUtil.screenWidth * 0.03,
                   child: Row(
                     children: [
-                      _buildCardBadge(Icons.access_time, recipe['time']),
+                      _buildCardBadge(context, Icons.access_time, recipe['time']),
                       SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
-                      _buildCardBadge(Icons.star, recipe['rating'].toString()),
+                      _buildCardBadge(context, Icons.star, recipe['rating'].toString()),
                     ],
                   ),
                 ),
