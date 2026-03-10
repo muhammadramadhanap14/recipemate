@@ -21,40 +21,37 @@ final talker = TalkerFlutter.init(); // Initialize Talker instance here
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
-  //register dependency injection
-  Get.put<ApiRepository>(ApiRepository(), permanent: true);
-  Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
-  Get.put<ThemeController>(ThemeController(), permanent: true);
+  runZonedGuarded(() {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // Set Flutter's error handler
-  FlutterError.onError = (FlutterErrorDetails details) {
-    talker.handle(details.exception, details.stack);
-    // String firstStackLine = details.stack.toString().split('\n').first;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      navigatorKey.currentState?.pushReplacementNamed(
-        '/error',
-        arguments: '${details.exception}\n${details.stack.toString()}',
-      );
-    });
-  };
+    //register dependency injection
+    Get.put<ApiRepository>(ApiRepository(), permanent: true);
+    Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
+    Get.put<ThemeController>(ThemeController(), permanent: true);
 
-  // Set Dart's zone error handler
-  runZonedGuarded(
-        () {
-      runApp(const RecipemateApp());
-    },
-        (error, stackTrace) {
-      talker.handle(error, stackTrace);
-      String errorMessage = error.toString();
-      // String firstStackTraceLine = '${stackTrace.toString().split('\n').first}\n${stackTrace.toString().split('\n')[1]}';
+    // Set Flutter's error handler
+    FlutterError.onError = (FlutterErrorDetails details) {
+      talker.handle(details.exception, details.stack);
+      // String firstStackLine = details.stack.toString().split('\n').first;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         navigatorKey.currentState?.pushReplacementNamed(
           '/error',
-          arguments: '$errorMessage\n${stackTrace.toString()}',
+          arguments: '${details.exception}\n${details.stack.toString()}',
         );
       });
-    },
-  );
+    };
+
+    runApp(const RecipemateApp());
+  }, (error, stackTrace) {
+    talker.handle(error, stackTrace);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      navigatorKey.currentState?.pushReplacementNamed(
+        '/error',
+        arguments: '$error\n$stackTrace',
+      );
+    });
+  });
 }
 
 class RecipemateApp extends StatelessWidget {
