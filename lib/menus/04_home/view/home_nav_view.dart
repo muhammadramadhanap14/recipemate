@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:recipemate/utils/constant_var.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 
 import '../../../utils/recipemate_app_util.dart';
-import '../../../utils/color_var.dart';
 import '../view_model/home_nav_view_model.dart';
 
 class HomeNavView extends StatelessWidget {
@@ -31,7 +29,7 @@ class HomeNavView extends StatelessWidget {
         await viewModel.onWillPop();
       },
       child: Scaffold(
-        backgroundColor: HexColor(ColorVar.bgAppColor),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Obx(() => viewModel.currentPage),
@@ -45,7 +43,7 @@ class HomeNavView extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: HexColor(ColorVar.appColor).withValues(alpha: 0.3),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                 blurRadius: RecipeMateAppUtil.screenWidth * 0.04,
                 spreadRadius: 2,
                 offset: Offset(0, RecipeMateAppUtil.screenHeight * 0.006),
@@ -56,24 +54,24 @@ class HomeNavView extends StatelessWidget {
             onPressed: () {
               Get.toNamed('/recipemate_ai');
             },
-            backgroundColor: HexColor(ColorVar.appColor),
+            backgroundColor: Theme.of(context).colorScheme.primary,
             shape: CircleBorder(
               side: BorderSide(
-                color: HexColor(ColorVar.white),
+                color: Theme.of(context).colorScheme.surface,
                 width: RecipeMateAppUtil.screenWidth * 0.01,
               ),
             ),
             elevation: 0,
             child: Icon(
               Icons.auto_awesome,
-              color: HexColor(ColorVar.white),
+              color: Theme.of(context).colorScheme.onPrimary,
               size: iconSizeCenter,
             ),
           ),
         ),
         bottomNavigationBar: isKeyboardVisible ? const SizedBox.shrink() : BottomAppBar(
           height: barHeight,
-          color: HexColor(ColorVar.white),
+          color: Theme.of(context).scaffoldBackgroundColor,
           elevation: 20,
           padding: EdgeInsets.symmetric(
             horizontal: RecipeMateAppUtil.screenWidth * 0.04,
@@ -115,8 +113,8 @@ class HomeNavView extends StatelessWidget {
     return Obx(() {
       final isSelected = viewModel.selectedIndex.value == index;
       final color = isSelected 
-        ? HexColor(ColorVar.appColor)
-        : HexColor(ColorVar.bgGray8);
+        ? Theme.of(context).colorScheme.primary
+        : Theme.of(context).colorScheme.onSecondary;
       
       return GestureDetector(
         onTap: () => viewModel.changePage(index),

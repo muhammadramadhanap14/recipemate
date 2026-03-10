@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
 import '../../../utils/recipemate_app_util.dart';
-import '../../../utils/color_var.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../view_model/home_view_model.dart';
@@ -19,7 +17,7 @@ class HomeView extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: HexColor(ColorVar.bgAppColor),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -62,7 +60,7 @@ class HomeView extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: HexColor(ColorVar.appColor),
+                color: Theme.of(context).colorScheme.primary,
                 width: RecipeMateAppUtil.screenWidth * 0.005,
               ),
               image: const DecorationImage(
@@ -80,11 +78,12 @@ class HomeView extends StatelessWidget {
                   text: "GOOD MORNING",
                   fontSize: DimensText.microText(context),
                   fontWeight: FontWeight.bold,
-                  color: HexColor(ColorVar.appColor).withValues(alpha: 0.6),
+                  color: Theme.of(context).colorScheme.primary
                 ),
                 Obx(() => customText(
                   text: viewModel.userName.value,
                   fontSize: DimensText.headerMenusText(context),
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'times_new_roman_bold',
                 )),
@@ -94,12 +93,12 @@ class HomeView extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.025),
             decoration: BoxDecoration(
-              color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.05),
+              color: Theme.of(context).cardColor,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.notifications,
-              color: HexColor(ColorVar.appColor).withValues(alpha: 0.6),
+              color: Theme.of(context).colorScheme.primary,
               size: RecipeMateAppUtil.screenWidth * 0.07,
             ),
           ),
@@ -113,15 +112,14 @@ class HomeView extends StatelessWidget {
       height: RecipeMateAppUtil.screenHeight * 0.07,
       padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.04),
       decoration: BoxDecoration(
-        color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.05),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.04),
-        border: Border.all(color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Icon(
             Icons.search,
-            color: HexColor(ColorVar.appColor),
+            color: Theme.of(context).colorScheme.primary,
             size: RecipeMateAppUtil.screenWidth * 0.06,
           ),
           SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),
@@ -130,7 +128,7 @@ class HomeView extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: "Search recipes, ingredients...",
                 hintStyle: TextStyle(
-                  color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.4),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                   fontSize: DimensText.captionText(context),
                 ),
                 border: InputBorder.none,
@@ -139,7 +137,7 @@ class HomeView extends StatelessWidget {
           ),
           Icon(
             Icons.mic,
-            color: HexColor(ColorVar.appColor),
+            color: Theme.of(context).colorScheme.primary,
             size: RecipeMateAppUtil.screenWidth * 0.06,
           ),
         ],
@@ -158,11 +156,12 @@ class HomeView extends StatelessWidget {
             fontSize: DimensText.subHeaderText(context),
             fontWeight: FontWeight.bold,
             fontFamily: 'times_new_roman_bold',
+            color: Theme.of(context).colorScheme.onSurface,
           ),
           customText(
             text: actionText,
             fontSize: DimensText.captionText(context),
-            color: HexColor(ColorVar.appColor),
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,
           ),
         ],
@@ -217,14 +216,14 @@ class HomeView extends StatelessWidget {
                       vertical: RecipeMateAppUtil.screenHeight * 0.008,
                     ),
                     decoration: BoxDecoration(
-                      color: HexColor(ColorVar.appColor),
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.05),
                     ),
                     child: customText(
                       text: "${recipe['match']}% MATCH",
                       fontSize: DimensText.captionText(context),
                       fontWeight: FontWeight.bold,
-                      color: HexColor(ColorVar.white),
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                 ),
@@ -232,12 +231,12 @@ class HomeView extends StatelessWidget {
                   top: RecipeMateAppUtil.screenHeight * 0.015,
                   right: RecipeMateAppUtil.screenWidth * 0.03,
                   child: CircleAvatar(
-                    backgroundColor: HexColor(ColorVar.white),
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.5),
                     radius: RecipeMateAppUtil.screenWidth * 0.045,
                     child: Icon(
                       Icons.favorite,
                       size: RecipeMateAppUtil.screenWidth * 0.045,
-                      color: HexColor(ColorVar.redStatus),
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
@@ -259,12 +258,13 @@ class HomeView extends StatelessWidget {
             customText(
               text: recipe['title'],
               fontSize: DimensText.bodyText(context),
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.bold,
             ),
             customText(
               text: recipe['subtitle'],
               fontSize: DimensText.captionText(context),
-              color: HexColor(ColorVar.appColor).withValues(alpha: 0.7),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
               fontWeight: FontWeight.w600,
             ),
           ],
@@ -280,21 +280,21 @@ class HomeView extends StatelessWidget {
         vertical: RecipeMateAppUtil.screenHeight * 0.005,
       ),
       decoration: BoxDecoration(
-        color: HexColor(ColorVar.black).withValues(alpha: 0.5),
+        color: Theme.of(context).colorScheme.onTertiary.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.03),
       ),
       child: Row(
         children: [
           Icon(
             icon,
-            color: HexColor(ColorVar.appColor),
+            color: Theme.of(context).colorScheme.primary,
             size: RecipeMateAppUtil.screenWidth * 0.03,
           ),
           SizedBox(width: RecipeMateAppUtil.screenWidth * 0.01),
           customText(
             text: text,
             fontSize: DimensText.captionText(context),
-            color: HexColor(ColorVar.white),
+            color: Theme.of(context).colorScheme.onPrimary,
             fontWeight: FontWeight.bold,
           ),
         ],
@@ -323,7 +323,7 @@ class HomeView extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: HexColor(ColorVar.appColor).withValues(alpha: 0.1),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                       width: RecipeMateAppUtil.screenWidth * 0.005,
                     ),
                     image: DecorationImage(
@@ -335,6 +335,7 @@ class HomeView extends StatelessWidget {
                 SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
                 customText(
                   text: item['name'],
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: DimensText.captionText(context),
                   fontWeight: FontWeight.bold,
                 ),

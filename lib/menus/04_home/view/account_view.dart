@@ -14,21 +14,22 @@ class AccountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AccountViewModel viewModel = Get.put(AccountViewModel());
+    final theme = Theme.of(context);
     RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
     });
 
     return Scaffold(
-      backgroundColor: HexColor(ColorVar.bgAppColor),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: HexColor(ColorVar.bgAppColor),
+        backgroundColor: theme.scaffoldBackgroundColor,
         centerTitle: true,
         title: customText(
           text: ConstantVar.akun,
           fontSize: DimensText.headerMenusText(context),
           fontWeight: FontWeight.bold,
-          color: HexColor(ColorVar.black),
+          color: theme.colorScheme.onSurface,
           fontFamily: 'times_new_roman_bold',
         ),
         automaticallyImplyLeading: false,
@@ -53,11 +54,11 @@ class AccountView extends StatelessWidget {
                     customText(
                       text: "English",
                       fontSize: DimensText.captionText(context),
-                      color: HexColor(ColorVar.bgGray8),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     Icon(
                       Icons.keyboard_arrow_down, 
-                      color: HexColor(ColorVar.bgGray8),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: RecipeMateAppUtil.screenWidth * 0.05,
                     ),
                   ],
@@ -68,13 +69,13 @@ class AccountView extends StatelessWidget {
               _buildMenuItem(
                 context: context,
                 icon: Icons.dark_mode,
-                title: "Dark Mode",
-                trailing: Obx(() => Switch(
-                  value: viewModel.isDarkMode.value,
-                  activeTrackColor: HexColor(ColorVar.appColor).withValues(alpha: 0.3),
-                  activeThumbColor: HexColor(ColorVar.appColor),
-                  onChanged: viewModel.toggleDarkMode,
-                )),
+                title: "Theme",
+                trailing: Icon(
+                  Icons.keyboard_arrow_right,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  size: RecipeMateAppUtil.screenWidth * 0.05,
+                ),
+                onTap: () => viewModel.openThemeDialog(context),
               ),
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
               _buildMenuItem(
@@ -84,9 +85,9 @@ class AccountView extends StatelessWidget {
                 titleColor: HexColor(ColorVar.appColor),
                 iconColor: HexColor(ColorVar.appColor),
                 trailing: Icon(
-                  Icons.chevron_right, 
-                  color: HexColor(ColorVar.bgGray8),
-                  size: RecipeMateAppUtil.screenWidth * 0.06,
+                  Icons.keyboard_arrow_right,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  size: RecipeMateAppUtil.screenWidth * 0.05,
                 ),
                 onTap: () => viewModel.logoutDialog(context),
               ),
@@ -147,7 +148,7 @@ class AccountView extends StatelessWidget {
           text: viewModel.userName.value,
           fontSize: DimensText.subHeaderLargeText(context),
           fontWeight: FontWeight.w900,
-          color: HexColor(ColorVar.black),
+          color: Theme.of(context).colorScheme.onSurface,
           fontFamily: 'times_new_roman_bold'
         )),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.002),
@@ -155,7 +156,7 @@ class AccountView extends StatelessWidget {
           text: viewModel.userId.value,
           fontWeight: FontWeight.w400,
           fontSize: DimensText.captionText(context),
-          color: HexColor(ColorVar.bgGray8),
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
         )),
       ],
     );
@@ -181,7 +182,7 @@ class AccountView extends StatelessWidget {
           vertical: RecipeMateAppUtil.screenHeight * 0.015,
         ),
         decoration: BoxDecoration(
-          color: HexColor(ColorVar.widgetOrCardBgColor).withValues(alpha: 0.5),
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Row(
@@ -190,7 +191,7 @@ class AccountView extends StatelessWidget {
               padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.01),
               child: Icon(
                 icon,
-                color: iconColor ?? HexColor(ColorVar.subTextColor),
+                color: iconColor ?? Theme.of(context).colorScheme.onSurface,
                 size: RecipeMateAppUtil.screenWidth * 0.065,
               ),
             ),
@@ -200,7 +201,7 @@ class AccountView extends StatelessWidget {
                 text: title,
                 fontSize: DimensText.bodySmallText(context),
                 fontWeight: FontWeight.w600,
-                color: titleColor ?? HexColor(ColorVar.black),
+                color: titleColor ?? Theme.of(context).colorScheme.onSurface,
               ),
             ),
             trailing,

@@ -31,6 +31,68 @@ class ViewDialogUtil {
     );
   }
 
+  static Future<ThemeMode?> dialogSelectTheme(BuildContext context, ThemeMode currentTheme) {
+    return Get.dialog<ThemeMode>(
+      AlertDialog(
+        title: Text(
+          "Select Theme",
+          style: TextStyle(
+            fontSize: DimensText.bodyText(context),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            RadioListTile<ThemeMode>(
+              title: Text(
+                "System Default",
+                style: TextStyle(
+                  fontSize: DimensText.bodySmallText(context),
+                ),
+              ),
+              value: ThemeMode.system,
+              groupValue: currentTheme,
+              onChanged: (value) {
+                Get.back(result: value);
+              },
+            ),
+
+            RadioListTile<ThemeMode>(
+              title: Text(
+                  "Light",
+                style: TextStyle(
+                  fontSize: DimensText.bodySmallText(context),
+                ),
+              ),
+              value: ThemeMode.light,
+              groupValue: currentTheme,
+              onChanged: (value) {
+                Get.back(result: value);
+              },
+            ),
+
+            RadioListTile<ThemeMode>(
+              title: Text(
+                "Dark",
+                style: TextStyle(
+                  fontSize: DimensText.bodySmallText(context),
+                ),
+              ),
+              value: ThemeMode.dark,
+              groupValue: currentTheme,
+              onChanged: (value) {
+                Get.back(result: value);
+              },
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+
   void showYesNoActionDialog(String content, String positiveTitle,
       String negativeTitle, String pictureParam,
       dynamic intentData,

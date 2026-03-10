@@ -12,6 +12,7 @@ class AccountViewModel extends GetxController {
   final userId = 'axel.darmawan@example.com'.obs;
   final appVersion = '-'.obs;
   final RxBool isDarkMode = false.obs;
+  Rx<ThemeMode> themeMode = ThemeMode.system.obs;
 
   @override
   void onInit(){
@@ -21,9 +22,16 @@ class AccountViewModel extends GetxController {
     });
   }
 
-  void toggleDarkMode(bool value) {
-    isDarkMode.value = value;
-    // Tambahkan logika ganti tema di sini jika diperlukan
+  void changeTheme(ThemeMode mode) {
+    themeMode.value = mode;
+    Get.changeThemeMode(mode);
+  }
+
+  void openThemeDialog(BuildContext context) async {
+    final result = await ViewDialogUtil.dialogSelectTheme(context, themeMode.value);
+    if (result != null) {
+      changeTheme(result);
+    }
   }
 
   Future<void> initAppVersion() async {
