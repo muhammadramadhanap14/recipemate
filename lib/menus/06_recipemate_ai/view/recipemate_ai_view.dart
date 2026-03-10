@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:recipemate/utils/constant_var.dart';
 import '../../../utils/recipemate_app_util.dart';
-import '../../../utils/color_var.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../view_model/recipemate_ai_view_model.dart';
@@ -20,9 +18,9 @@ class RecipemateAiView extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: HexColor(ColorVar.bgAppColor),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: HexColor(ColorVar.bgAppColor),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: false,
         title: Row(
           children: [
@@ -35,7 +33,7 @@ class RecipemateAiView extends StatelessWidget {
               text: ConstantVar.recipeMateAi,
               fontSize: DimensText.headerMenusText(context),
               fontWeight: FontWeight.bold,
-              color: HexColor(ColorVar.black),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ],
         ),
@@ -43,8 +41,8 @@ class RecipemateAiView extends StatelessWidget {
           IconButton(
             onPressed: () {},
             icon: Icon(
-              Icons.notifications_none, 
-              color: HexColor(ColorVar.black),
+              Icons.notifications,
+              color: Theme.of(context).colorScheme.primary,
               size: RecipeMateAppUtil.screenWidth * 0.065,
             ),
           ),
@@ -72,6 +70,7 @@ class RecipemateAiView extends StatelessWidget {
                     children: [
                       customText(
                         text: "Best Match",
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: DimensText.subHeaderText(context),
                         fontWeight: FontWeight.bold,
                       ),
@@ -82,14 +81,14 @@ class RecipemateAiView extends StatelessWidget {
                           vertical: RecipeMateAppUtil.screenHeight * 0.005,
                         ),
                         decoration: BoxDecoration(
-                          color: HexColor(ColorVar.appColor).withValues(alpha: 0.1),
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.05),
                         ),
                         child: customText(
                           text: "AI DRIVEN",
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: DimensText.microText(context),
-                          fontWeight: FontWeight.bold,
-                          color: HexColor(ColorVar.appColor),
+                          fontWeight: FontWeight.bold
                         ),
                       ),
                     ],
@@ -99,7 +98,7 @@ class RecipemateAiView extends StatelessWidget {
                     child: customText(
                       text: "View All",
                       fontSize: DimensText.captionText(context),
-                      color: HexColor(ColorVar.appColor),
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -116,7 +115,7 @@ class RecipemateAiView extends StatelessWidget {
                   return _buildRecipeCard(context, recipe);
                 },
               ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
             ],
           ),
         ),
@@ -131,22 +130,14 @@ class RecipemateAiView extends StatelessWidget {
         vertical: RecipeMateAppUtil.screenHeight * 0.005,
       ),
       decoration: BoxDecoration(
-        color: HexColor(ColorVar.white),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.08),
-        border: Border.all(color: Colors.grey.shade200),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ],
       ),
       child: Row(
         children: [
           Icon(
-            Icons.search, 
-            color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.4),
+            Icons.search,
+            color: Theme.of(context).colorScheme.primary,
             size: RecipeMateAppUtil.screenWidth * 0.06,
           ),
           SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
@@ -158,8 +149,12 @@ class RecipemateAiView extends StatelessWidget {
                 ...viewModel.selectedIngredients.map((tag) => Chip(
                   label: customText(text: tag, fontSize: DimensText.captionText(context)),
                   onDeleted: () => viewModel.removeIngredient(tag),
-                  backgroundColor: HexColor(ColorVar.bgGray8).withValues(alpha: 0.1),
-                  deleteIcon: Icon(Icons.close, size: RecipeMateAppUtil.screenWidth * 0.035),
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.02),
+                  deleteIcon: Icon(
+                    Icons.close,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: RecipeMateAppUtil.screenWidth * 0.035
+                  ),
                   padding: EdgeInsets.zero,
                   labelPadding: EdgeInsets.only(left: RecipeMateAppUtil.screenWidth * 0.02),
                   shape: RoundedRectangleBorder(
@@ -171,11 +166,15 @@ class RecipemateAiView extends StatelessWidget {
                   width: RecipeMateAppUtil.screenWidth * 0.15,
                   child: TextField(
                     onChanged: (val) => viewModel.searchText.value = val,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: "Ba",
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: DimensText.captionText(context),
+                      ),
                       border: InputBorder.none,
                       isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
                     ),
                     style: TextStyle(fontSize: DimensText.bodySmallText(context)),
                   ),
@@ -185,7 +184,7 @@ class RecipemateAiView extends StatelessWidget {
           ),
           Icon(
             Icons.cancel, 
-            color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.4),
+            color: Theme.of(context).colorScheme.primary,
             size: RecipeMateAppUtil.screenWidth * 0.05,
           ),
         ],
@@ -196,36 +195,30 @@ class RecipemateAiView extends StatelessWidget {
   Widget _buildSuggestions(BuildContext context, RecipemateAiViewModel viewModel) {
     return Container(
       decoration: BoxDecoration(
-        color: HexColor(ColorVar.white),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.05),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          )
-        ],
       ),
       child: Column(
         children: viewModel.suggestions.map((item) {
           return ListTile(
             leading: CircleAvatar(
-              backgroundColor: HexColor(ColorVar.bgGray8).withValues(alpha: 0.1),
+              backgroundColor: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.2),
               radius: RecipeMateAppUtil.screenWidth * 0.05,
               child: Icon(
                 item['icon'], 
-                color: HexColor(ColorVar.appColor), 
+                color: Theme.of(context).colorScheme.primary,
                 size: RecipeMateAppUtil.screenWidth * 0.05,
               ),
             ),
             title: customText(
-              text: item['name'], 
+              text: item['name'],
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: DimensText.bodySmallText(context),
               fontWeight: FontWeight.w500,
             ),
             trailing: Icon(
-              Icons.add_circle, 
-              color: HexColor(ColorVar.appColor),
+              Icons.add_circle,
+              color: Theme.of(context).colorScheme.primary,
               size: RecipeMateAppUtil.screenWidth * 0.06,
             ),
             onTap: () {},
@@ -240,11 +233,11 @@ class RecipemateAiView extends StatelessWidget {
     
     return Container(
       decoration: BoxDecoration(
-        color: HexColor(ColorVar.white),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 8),
           )
@@ -273,22 +266,22 @@ class RecipemateAiView extends StatelessWidget {
                     vertical: RecipeMateAppUtil.screenHeight * 0.008,
                   ),
                   decoration: BoxDecoration(
-                    color: HexColor(ColorVar.white),
+                    color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.05),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         Icons.bolt, 
-                        color: HexColor(ColorVar.appColor), 
+                        color: Theme.of(context).colorScheme.primary,
                         size: RecipeMateAppUtil.screenWidth * 0.04,
                       ),
                       SizedBox(width: RecipeMateAppUtil.screenWidth * 0.01),
                       customText(
                         text: "${recipe['match']}% Match",
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: DimensText.captionText(context),
                         fontWeight: FontWeight.bold,
-                        color: HexColor(ColorVar.appColor),
                       ),
                     ],
                   ),
@@ -298,11 +291,11 @@ class RecipemateAiView extends StatelessWidget {
                 top: RecipeMateAppUtil.screenHeight * 0.015,
                 right: RecipeMateAppUtil.screenWidth * 0.03,
                 child: CircleAvatar(
-                  backgroundColor: HexColor(ColorVar.white),
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.2),
                   radius: RecipeMateAppUtil.screenWidth * 0.05,
                   child: Icon(
-                    Icons.favorite_border, 
-                    color: Colors.grey,
+                    Icons.favorite,
+                    color: Theme.of(context).colorScheme.primary,
                     size: RecipeMateAppUtil.screenWidth * 0.055,
                   ),
                 ),
@@ -316,6 +309,7 @@ class RecipemateAiView extends StatelessWidget {
               children: [
                 customText(
                   text: recipe['title'],
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: DimensText.bodyText(context),
                   fontWeight: FontWeight.bold,
                 ),
@@ -335,14 +329,14 @@ class RecipemateAiView extends StatelessWidget {
                     Icon(
                       Icons.inventory_2_outlined, 
                       size: RecipeMateAppUtil.screenWidth * 0.04, 
-                      color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.6),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
                     Expanded(
                       child: customText(
                         text: recipe['status'],
                         fontSize: DimensText.captionText(context),
-                        color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                         intMaxLine: 1,
                       ),
                     ),
@@ -363,13 +357,13 @@ class RecipemateAiView extends StatelessWidget {
         vertical: RecipeMateAppUtil.screenHeight * 0.005,
       ),
       decoration: BoxDecoration(
-        color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.05),
+        color: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.02),
       ),
       child: customText(
         text: text, 
         fontSize: DimensText.captionText(context),
-        color: HexColor(ColorVar.bgGray8).withValues(alpha: 0.6),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
       ),
     );
   }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
 import '../../../utils/constant_var.dart';
 import '../../../utils/recipemate_app_util.dart';
-import '../../../utils/color_var.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../view_model/account_view_model.dart';
@@ -80,10 +78,10 @@ class AccountView extends StatelessWidget {
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
               _buildMenuItem(
                 context: context,
-                icon: Icons.logout,
+                icon: Icons.logout_rounded,
                 title: "Logout",
-                titleColor: HexColor(ColorVar.appColor),
-                iconColor: HexColor(ColorVar.appColor),
+                titleColor: Theme.of(context).colorScheme.primary,
+                iconColor: Theme.of(context).colorScheme.primary,
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -112,7 +110,7 @@ class AccountView extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: HexColor(ColorVar.appColor).withValues(alpha: 0.1), 
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   width: RecipeMateAppUtil.screenWidth * 0.01,
                 ),
               ),
@@ -127,16 +125,16 @@ class AccountView extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.015),
                 decoration: BoxDecoration(
-                  color: HexColor(ColorVar.appColor),
+                  color: Theme.of(context).colorScheme.primary,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: HexColor(ColorVar.white),
+                    color: Theme.of(context).colorScheme.onPrimary,
                     width: RecipeMateAppUtil.screenWidth * 0.005,
                   ),
                 ),
                 child: Icon(
                   Icons.edit, 
-                  color: HexColor(ColorVar.white),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   size: RecipeMateAppUtil.screenWidth * 0.04,
                 ),
               ),
