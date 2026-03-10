@@ -9,7 +9,6 @@ class HomeNavViewModel extends GetxController {
   var selectedIndex = 0.obs;
   var lastPressed = Rxn<DateTime>();
 
-
   final List<Widget> _pages = [
     const HomeView(),
     const AccountView()
@@ -25,8 +24,7 @@ class HomeNavViewModel extends GetxController {
   // Double tap to exit
   Future<void> onWillPop(BuildContext context) async {
     final now = DateTime.now();
-    if (lastPressed.value == null ||
-        now.difference(lastPressed.value!) > const Duration(seconds: 2)) {
+    if (lastPressed.value == null || now.difference(lastPressed.value!) > const Duration(seconds: 2)) {
       lastPressed.value = now;
       Get.snackbar(
         "Keluar Aplikasi",
@@ -39,7 +37,6 @@ class HomeNavViewModel extends GetxController {
       );
       return;
     }
-
     // Keluar aplikasi
     await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
