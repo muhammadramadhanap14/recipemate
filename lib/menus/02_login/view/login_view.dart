@@ -1,10 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 import '../../../repository/api_repository.dart';
-import '../../../utils/color_var.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../view_model/login_view_model.dart';
@@ -31,7 +29,7 @@ class LoginView extends StatelessWidget {
     final double logoSize = screenW * 0.45;
 
     return Scaffold(
-      backgroundColor: HexColor(ColorVar.bgAppColor),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -64,7 +62,7 @@ class LoginView extends StatelessWidget {
                           fontSize: DimensText.superHeaderText(context),
                           fontWeight: FontWeight.w800,
                           fontFamily: 'times_new_roman_med_italic',
-                          color: HexColor(ColorVar.black),
+                          color: Theme.of(context).colorScheme.onSurface,
                           textAlign: TextAlign.center
                         ),
 
@@ -72,7 +70,7 @@ class LoginView extends StatelessWidget {
                           text: "Your smart kitchen assistant awaits.",
                           fontSize: DimensText.captionText(context),
                           fontWeight: FontWeight.w500,
-                          color: HexColor(ColorVar.bgGray8),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                           textAlign: TextAlign.center,
                         ),
 
@@ -84,27 +82,41 @@ class LoginView extends StatelessWidget {
                             text: "EMAIL ADDRESS",
                             fontSize: DimensText.microText(context),
                             fontWeight: FontWeight.w700,
-                            color: HexColor(ColorVar.appColor),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
 
                         SizedBox(height: screenH * 0.01),
 
-                        customTextFormField(
-                          hintText: 'alex@example.com',
-                          prefixIcon: Icon(
-                            Icons.email_rounded,
-                            color: HexColor(ColorVar.appColor),
-                            size: screenW * 0.06,
-                          ),
-                          enableFillColor: ColorVar.widgetOrCardBgColor,
-                          isBorderSide: false,
-                          doubleVerticalPadding: screenH * 0.022,
-                          doubleHorizontalPadding: screenW * 0.04,
-                          doubleTextSize: DimensText.captionText(context),
-                          context: context,
-                          onChanged: viewModel.setUsername,
+                        TextFormField(
                           focusNode: FocusNode(),
+                          keyboardType: TextInputType.emailAddress,
+                          onChanged: viewModel.setUsername,
+                          style: TextStyle(
+                            fontSize: DimensText.captionText(context),
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: "alex@example.com",
+                            hintStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.email_rounded,
+                              color: Theme.of(context).colorScheme.primary,
+                              size: screenW * 0.06,
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context).cardColor,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: screenH * 0.022,
+                              horizontal: screenW * 0.04,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
                         ),
 
                         SizedBox(height: screenH * 0.022),
@@ -117,45 +129,58 @@ class LoginView extends StatelessWidget {
                               text: "PASSWORD",
                               fontSize: DimensText.microText(context),
                               fontWeight: FontWeight.w700,
-                              color: HexColor(ColorVar.appColor),
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                             customText(
                               text: "FORGOT?",
                               fontSize: DimensText.microText(context),
                               fontWeight: FontWeight.w600,
-                              color: HexColor(ColorVar.bgGray8),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                           ],
                         ),
 
                         SizedBox(height: screenH * 0.01),
 
-                        Obx(() => customTextFormField(
-                          hintText: "••••••••",
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: HexColor(ColorVar.appColor),
-                            size: screenW * 0.06,
-                          ),
-                          isSuffixIcon: true,
-                          suffixIcon: Icon(
-                            viewModel.isObscureText.value
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                            size: screenW * 0.06,
-                          ),
-                          onSuffixClick: viewModel.togglePasswordVisibility,
-                          enableFillColor: ColorVar.widgetOrCardBgColor,
-                          isBorderSide: false,
-                          doubleVerticalPadding: screenH * 0.022,
-                          doubleHorizontalPadding: screenW * 0.04,
-                          doubleTextSize: DimensText.captionText(context),
-                          context: context,
+                        Obx(() => TextFormField(
+                          focusNode: FocusNode(),
                           obscureText: viewModel.isObscureText.value,
                           onChanged: viewModel.setPassword,
-                          focusNode: FocusNode(),
+                          style: TextStyle(
+                            fontSize: DimensText.captionText(context),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
-                        ),
+                          decoration: InputDecoration(
+                            hintText: "••••••••",
+                            hintStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.lock,
+                              color: Theme.of(context).colorScheme.primary,
+                              size: screenW * 0.06,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                viewModel.isObscureText.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              onPressed: viewModel.togglePasswordVisibility,
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context).cardColor,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: screenH * 0.022,
+                              horizontal: screenW * 0.04,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        )),
 
                         SizedBox(height: screenH * 0.025),
 
@@ -163,12 +188,12 @@ class LoginView extends StatelessWidget {
                           width: double.infinity,
                           child: customElevatedButton(
                             onPressed: viewModel.isValidButton.value ? viewModel.onLoginPressed : null,
-                            backgroundColor: HexColor(ColorVar.appColor),
-                            sideColor: HexColor(ColorVar.appColor),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            sideColor: Theme.of(context).colorScheme.primary,
                             borderRadius: screenW * 0.04,
                             text: "Sign In",
                             fontSize: DimensText.buttonText(context),
-                            fontColor: HexColor(ColorVar.white),
+                            fontColor: Theme.of(context).colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
                             padding: EdgeInsets.symmetric(
                               vertical: screenH * 0.02,
@@ -188,14 +213,14 @@ class LoginView extends StatelessWidget {
                             text: TextSpan(
                               text: "Don't have an account? ",
                               style: TextStyle(
-                                color: HexColor(ColorVar.bgGray8),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                 fontSize: DimensText.captionText(context),
                               ),
                               children: [
                                 TextSpan(
                                   text: "Sign Up",
                                   style: TextStyle(
-                                    color: HexColor(ColorVar.appColor),
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   recognizer: TapGestureRecognizer()..onTap = () {

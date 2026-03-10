@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
-import '../../../utils/color_var.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -24,7 +22,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: HexColor(ColorVar.bgAppColor),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -46,30 +44,61 @@ class PreferenceFoodSatuView extends StatelessWidget {
                           SizedBox(height: screenH * 0.04),
                           
                           _buildInputLabel(context, "SHORT NAME", screenW, screenH),
-                          customTextFormField(
-                            hintText: 'e.g. Alex Dards',
-                            context: context,
-                            onChanged: viewModel.setName,
-                            enableFillColor: ColorVar.white,
+
+                          TextFormField(
                             focusNode: FocusNode(),
-                            doubleVerticalPadding: screenH * 0.02,
-                            doubleHorizontalPadding: screenW * 0.04,
-                            doubleTextSize: DimensText.captionText(context),
+                            keyboardType: TextInputType.name,
+                            onChanged: viewModel.setName,
+                            style: TextStyle(
+                              fontSize: DimensText.captionText(context),
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: 'e.g. Alex Dards',
+                              hintStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
+                              filled: true,
+                              fillColor: Theme.of(context).cardColor,
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: screenH * 0.02,
+                                horizontal: screenW * 0.04,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
                           ),
                           
                           SizedBox(height: screenH * 0.025),
                           
                           _buildInputLabel(context, "AGE", screenW, screenH),
-                          customTextFormField(
-                            hintText: 'e.g. 25',
-                            context: context,
-                            onChanged: viewModel.setAge,
-                            enableFillColor: ColorVar.white,
-                            keyboardType: TextInputType.number,
+
+                          TextFormField(
                             focusNode: FocusNode(),
-                            doubleVerticalPadding: screenH * 0.02,
-                            doubleHorizontalPadding: screenW * 0.04,
-                            doubleTextSize: DimensText.captionText(context),
+                            keyboardType: TextInputType.number,
+                            onChanged: viewModel.setAge,
+                            style: TextStyle(
+                              fontSize: DimensText.captionText(context),
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: 'e.g. 25',
+                              hintStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
+                              filled: true,
+                              fillColor: Theme.of(context).cardColor,
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: screenH * 0.02,
+                                horizontal: screenW * 0.04,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
                           ),
                           
                           SizedBox(height: screenH * 0.025),
@@ -81,16 +110,30 @@ class PreferenceFoodSatuView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     _buildInputLabel(context, "HEIGHT (CM)", screenW, screenH),
-                                    customTextFormField(
-                                      hintText: '170',
-                                      context: context,
-                                      onChanged: viewModel.setHeight,
-                                      enableFillColor: ColorVar.white,
-                                      keyboardType: TextInputType.number,
+                                    TextFormField(
                                       focusNode: FocusNode(),
-                                      doubleVerticalPadding: screenH * 0.02,
-                                      doubleHorizontalPadding: screenW * 0.04,
-                                      doubleTextSize: DimensText.captionText(context),
+                                      keyboardType: TextInputType.number,
+                                      onChanged: viewModel.setHeight,
+                                      style: TextStyle(
+                                        fontSize: DimensText.captionText(context),
+                                        color: Theme.of(context).colorScheme.onSurface,
+                                      ),
+                                      decoration: InputDecoration(
+                                        hintText: '170',
+                                        hintStyle: TextStyle(
+                                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                        ),
+                                        filled: true,
+                                        fillColor: Theme.of(context).cardColor,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: screenH * 0.02,
+                                          horizontal: screenW * 0.04,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -101,16 +144,31 @@ class PreferenceFoodSatuView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     _buildInputLabel(context, "WEIGHT (KG)", screenW, screenH),
-                                    customTextFormField(
-                                      hintText: '65',
-                                      context: context,
-                                      onChanged: viewModel.setWeight,
-                                      enableFillColor: ColorVar.white,
-                                      keyboardType: TextInputType.number,
+
+                                    TextFormField(
                                       focusNode: FocusNode(),
-                                      doubleVerticalPadding: screenH * 0.02,
-                                      doubleHorizontalPadding: screenW * 0.04,
-                                      doubleTextSize: DimensText.captionText(context),
+                                      keyboardType: TextInputType.number,
+                                      onChanged: viewModel.setWeight,
+                                      style: TextStyle(
+                                        fontSize: DimensText.captionText(context),
+                                        color: Theme.of(context).colorScheme.onSurface,
+                                      ),
+                                      decoration: InputDecoration(
+                                        hintText: '65',
+                                        hintStyle: TextStyle(
+                                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                        ),
+                                        filled: true,
+                                        fillColor: Theme.of(context).cardColor,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: screenH * 0.02,
+                                          horizontal: screenW * 0.04,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -142,7 +200,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
         text: text,
         fontSize: DimensText.microText(context),
         fontWeight: FontWeight.bold,
-        color: HexColor(ColorVar.appColor),
+        color: Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -157,13 +215,13 @@ class PreferenceFoodSatuView extends StatelessWidget {
               text: "STEP 1 OF 3",
               fontSize: DimensText.captionText(context),
               fontWeight: FontWeight.w500,
-              color: HexColor(ColorVar.bgGray8),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
             ),
             customText(
               text: "33%",
               fontSize: DimensText.captionText(context),
               fontWeight: FontWeight.w500,
-              color: HexColor(ColorVar.appColor),
+              color: Theme.of(context).colorScheme.primary
             ),
           ],
         ),
@@ -173,8 +231,8 @@ class PreferenceFoodSatuView extends StatelessWidget {
           child: LinearProgressIndicator(
             value: 0.33,
             minHeight: screenH * 0.01,
-            backgroundColor: HexColor(ColorVar.white),
-            valueColor: AlwaysStoppedAnimation(HexColor(ColorVar.appColor)),
+            backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            valueColor: AlwaysStoppedAnimation(Theme.of(context).colorScheme.primary),
           ),
         ),
       ],
@@ -189,7 +247,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
           text: "Tell us about yourself!",
           fontSize: DimensText.headerText(context),
           fontWeight: FontWeight.bold,
-          color: HexColor(ColorVar.black),
+          color: Theme.of(context).colorScheme.onSurface,
           fontFamily: 'inter_bold',
         ),
         SizedBox(height: screenH * 0.01),
@@ -197,7 +255,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
           text: "Help us personalize your experience by providing some basic information.",
           fontSize: DimensText.captionText(context),
           fontWeight: FontWeight.w500,
-          color: HexColor(ColorVar.bgGray8),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
           intMaxLine: null,
         ),
       ],
@@ -209,15 +267,15 @@ class PreferenceFoodSatuView extends StatelessWidget {
       return SizedBox(
         width: double.infinity,
         child: customElevatedButton(
-            onPressed: viewModel.isStep1Valid ? () => Get.toNamed('/preference_food_dua') : null,
-            backgroundColor: HexColor(ColorVar.appColor),
-            sideColor: HexColor(ColorVar.appColor),
-            borderRadius: screenW * 0.04,
-            text: "Next",
-            fontSize: DimensText.buttonText(context),
-            fontColor: HexColor(ColorVar.white),
-            fontWeight: FontWeight.bold,
-            padding: EdgeInsets.symmetric(vertical: screenH * 0.022)),
+          onPressed: viewModel.isStep1Valid ? () => Get.toNamed('/preference_food_dua') : null,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          sideColor: Theme.of(context).colorScheme.primary,
+          borderRadius: screenW * 0.04,
+          text: "Next",
+          fontSize: DimensText.buttonText(context),
+          fontColor: Theme.of(context).colorScheme.onPrimary,
+          fontWeight: FontWeight.bold,
+          padding: EdgeInsets.symmetric(vertical: screenH * 0.022)),
       );
     });
   }

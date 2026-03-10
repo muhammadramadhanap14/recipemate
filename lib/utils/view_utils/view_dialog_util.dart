@@ -1,36 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
-
-import '../../models/model_util/model_three_column.dart';
-import '../recipemate_app_util.dart';
-import '../color_var.dart';
-import '../constant_var.dart';
 import '../dimens_text.dart';
 
 class ViewDialogUtil {
 
-  void getXSnackBar(
-      String title,
-      String message,
-      String bgColor,
-      String fontColor,
-      {
-        int durationSnackBar = 2,
-      }
-      ) {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.TOP, // Or TOP
-      backgroundColor: HexColor(bgColor).withValues(alpha: 0.7),
-      colorText: HexColor(fontColor),
-      margin: const EdgeInsets.all(8),
-      duration: Duration(seconds: durationSnackBar),
-    );
-  }
-
+  // Dialog choose theme
   static Future<ThemeMode?> dialogSelectTheme(BuildContext context, ThemeMode currentTheme) {
     return Get.dialog<ThemeMode>(
       AlertDialog(
@@ -41,318 +16,170 @@ class ViewDialogUtil {
             fontWeight: FontWeight.bold,
           ),
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-
-            RadioListTile<ThemeMode>(
-              title: Text(
-                "System Default",
-                style: TextStyle(
-                  fontSize: DimensText.bodySmallText(context),
+        content: RadioGroup<ThemeMode>(
+          groupValue: currentTheme,
+          onChanged: (ThemeMode? value) {
+            Get.back(result: value);
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<ThemeMode>(
+                title: Text(
+                  "System Default",
+                  style: TextStyle(
+                    fontSize: DimensText.bodySmallText(context),
+                  ),
                 ),
+                value: ThemeMode.system,
               ),
-              value: ThemeMode.system,
-              groupValue: currentTheme,
-              onChanged: (value) {
-                Get.back(result: value);
-              },
-            ),
-
-            RadioListTile<ThemeMode>(
-              title: Text(
+              RadioListTile<ThemeMode>(
+                title: Text(
                   "Light",
-                style: TextStyle(
-                  fontSize: DimensText.bodySmallText(context),
+                  style: TextStyle(
+                    fontSize: DimensText.bodySmallText(context),
+                  ),
                 ),
+                value: ThemeMode.light,
               ),
-              value: ThemeMode.light,
-              groupValue: currentTheme,
-              onChanged: (value) {
-                Get.back(result: value);
-              },
-            ),
-
-            RadioListTile<ThemeMode>(
-              title: Text(
-                "Dark",
-                style: TextStyle(
-                  fontSize: DimensText.bodySmallText(context),
+              RadioListTile<ThemeMode>(
+                title: Text(
+                  "Dark",
+                  style: TextStyle(
+                    fontSize: DimensText.bodySmallText(context),
+                  ),
                 ),
+                value: ThemeMode.dark,
               ),
-              value: ThemeMode.dark,
-              groupValue: currentTheme,
-              onChanged: (value) {
-                Get.back(result: value);
-              },
-            ),
-
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void showYesNoActionDialog(String content, String positiveTitle,
-      String negativeTitle, String pictureParam,
-      dynamic intentData,
-      BuildContext context,
-      Function(dynamic model) positiveClick,
-      ) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-          builder: (BuildContext dialogContext) {
-            final screenWidth = MediaQuery.of(dialogContext).size.width;
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0)),
-              backgroundColor: HexColor(ColorVar.white),
-              child: Container(
-                width: screenWidth * 0.7,
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 20),
-                    Image.asset('assets/images/$pictureParam', width: 160, height: 110),
-                    const SizedBox(height: 15),
-                    customText(
-                      text: content,
-                      textAlign: TextAlign.center,
-                      color: HexColor(ColorVar.black),
-                      isSoftWrap: true,
-                      intMaxLine: null,
-                      fontSize: DimensText.bodyText(context),
-                    ),
-                    const SizedBox(height: 28),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: customOutlinedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              text: negativeTitle,
-                              borderColor: HexColor(ColorVar.bgGray72),
-                              fontColor: HexColor(ColorVar.bgGray72),
-                              fontSize: DimensText.buttonSmallText(context),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: customRawMaterialButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                positiveClick(intentData);
-                              },
-                              text: positiveTitle,
-                              backgroundColor: HexColor(ColorVar.appColor),
-                              fontSize: DimensText.buttonSmallText(context),
-                              douWidth: 105,
-                              douHeight: 40
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+  void showYesNoActionDialog(
+    String content, String positiveTitle,
+    String negativeTitle, String pictureParam,
+    dynamic intentData,
+    BuildContext context,
+    Function(dynamic model) positiveClick,
+  ){
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        final screenWidth = MediaQuery.of(dialogContext).size.width;
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0)),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+          child: Container(
+            width: screenWidth * 0.7,
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+                Image.asset('assets/images/$pictureParam', width: 160, height: 110),
+                const SizedBox(height: 15),
+                customText(
+                  text: content,
+                  textAlign: TextAlign.center,
+                  color: Theme.of(context).colorScheme.onTertiary,
+                  isSoftWrap: true,
+                  intMaxLine: null,
+                  fontSize: DimensText.bodyText(context),
                 ),
-              ),
-            );
-          }
-        );
-  }
-
-  void showOneButtonActionDialog(
-      String content, String btnTitle,
-      String pictureParam,BuildContext context,
-      dynamic intentData,
-      Function(dynamic model) onClick,
-      ) {
-
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-          builder: (BuildContext dialogContext) {
-            final screenWidth = MediaQuery.of(dialogContext).size.width;
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0)),
-              backgroundColor: HexColor(ColorVar.white),
-              child: Container(
-                width: screenWidth * 0.7,
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 20),
-                    Image.asset('assets/images/$pictureParam', width: 160, height: 110),
-                    const SizedBox(height: 15),
-                    customText(
-                      text: content,
-                      textAlign: TextAlign.center,
-                      color: HexColor(ColorVar.black),
-                      isSoftWrap: true,
-                      intMaxLine: null,
-                      fontSize: DimensText.bodyText(context),
-                    ),
-                    const SizedBox(height: 30),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: customTextButton(
-                          text: btnTitle,
-                          fontColor: HexColor(ColorVar.black),
-                          fontSize: DimensText.buttonSmallText(context),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            onClick(intentData);
-                          }),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-        );
-  }
-
-  //jika dibutuhkan untuk searching one column
-  void dialogSearchOneColumn(
-      BuildContext context,
-      List<ModelThreeColumn> list,
-      String titleDialog,
-      void Function(ModelThreeColumn selectedModel) selectedClick,
-      ) {
-    // Kunci orientasi ke portrait
-    RecipeMateAppUtil.lockToPortrait();
-
-    List<ModelThreeColumn> tempList = List.from(list);
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return StatefulBuilder(builder: (stfContext, stfSetState) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            backgroundColor: HexColor(ColorVar.white),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: 355,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: HexColor(ColorVar.appColor),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(10.0),
-                        topRight: Radius.circular(10.0),
-                      ),
-                    ),
-                    child: Center(
-                      child: customText(
-                        text: titleDialog,
-                        fontSize: DimensText.bodyText(context),
-                        color: HexColor(ColorVar.white),
-                        fontFamily: 'inter_bold'
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: customTextField(context: context,
-                        onChanged: (value) {
-                          stfSetState(() {
-                            if (value.isNotEmpty) {
-                              tempList = list.where((equipment) =>
-                                  equipment.column2
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase())).toList();
-                            } else {
-                              tempList = List.from(list);
-                            }
-                          });
-                        },
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search ..',
-                      borderRadius: 5
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 1.0),
-                      child: tempList.isNotEmpty
-                          ? ListView.builder(
-                          itemCount: tempList.length,
-                          itemBuilder: (context, index) {
-                            final model = tempList[index];
-                            return InkWell(
-                              onTap: () {
-                                if (model.column1 != '0') {
-                                  Navigator.of(context).pop();
-                                  selectedClick(model);
-                                } else {
-                                  getXSnackBar(
-                                    ConstantVar.stWarning,
-                                    'Mohon dipilih yang benar',
-                                    ColorVar.redStatus,
-                                    ColorVar.white);
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 13, vertical: 13),
-                                color: index % 2 == 0
-                                    ? HexColor(ColorVar.bgDtlDataTable)
-                                    : Colors.transparent,
-                                child: customText(
-                                  text: model.column2,
-                                  fontSize: DimensText.bodySmallText(context),
-                                  color: HexColor(ColorVar.black),
-                                  fontFamily:'inter_regular'
-                                ),
-                              ),
-                            );
-                          })
-                          : Center(
-                            child: customText(text: 'no Data Found'),
-                      ), // Lebih baik dari SizedBox.shrink()
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: RawMaterialButton(
+                const SizedBox(height: 28),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: customOutlinedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        fillColor: HexColor(ColorVar.redText),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: customText(
-                            text: ConstantVar.stCancelTitle,
-                            color: HexColor(ColorVar.white),
-                            fontSize: DimensText.buttonText(context),
-                            fontFamily: 'inter_regular'
-                        ),
+                        text: negativeTitle,
+                        borderColor: Theme.of(context).colorScheme.onSecondary,
+                        fontColor: Theme.of(context).colorScheme.onTertiary,
+                        fontSize: DimensText.buttonSmallText(context),
                       ),
                     ),
-                  )
-                ],
-              ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: customRawMaterialButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          positiveClick(intentData);
+                        },
+                        text: positiveTitle,
+                        fontColor: Theme.of(context).colorScheme.onSurface,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        fontSize: DimensText.buttonSmallText(context),
+                        douWidth: 105,
+                        douHeight: 40
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          );
-        });
-      },
+          ),
+        );
+      }
+    );
+  }
+
+  void showOneButtonActionDialog(
+    String content, String btnTitle,
+    String pictureParam,BuildContext context,
+    dynamic intentData,
+    Function(dynamic model) onClick,
+  ) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext dialogContext) {
+      final screenWidth = MediaQuery.of(dialogContext).size.width;
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0)),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+          child: Container(
+            width: screenWidth * 0.7,
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+                Image.asset('assets/images/$pictureParam', width: 160, height: 110),
+                const SizedBox(height: 15),
+                customText(
+                  text: content,
+                  textAlign: TextAlign.center,
+                  color: Theme.of(context).colorScheme.onTertiary,
+                  isSoftWrap: true,
+                  intMaxLine: null,
+                  fontSize: DimensText.bodyText(context),
+                ),
+                const SizedBox(height: 30),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: customTextButton(
+                    text: btnTitle,
+                    fontColor: Theme.of(context).colorScheme.onTertiary,
+                    fontSize: DimensText.buttonSmallText(context),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      onClick(intentData);
+                    }),
+                ),
+              ],
+            ),
+          )
+        );
+      }
     );
   }
 }

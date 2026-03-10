@@ -26,7 +26,7 @@ class HomeNavView extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
-        await viewModel.onWillPop();
+        await viewModel.onWillPop(context);
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,

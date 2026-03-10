@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:recipemate/utils/color_var.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 import '../../../utils/recipemate_app_util.dart';
@@ -35,7 +33,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
     return PopScope(
       canPop: true,
       child: Scaffold(
-      backgroundColor: HexColor(ColorVar.white),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -72,13 +70,13 @@ class PreferenceFoodDuaView extends StatelessWidget {
               text: "STEP 2 OF 3",
               fontSize: DimensText.captionText(context),
               fontWeight: FontWeight.w500,
-              color: HexColor(ColorVar.bgGray8),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
             ),
             customText(
               text: "66%",
               fontSize: DimensText.captionText(context),
               fontWeight: FontWeight.w500,
-              color: HexColor(ColorVar.appColor),
+              color: Theme.of(context).colorScheme.primary
             ),
           ],
         ),
@@ -90,10 +88,8 @@ class PreferenceFoodDuaView extends StatelessWidget {
           child: LinearProgressIndicator(
             value: 0.66,
             minHeight: screenH * 0.01,
-            backgroundColor: HexColor(ColorVar.bgGray),
-            valueColor: AlwaysStoppedAnimation(
-                HexColor(ColorVar.appColor)
-            ),
+            backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            valueColor: AlwaysStoppedAnimation(Theme.of(context).colorScheme.primary),
           ),
         ),
       ],
@@ -108,7 +104,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
           text: "Tell us your taste!",
           fontSize: DimensText.headerText(context),
           fontWeight: FontWeight.bold,
-          color: HexColor(ColorVar.black),
+          color: Theme.of(context).colorScheme.onSurface,
           fontFamily: 'inter_bold'
         ),
 
@@ -118,7 +114,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
           text: "What are your favorite food types or dietary preferences?",
           fontSize: DimensText.captionText(context),
           fontWeight: FontWeight.w500,
-          color: HexColor(ColorVar.bgGray8),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
           intMaxLine: null
         ),
       ],
@@ -143,19 +139,14 @@ class PreferenceFoodDuaView extends StatelessWidget {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               decoration: BoxDecoration(
-                color: HexColor(ColorVar.white),
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(screenW * 0.04),
                 border: Border.all(
-                  color: selected ? HexColor(ColorVar.appColor) : HexColor(ColorVar.bgGray),
+                  color: selected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                   width: selected ? 2 : 1,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: HexColor(ColorVar.black).withValues(alpha: 0.03),
-                    blurRadius: screenW * 0.02,
-                    offset: Offset(0, screenH * 0.004),
-                  ),
-                ],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -166,13 +157,15 @@ class PreferenceFoodDuaView extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: selected
-                          ? HexColor(ColorVar.appColor).withValues(alpha: 0.1)
-                          : HexColor(ColorVar.bgGray).withValues(alpha: 0.3),
+                        ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     child: Icon(
                       item.icon,
                       size: screenW * 0.07,
-                      color: selected ? HexColor(ColorVar.appColor) : HexColor(ColorVar.bgGray8),
+                      color: selected
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   SizedBox(height: screenH * 0.015),
@@ -180,7 +173,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
                     text: item.label,
                     fontSize: DimensText.bodySmallText(context),
                     fontWeight: selected ? FontWeight.bold : FontWeight.w500,
-                    color: HexColor(ColorVar.black),
+                    color: Theme.of(context).colorScheme.onSurface
                   ),
                 ],
               ),
@@ -197,12 +190,12 @@ class PreferenceFoodDuaView extends StatelessWidget {
         width: double.infinity,
         child: customElevatedButton(
           onPressed: viewModel.isStep2Valid ? () => Get.toNamed('/preference_food_tiga') : null,
-          backgroundColor: HexColor(ColorVar.appColor),
-          sideColor: HexColor(ColorVar.appColor),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          sideColor: Theme.of(context).colorScheme.primary,
           borderRadius: screenW * 0.04,
           text: "Next",
           fontSize: DimensText.buttonText(context),
-          fontColor: HexColor(ColorVar.white),
+          fontColor: Theme.of(context).colorScheme.onPrimary,
           fontWeight: FontWeight.bold,
           padding: EdgeInsets.symmetric(vertical: screenH * 0.022)),
       );

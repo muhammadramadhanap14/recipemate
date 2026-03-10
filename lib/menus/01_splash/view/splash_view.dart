@@ -1,8 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:recipemate/utils/color_var.dart';
 
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/recipemate_circle_painter.dart';
@@ -94,7 +92,7 @@ class _SplashViewState extends State<SplashView>
   Widget build(BuildContext context) {
     final circleSize = MediaQuery.of(context).size.width * 0.45;
     return Scaffold(
-      backgroundColor: HexColor(ColorVar.bgAppColor),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
           child: Column(

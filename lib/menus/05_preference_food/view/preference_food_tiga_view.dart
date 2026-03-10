@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
-import '../../../utils/color_var.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -31,30 +29,30 @@ class PreferenceFoodTigaView extends StatelessWidget {
     return PopScope(
       canPop: true,
       child: Scaffold(
-          backgroundColor: HexColor(ColorVar.white),
-          body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenW * 0.06,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: screenH * 0.025),
-                  _buildProgress(context, viewModel, screenW, screenH),
-                  SizedBox(height: screenH * 0.03),
-                  _buildTitle(context, viewModel, screenH),
-                  SizedBox(height: screenH * 0.03),
-                  Expanded(
-                    child: _buildGrid(context, viewModel, screenW, screenH),
-                  ),
-                  SizedBox(height: screenH * 0.02),
-                  _buildFinishButton(context, viewModel, screenW, screenH),
-                  SizedBox(height: screenH * 0.025),
-                ],
-              ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenW * 0.06,
             ),
-          )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: screenH * 0.025),
+                _buildProgress(context, viewModel, screenW, screenH),
+                SizedBox(height: screenH * 0.03),
+                _buildTitle(context, viewModel, screenH),
+                SizedBox(height: screenH * 0.03),
+                Expanded(
+                  child: _buildGrid(context, viewModel, screenW, screenH),
+                ),
+                SizedBox(height: screenH * 0.02),
+                _buildFinishButton(context, viewModel, screenW, screenH),
+                SizedBox(height: screenH * 0.025),
+              ],
+            ),
+          ),
+        )),
     );
   }
 
@@ -68,13 +66,13 @@ class PreferenceFoodTigaView extends StatelessWidget {
               text: "STEP 3 OF 3",
               fontSize: DimensText.captionText(context),
               fontWeight: FontWeight.w500,
-              color: HexColor(ColorVar.bgGray8),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
             ),
             customText(
               text: "100%",
               fontSize: DimensText.captionText(context),
               fontWeight: FontWeight.w500,
-              color: HexColor(ColorVar.appColor),
+              color: Theme.of(context).colorScheme.primary
             ),
           ],
         ),
@@ -86,10 +84,8 @@ class PreferenceFoodTigaView extends StatelessWidget {
           child: LinearProgressIndicator(
             value: 1,
             minHeight: screenH * 0.01,
-            backgroundColor: HexColor(ColorVar.bgGray),
-            valueColor: AlwaysStoppedAnimation(
-                HexColor(ColorVar.appColor)
-            ),
+            backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            valueColor: AlwaysStoppedAnimation(Theme.of(context).colorScheme.primary),
           ),
         ),
       ],
@@ -104,7 +100,7 @@ class PreferenceFoodTigaView extends StatelessWidget {
             text: "Tell us your taste!",
             fontSize: DimensText.headerText(context),
             fontWeight: FontWeight.bold,
-            color: HexColor(ColorVar.black),
+            color: Theme.of(context).colorScheme.onSurface,
             fontFamily: 'inter_bold'
         ),
 
@@ -114,7 +110,7 @@ class PreferenceFoodTigaView extends StatelessWidget {
             text: "What are your favorite food types or dietary preferences?",
             fontSize: DimensText.captionText(context),
             fontWeight: FontWeight.w500,
-            color: HexColor(ColorVar.bgGray8),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             intMaxLine: null
         ),
       ],
@@ -139,19 +135,14 @@ class PreferenceFoodTigaView extends StatelessWidget {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               decoration: BoxDecoration(
-                color: HexColor(ColorVar.white),
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(screenW * 0.04),
                 border: Border.all(
-                  color: selected ? HexColor(ColorVar.appColor) : HexColor(ColorVar.bgGray),
+                  color: selected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                   width: selected ? 2 : 1,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: screenW * 0.02,
-                    offset: Offset(0, screenH * 0.004),
-                  ),
-                ],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -162,13 +153,15 @@ class PreferenceFoodTigaView extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: selected
-                          ? HexColor(ColorVar.appColor).withValues(alpha: 0.1)
-                          : HexColor(ColorVar.bgGray).withValues(alpha: 0.3),
+                        ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     child: Icon(
                       item.icon,
                       size: screenW * 0.07,
-                      color: selected ? HexColor(ColorVar.appColor) : HexColor(ColorVar.bgGray8),
+                      color: selected
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   SizedBox(height: screenH * 0.015),
@@ -176,7 +169,7 @@ class PreferenceFoodTigaView extends StatelessWidget {
                     text: item.label,
                     fontSize: DimensText.bodySmallText(context),
                     fontWeight: selected ? FontWeight.bold : FontWeight.w500,
-                    color: HexColor(ColorVar.black),
+                    color: Theme.of(context).colorScheme.onSurface
                   ),
                 ],
               ),
@@ -193,12 +186,12 @@ class PreferenceFoodTigaView extends StatelessWidget {
         width: double.infinity,
         child: customElevatedButton(
             onPressed: viewModel.isStep3Valid ? () => viewModel.finishOnboarding() : null,
-            backgroundColor: HexColor(ColorVar.appColor),
-            sideColor: HexColor(ColorVar.appColor),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            sideColor: Theme.of(context).colorScheme.primary,
             borderRadius: screenW * 0.04,
             text: "Finish!",
             fontSize: DimensText.buttonText(context),
-            fontColor: HexColor(ColorVar.white),
+            fontColor: Theme.of(context).colorScheme.onPrimary,
             fontWeight: FontWeight.bold,
             padding: EdgeInsets.symmetric(vertical: screenH * 0.022)),
       );

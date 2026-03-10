@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:recipemate/utils/color_var.dart';
 
 import '../view/account_view.dart';
 import '../view/home_view.dart';
@@ -25,7 +23,7 @@ class HomeNavViewModel extends GetxController {
   }
 
   // Double tap to exit
-  Future<void> onWillPop() async {
+  Future<void> onWillPop(BuildContext context) async {
     final now = DateTime.now();
     if (lastPressed.value == null ||
         now.difference(lastPressed.value!) > const Duration(seconds: 2)) {
@@ -34,8 +32,8 @@ class HomeNavViewModel extends GetxController {
         "Keluar Aplikasi",
         "Tekan sekali lagi untuk keluar",
         snackPosition: SnackPosition.TOP,
-        backgroundColor: HexColor(ColorVar.appColor),
-        colorText: HexColor(ColorVar.white),
+        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+        colorText: Theme.of(context).colorScheme.onSurface,
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 2),
       );
