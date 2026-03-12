@@ -37,7 +37,7 @@ class HomeView extends StatelessWidget {
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
               _buildRecommendedList(context, viewModel),
 
-              _buildSectionHeader(context, "Top Searching Food", "View Popular"),
+              _buildSectionHeader(context, "Top Searching Food", "See all"),
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
               _buildTopSearchingList(context, viewModel),
 
