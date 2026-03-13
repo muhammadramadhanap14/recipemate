@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
 import 'package:recipemate/menus/05_preference_food/view/preference_food_dua_view.dart';
@@ -19,6 +21,7 @@ import 'utils/view_utils/app_theme.dart';
 
 final talker = TalkerFlutter.init(); // Initialize Talker instance here
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+Locale? appLocale;
 
 void main() {
   runZonedGuarded(() {
@@ -67,10 +70,20 @@ class RecipemateApp extends StatelessWidget {
         //uncomment untuk aktifkan flutter talker
         // navigatorObservers: [TalkerRouteObserver(talker)], // Correct way to pass talker instance
         // navigatorKey: navigatorKey,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('id'),
+        ],
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: themeController.themeMode.value,
-        initialRoute: '/',
+        initialRoute: '/home',
         getPages: [
           //GOTO FORM
           GetPage(name: '/', page: () => const SplashView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),

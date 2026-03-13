@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
+import '../../l10n/app_localizations.dart';
 import '../dimens_text.dart';
 
 class ViewDialogUtil {
@@ -53,6 +54,64 @@ class ViewDialogUtil {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  static void dialogSelectLanguage({
+    required BuildContext context,
+    required Function(Locale? locale, String label) onSelected
+  }) {
+    Get.dialog(
+      AlertDialog(
+        title: Text(
+          AppLocalizations.of(context)!.selectLanguage,
+          style: TextStyle(
+            fontSize: DimensText.bodyText(context),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(
+                "System Language",
+                style: TextStyle(
+                  fontSize: DimensText.bodySmallText(context),
+                ),
+              ),
+              onTap: () {
+                onSelected(null, "System");
+                Get.back();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "English",
+                style: TextStyle(
+                  fontSize: DimensText.bodySmallText(context),
+                ),
+              ),
+              onTap: () {
+                onSelected(const Locale('en'), "English");
+                Get.back();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Bahasa Indonesia",
+                style: TextStyle(
+                  fontSize: DimensText.bodySmallText(context),
+                ),
+              ),
+              onTap: () {
+                onSelected(const Locale('id'), "Indonesia");
+                Get.back();
+              },
+            ),
+          ],
         ),
       ),
     );

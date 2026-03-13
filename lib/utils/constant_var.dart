@@ -44,6 +44,7 @@ class ConstantVar {
   static const String addToListBtn = "Add to List";
   static const String editBtn = "Edit";
   static const String addBtn = "Add";
+  static const String yesBtn = "Yes";
 
   //Teks
   static const String stAccountActivities = "Account Activities";

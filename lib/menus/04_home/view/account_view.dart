@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../utils/constant_var.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -24,7 +24,7 @@ class AccountView extends StatelessWidget {
         backgroundColor: theme.scaffoldBackgroundColor,
         centerTitle: true,
         title: customText(
-          text: ConstantVar.akun,
+          text: AppLocalizations.of(context)!.account,
           fontSize: DimensText.headerMenusText(context),
           fontWeight: FontWeight.bold,
           color: theme.colorScheme.onSurface,
@@ -45,15 +45,16 @@ class AccountView extends StatelessWidget {
               _buildMenuItem(
                 context: context,
                 icon: Icons.language,
-                title: "Language",
+                title: AppLocalizations.of(context)!.language,
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    customText(
-                      text: "English",
+                    Obx(() => customText(
+                      text: viewModel.currentLanguage.value,
                       fontSize: DimensText.captionText(context),
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                    )),
+                    SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
                     Icon(
                       Icons.keyboard_arrow_down, 
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -61,13 +62,13 @@ class AccountView extends StatelessWidget {
                     ),
                   ],
                 ),
-                onTap: () {},
+                onTap: () => viewModel.openLanguageDialog(),
               ),
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
               _buildMenuItem(
                 context: context,
                 icon: Icons.dark_mode,
-                title: "Theme",
+                title: AppLocalizations.of(context)!.theme,
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -79,7 +80,7 @@ class AccountView extends StatelessWidget {
               _buildMenuItem(
                 context: context,
                 icon: Icons.change_circle,
-                title: "Change food types & dietary preferences",
+                title: AppLocalizations.of(context)!.changeFoodTypes,
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -91,7 +92,7 @@ class AccountView extends StatelessWidget {
               _buildMenuItem(
                 context: context,
                 icon: Icons.logout_rounded,
-                title: "Logout",
+                title: AppLocalizations.of(context)!.logout,
                 titleColor: Theme.of(context).colorScheme.primary,
                 iconColor: Theme.of(context).colorScheme.primary,
                 trailing: Icon(

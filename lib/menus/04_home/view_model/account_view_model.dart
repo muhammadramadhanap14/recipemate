@@ -11,6 +11,7 @@ class AccountViewModel extends GetxController {
   final appVersion = '-'.obs;
   final RxBool isDarkMode = false.obs;
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
+  RxString currentLanguage = "English".obs;
 
   @override
   void onInit(){
@@ -37,10 +38,21 @@ class AccountViewModel extends GetxController {
     }
   }
 
+  void openLanguageDialog() {
+    ViewDialogUtil.dialogSelectLanguage(
+      context: Get.context!,
+      onSelected: (Locale? locale, String label) {
+        final newLocale = locale ?? Get.deviceLocale ?? const Locale('en');
+        Get.updateLocale(newLocale);
+        currentLanguage.value = label;
+      },
+    );
+  }
+
   void openDialogChangePrefFood(BuildContext context) {
     ViewDialogUtil().showYesNoActionDialog(
       ConstantVar.stChangePrefFood,
-      ConstantVar.stEditData,
+      ConstantVar.yesBtn,
       ConstantVar.stCancelTitle,
       ConstantVar.confirmGif,
       null,
