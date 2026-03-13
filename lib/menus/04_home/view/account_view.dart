@@ -78,6 +78,18 @@ class AccountView extends StatelessWidget {
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
               _buildMenuItem(
                 context: context,
+                icon: Icons.change_circle,
+                title: "Change food types & dietary preferences",
+                trailing: Icon(
+                  Icons.keyboard_arrow_right,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  size: RecipeMateAppUtil.screenWidth * 0.05,
+                ),
+                onTap: () => viewModel.openDialogChangePrefFood(context),
+              ),
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+              _buildMenuItem(
+                context: context,
                 icon: Icons.logout_rounded,
                 title: "Logout",
                 titleColor: Theme.of(context).colorScheme.primary,
@@ -200,6 +212,7 @@ class AccountView extends StatelessWidget {
                 fontSize: DimensText.bodySmallText(context),
                 fontWeight: FontWeight.w600,
                 color: titleColor ?? Theme.of(context).colorScheme.onSurface,
+                intMaxLine: null
               ),
             ),
             trailing,

@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:recipemate/utils/constant_var.dart';
 
 import '../../../utils/view_utils/view_dialog_util.dart';
@@ -22,6 +20,11 @@ class AccountViewModel extends GetxController {
     });
   }
 
+  Future<void> initAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    appVersion.value = "v${packageInfo.version}";
+  }
+
   void changeTheme(ThemeMode mode) {
     themeMode.value = mode;
     Get.changeThemeMode(mode);
@@ -34,21 +37,18 @@ class AccountViewModel extends GetxController {
     }
   }
 
-  Future<void> initAppVersion() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    appVersion.value = "v${packageInfo.version}";
-  }
-
-  Future<void> clearAllCache() async {
-    try {
-      final cacheDir = await getTemporaryDirectory();
-      if (cacheDir.existsSync()) {
-        cacheDir.deleteSync(recursive: true);
-      }
-      // Logika clear session
-    } catch (e) {
-      log("Logout error: $e");
-    }
+  void openDialogChangePrefFood(BuildContext context) {
+    ViewDialogUtil().showYesNoActionDialog(
+      ConstantVar.stChangePrefFood,
+      ConstantVar.stEditData,
+      ConstantVar.stCancelTitle,
+      ConstantVar.confirmGif,
+      null,
+      context,
+      (dynamic model) async {
+        Get.offAllNamed('/preference_food_satu');
+      },
+    );
   }
 
   void logoutDialog(BuildContext context) {
@@ -60,7 +60,6 @@ class AccountViewModel extends GetxController {
       null,
       context,
       (dynamic model) async {
-        await clearAllCache();
         Get.offAllNamed('/login');
       },
     );

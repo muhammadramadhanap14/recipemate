@@ -72,6 +72,7 @@ class ConstantVar {
   static const String stConfirmDelete = "Are you sure you want to delete?";
   static const String stConfirmEdit = "Are you sure you want to Edit?";
   static const String stConfirmGetBackBeforeSave = "Are you sure you want to get back?\nAll unsaved data will be lost.";
+  static const String stChangePrefFood = "Are you sure you want to change?";
 
   //return api :
   static int intSuccess = 200;
