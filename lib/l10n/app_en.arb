@@ -23,5 +23,17 @@
   "stSearchRecipes": "Search recipes, ingredients...",
   "stMorningGreeting": "GOOD MORNING",
   "stAfternoonGreeting": "GOOD AFTERNOON",
-  "stEveningGreeting": "GOOD EVENING"
+  "stEveningGreeting": "GOOD NIGHT",
+  "stWelcomeBack": "Welcome back",
+  "stWelcomeGreet": "Your smart kitchen assistant awaits.",
+  "stRegister": "Create Account",
+  "stRegisterGreet": "Start your smart cooking journey today.",
+  "stFullName": "FULL NAME",
+  "stEmailAddress": "EMAIL ADDRESS",
+  "stPassword": "PASSWORD",
+  "stForgotPassword": "Forgot Password?",
+  "stSignIn": "Sign In",
+  "stSignUp": "Sign Up",
+  "stDontHaveAccount": "Don't have an account? ",
+  "stAlreadyHaveAccount": "Already have an account? "
 }

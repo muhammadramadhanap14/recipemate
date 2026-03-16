@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/menus/03_register/view_model/register_view_model.dart';
 import 'package:recipemate/utils/dimens_text.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -58,7 +59,7 @@ class RegisterView extends StatelessWidget {
                         SizedBox(height: screenH * 0.02),
 
                         customText(
-                            text: 'Create Account',
+                            text: AppLocalizations.of(context)!.stRegister,
                             fontSize: DimensText.superHeaderText(context),
                             fontWeight: FontWeight.w800,
                             fontFamily: 'times_new_roman_med_italic',
@@ -67,7 +68,7 @@ class RegisterView extends StatelessWidget {
                         ),
 
                         customText(
-                          text: "Start your smart cooking journey today.",
+                          text: AppLocalizations.of(context)!.stRegisterGreet,
                           fontSize: DimensText.captionText(context),
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
@@ -79,7 +80,7 @@ class RegisterView extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: customText(
-                            text: "FULL NAME",
+                            text: AppLocalizations.of(context)!.stFullName,
                             fontSize: DimensText.microText(context),
                             fontWeight: FontWeight.w700,
                             color: Theme.of(context).colorScheme.primary,
@@ -124,7 +125,7 @@ class RegisterView extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: customText(
-                            text: "EMAIL ADDRESS",
+                            text: AppLocalizations.of(context)!.stEmailAddress,
                             fontSize: DimensText.microText(context),
                             fontWeight: FontWeight.w700,
                             color: Theme.of(context).colorScheme.primary,
@@ -169,7 +170,7 @@ class RegisterView extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: customText(
-                            text: "PASSWORD",
+                            text: AppLocalizations.of(context)!.stPassword,
                             fontSize: DimensText.microText(context),
                             fontWeight: FontWeight.w700,
                             color: Theme.of(context).colorScheme.primary,
@@ -227,7 +228,7 @@ class RegisterView extends StatelessWidget {
                             backgroundColor: Theme.of(context).colorScheme.primary,
                             sideColor: Theme.of(context).colorScheme.primary,
                             borderRadius: screenW * 0.04,
-                            text: "Sign Up",
+                            text: AppLocalizations.of(context)!.stSignUp,
                             fontSize: DimensText.buttonText(context),
                             fontColor: Theme.of(context).colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
@@ -247,14 +248,14 @@ class RegisterView extends StatelessWidget {
                           child: RichText(
                             textAlign: TextAlign.center,
                             text: TextSpan(
-                              text: "Already have an account? ",
+                              text: AppLocalizations.of(context)!.stAlreadyHaveAccount,
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                 fontSize: DimensText.captionText(context),
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Sign In",
+                                  text: AppLocalizations.of(context)!.stSignIn,
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.bold,

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/utils/dimens_text.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -58,7 +59,7 @@ class LoginView extends StatelessWidget {
                         SizedBox(height: screenH * 0.02),
 
                         customText(
-                          text: 'Welcome Back',
+                          text: AppLocalizations.of(context)!.stWelcomeBack,
                           fontSize: DimensText.superHeaderText(context),
                           fontWeight: FontWeight.w800,
                           fontFamily: 'times_new_roman_med_italic',
@@ -67,7 +68,7 @@ class LoginView extends StatelessWidget {
                         ),
 
                         customText(
-                          text: "Your smart kitchen assistant awaits.",
+                          text: AppLocalizations.of(context)!.stWelcomeGreet,
                           fontSize: DimensText.captionText(context),
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
@@ -79,7 +80,7 @@ class LoginView extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: customText(
-                            text: "EMAIL ADDRESS",
+                            text: AppLocalizations.of(context)!.stEmailAddress,
                             fontSize: DimensText.microText(context),
                             fontWeight: FontWeight.w700,
                             color: Theme.of(context).colorScheme.primary,
@@ -126,13 +127,13 @@ class LoginView extends StatelessWidget {
                           MainAxisAlignment.spaceBetween,
                           children: [
                             customText(
-                              text: "PASSWORD",
+                              text: AppLocalizations.of(context)!.stPassword,
                               fontSize: DimensText.microText(context),
                               fontWeight: FontWeight.w700,
                               color: Theme.of(context).colorScheme.primary,
                             ),
                             customText(
-                              text: "FORGOT?",
+                              text: AppLocalizations.of(context)!.stForgotPassword,
                               fontSize: DimensText.microText(context),
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
@@ -191,7 +192,7 @@ class LoginView extends StatelessWidget {
                             backgroundColor: Theme.of(context).colorScheme.primary,
                             sideColor: Theme.of(context).colorScheme.primary,
                             borderRadius: screenW * 0.04,
-                            text: "Sign In",
+                            text: AppLocalizations.of(context)!.stSignIn,
                             fontSize: DimensText.buttonText(context),
                             fontColor: Theme.of(context).colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
@@ -211,14 +212,14 @@ class LoginView extends StatelessWidget {
                           child: RichText(
                             textAlign: TextAlign.center,
                             text: TextSpan(
-                              text: "Don't have an account? ",
+                              text: AppLocalizations.of(context)!.stDontHaveAccount,
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                 fontSize: DimensText.captionText(context),
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Sign Up",
+                                  text: AppLocalizations.of(context)!.stSignUp,
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.bold,

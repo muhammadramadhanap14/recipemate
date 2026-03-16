@@ -23,5 +23,17 @@
   "stSearchRecipes": "Cari resep, bahan-bahan...",
   "stMorningGreeting": "SELAMAT PAGI",
   "stAfternoonGreeting": "SELAMAT SORE",
-  "stEveningGreeting": "SELAMAT MALAM"
+  "stEveningGreeting": "SELAMAT MALAM",
+  "stWelcomeBack": "Selamat Datang Kembali",
+  "stWelcomeGreet": "Asisten dapur pintar Anda menanti.",
+  "stRegister": "Buat Akun",
+  "stRegisterGreet": "Mulailah perjalanan memasak cerdas Anda hari ini.",
+  "stFullName": "NAMA LENGKAP",
+  "stEmailAddress": "ALAMAT EMAIL",
+  "stPassword": "KATA SANDI",
+  "stForgotPassword": "Lupa Kata Sandi?",
+  "stSignIn": "Masuk",
+  "stSignUp": "Daftar",
+  "stDontHaveAccount": "Belum punya akun? ",
+  "stAlreadyHaveAccount": "Sudah punya akun? "
 }
