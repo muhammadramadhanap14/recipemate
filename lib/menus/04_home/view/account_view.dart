@@ -56,7 +56,7 @@ class AccountView extends StatelessWidget {
                     )),
                     SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
                     Icon(
-                      Icons.keyboard_arrow_down, 
+                      Icons.keyboard_arrow_right,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: RecipeMateAppUtil.screenWidth * 0.05,
                     ),
@@ -69,10 +69,21 @@ class AccountView extends StatelessWidget {
                 context: context,
                 icon: Icons.dark_mode,
                 title: AppLocalizations.of(context)!.theme,
-                trailing: Icon(
-                  Icons.keyboard_arrow_right,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  size: RecipeMateAppUtil.screenWidth * 0.05,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Obx(() => customText(
+                      text: viewModel.currentTheme.value,
+                      fontSize: DimensText.captionText(context),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    )),
+                    SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+                    Icon(
+                      Icons.keyboard_arrow_right,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      size: RecipeMateAppUtil.screenWidth * 0.05,
+                    ),
+                  ]
                 ),
                 onTap: () => viewModel.openThemeDialog(context),
               ),
@@ -86,7 +97,7 @@ class AccountView extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   size: RecipeMateAppUtil.screenWidth * 0.05,
                 ),
-                onTap: () => viewModel.openDialogChangePrefFoodDialog(context),
+                onTap: () => viewModel.openChangePrefFoodDialog(context),
               ),
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
               _buildMenuItem(

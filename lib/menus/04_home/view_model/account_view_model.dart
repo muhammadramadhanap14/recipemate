@@ -13,10 +13,13 @@ class AccountViewModel extends GetxController {
   final RxBool isDarkMode = false.obs;
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
   RxString currentLanguage = "".obs;
+  RxString currentTheme = "".obs;
 
   @override
   void onInit(){
     super.onInit();
+    initializeLanguage();
+    initializeTheme();
     Future.microtask(() async {
       await initAppVersion();
     });
@@ -27,9 +30,48 @@ class AccountViewModel extends GetxController {
     appVersion.value = "v${packageInfo.version}";
   }
 
+  void initializeLanguage() {
+    if (Get.locale == null || Get.locale == Get.deviceLocale) {
+      currentLanguage.value = "Default System";
+    } else {
+      if (Get.locale!.languageCode == 'id') {
+        currentLanguage.value = "Indonesia";
+      } else if (Get.locale!.languageCode == 'en') {
+        currentLanguage.value = "English";
+      } else {
+        currentLanguage.value = "Default System";
+      }
+    }
+  }
+
+  void initializeTheme() {
+    switch (themeMode.value) {
+      case ThemeMode.system:
+        currentTheme.value = "Default System";
+        break;
+      case ThemeMode.light:
+        currentTheme.value = "Light";
+        break;
+      case ThemeMode.dark:
+        currentTheme.value = "Dark";
+        break;
+    }
+  }
+
   void changeTheme(ThemeMode mode) {
     themeMode.value = mode;
     Get.changeThemeMode(mode);
+    switch (mode) {
+      case ThemeMode.system:
+        currentTheme.value = "Default System";
+        break;
+      case ThemeMode.light:
+        currentTheme.value = "Light";
+        break;
+      case ThemeMode.dark:
+        currentTheme.value = "Dark";
+        break;
+    }
   }
 
   void openThemeDialog(BuildContext context) async {
@@ -43,14 +85,18 @@ class AccountViewModel extends GetxController {
     ViewDialogUtil.dialogSelectLanguage(
       context: Get.context!,
       onSelected: (Locale? locale, String label) {
-        final newLocale = locale ?? Get.deviceLocale ?? const Locale('en');
-        Get.updateLocale(newLocale);
-        currentLanguage.value = label;
+        if (locale == null) {
+          Get.updateLocale(Get.deviceLocale ?? const Locale('en'));
+          currentLanguage.value = "Default System";
+        } else {
+          Get.updateLocale(locale);
+          currentLanguage.value = label;
+        }
       },
     );
   }
 
-  void openDialogChangePrefFoodDialog(BuildContext context) {
+  void openChangePrefFoodDialog(BuildContext context) {
     ViewDialogUtil().showYesNoActionDialog(
       AppLocalizations.of(context)!.stConfirmChange,
       AppLocalizations.of(context)!.yesBtn,

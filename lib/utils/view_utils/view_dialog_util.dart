@@ -27,7 +27,7 @@ class ViewDialogUtil {
             children: [
               RadioListTile<ThemeMode>(
                 title: Text(
-                  "System Default",
+                  "Default System",
                   style: TextStyle(
                     fontSize: DimensText.bodySmallText(context),
                   ),
