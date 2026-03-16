@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
+import '../../l10n/app_localizations.dart';
 import '../color_var.dart';
-import '../constant_var.dart';
 import '../dimens_text.dart';
 
 class EmptyViewUtil extends StatelessWidget {
@@ -25,7 +25,7 @@ class EmptyViewUtil extends StatelessWidget {
               width: 200, height: 120),
           const SizedBox(height: 30),
           customText(
-            text: ConstantVar.stNotFound,
+            text: AppLocalizations.of(context)!.stNotFound,
             fontSize: DimensText.headerText(context),
             color: HexColor(ColorVar.black),
             fontFamily: 'inter_bold',
@@ -45,7 +45,7 @@ class EmptyViewUtil extends StatelessWidget {
                       width: 200, height:  110),
                   const SizedBox(height: 30),
                   customText(
-                      text: ConstantVar.stNotFound,
+                      text: AppLocalizations.of(context)!.stNotFound,
                       fontSize: DimensText.headerText(context),
                       fontFamily: 'inter_bold',
                   )

@@ -103,13 +103,14 @@ class LoginViewModel extends GetxController {
     /// );
   }
 
-  Future<void> loginTrc() async {
+  Future<void> loginTrc(BuildContext context) async {
     try {
       final handset = await RecipeMateAppUtil.getUniqueDeviceId();
       final response = await apiRepository.postApiLogin(
         username.value,
         password.value,
         handset,
+        context
       );
       /// TODO Parse JSON
       ///

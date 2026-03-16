@@ -3,9 +3,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-
-import '../utils/constant_url.dart';
-import '../utils/constant_var.dart';
+import 'package:recipemate/l10n/app_localizations.dart';
 
 class ApiRepository {
   late Dio _dio;
@@ -39,9 +37,10 @@ class ApiRepository {
   }
 
   Future<dynamic> postApiLogin(
-    String username,
-    String password,
-    String terminal,
+      String username,
+      String password,
+      String terminal,
+      BuildContext context,
     ) async {
     String basicAuth = 'Basic ${base64.encode(utf8.encode('$username:$password'))}';
     _dio.options.headers["content-Type"] = 'application/json';
@@ -68,7 +67,7 @@ class ApiRepository {
       if (e is DioException) {
         if(e.type == DioExceptionType.connectionTimeout) {
           log("Connection Timeout Exception: ${e.message}");
-          return ConstantVar.stTimeOutConnection;
+          return AppLocalizations.of(context)!.stTimeOutConnection;
         } else {
           log("DioException: ${e.message}");
           log("Request options: ${e.requestOptions}");

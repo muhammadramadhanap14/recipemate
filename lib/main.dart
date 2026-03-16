@@ -83,7 +83,7 @@ class RecipemateApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: themeController.themeMode.value,
-        initialRoute: '/home',
+        initialRoute: '/',
         getPages: [
           //GOTO FORM
           GetPage(name: '/', page: () => const SplashView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),

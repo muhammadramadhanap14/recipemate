@@ -86,7 +86,7 @@ class AccountView extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   size: RecipeMateAppUtil.screenWidth * 0.05,
                 ),
-                onTap: () => viewModel.openDialogChangePrefFood(context),
+                onTap: () => viewModel.openDialogChangePrefFoodDialog(context),
               ),
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
               _buildMenuItem(
@@ -100,7 +100,7 @@ class AccountView extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   size: RecipeMateAppUtil.screenWidth * 0.05,
                 ),
-                onTap: () => viewModel.logoutDialog(context),
+                onTap: () => viewModel.openLogoutDialog(context),
               ),
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
             ],

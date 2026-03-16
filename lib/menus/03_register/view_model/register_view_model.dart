@@ -109,13 +109,14 @@ class RegisterViewModel extends GetxController {
     /// );
   }
 
-  Future<void> registerTrc() async {
+  Future<void> registerTrc(BuildContext context) async {
     try {
       final handset = await RecipeMateAppUtil.getUniqueDeviceId();
       final response = await apiRepository.postApiLogin(
         username.value,
         password.value,
         handset,
+        context
       );
       /// TODO Parse JSON
       ///

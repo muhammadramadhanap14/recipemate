@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:recipemate/utils/constant_var.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../view_model/home_nav_view_model.dart';
 
@@ -84,7 +84,7 @@ class HomeNavView extends StatelessWidget {
                 viewModel: viewModel,
                 index: 0,
                 icon: Icons.home_rounded,
-                label: ConstantVar.home,
+                label: AppLocalizations.of(context)!.home,
               ),
               SizedBox(width: RecipeMateAppUtil.screenWidth * 0.12),
               _buildNavItem(
@@ -92,7 +92,7 @@ class HomeNavView extends StatelessWidget {
                 viewModel: viewModel,
                 index: 1,
                 icon: Icons.person_rounded,
-                label: ConstantVar.akun,
+                label: AppLocalizations.of(context)!.account,
               ),
             ],
           ),

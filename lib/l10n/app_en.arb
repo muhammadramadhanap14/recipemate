@@ -1,8 +1,20 @@
 {
+  "home": "Home",
   "account": "Account",
+  "recipeMateAi": "RecipeMate AI",
+  "menuErrorReport": "Error Report",
   "language": "Language",
   "theme": "Theme",
   "logout": "Logout",
   "selectLanguage": "Select Language",
-  "changeFoodTypes": "Change food types & dietary preferences"
+  "changeFoodTypes": "Change food types & dietary preferences",
+  "stConfirmLogout": "Are you sure you want to log out?",
+  "stConfirmChange": "Are you sure you want to change?",
+  "stTimeOutConnection": "Connection timeout, please try again later",
+  "stNoConnectionMessage": "Failed to connect to server,\nplease check your internet connection again",
+  "stNotFound": "No Data Found",
+  "confirmLogout": "Yes, Log out",
+  "yesBtn": "Yes",
+  "stCancelTitle": "Cancel",
+  "backBtnTitle": "Back"
 }

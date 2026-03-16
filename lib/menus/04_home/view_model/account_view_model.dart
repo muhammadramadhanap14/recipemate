@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recipemate/utils/constant_var.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 
 class AccountViewModel extends GetxController {
@@ -11,7 +12,7 @@ class AccountViewModel extends GetxController {
   final appVersion = '-'.obs;
   final RxBool isDarkMode = false.obs;
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
-  RxString currentLanguage = "English".obs;
+  RxString currentLanguage = "".obs;
 
   @override
   void onInit(){
@@ -49,11 +50,11 @@ class AccountViewModel extends GetxController {
     );
   }
 
-  void openDialogChangePrefFood(BuildContext context) {
+  void openDialogChangePrefFoodDialog(BuildContext context) {
     ViewDialogUtil().showYesNoActionDialog(
-      ConstantVar.stChangePrefFood,
-      ConstantVar.yesBtn,
-      ConstantVar.stCancelTitle,
+      AppLocalizations.of(context)!.stConfirmChange,
+      AppLocalizations.of(context)!.yesBtn,
+      AppLocalizations.of(context)!.stCancelTitle,
       ConstantVar.confirmGif,
       null,
       context,
@@ -63,11 +64,11 @@ class AccountViewModel extends GetxController {
     );
   }
 
-  void logoutDialog(BuildContext context) {
+  void openLogoutDialog(BuildContext context) {
     ViewDialogUtil().showYesNoActionDialog(
-      ConstantVar.stConfirmLogout,
-      ConstantVar.confirmLogout,
-      ConstantVar.stCancelTitle,
+      AppLocalizations.of(context)!.stConfirmLogout,
+      AppLocalizations.of(context)!.confirmLogout,
+      AppLocalizations.of(context)!.stCancelTitle,
       ConstantVar.confirmGif,
       null,
       context,

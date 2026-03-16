@@ -1,8 +1,20 @@
 {
+  "home": "Beranda",
   "account": "Akun",
+  "recipeMateAi": "RecipeMate AI",
+  "menuErrorReport": "Laporan Kesalahan",
   "language": "Bahasa",
   "theme": "Tema",
   "logout": "Keluar",
   "selectLanguage": "Pilih Bahasa",
-  "changeFoodTypes": "Ubah jenis makanan & preferensi diet"
+  "changeFoodTypes": "Ubah jenis makanan & preferensi diet",
+  "stConfirmLogout": "Apakah Anda yakin ingin keluar?",
+  "stConfirmChange": "Apakah Anda yakin ingin mengubah?",
+  "stTimeOutConnection": "Waktu koneksi habis, silakan coba lagi nanti.",
+  "stNoConnectionMessage": "Gagal terhubung ke server,\nsilahkan periksa koneksi internet Anda kembali",
+  "stNotFound": "Tidak Ada Data yang Ditemukan",
+  "confirmLogout": "Ya, Keluar",
+  "yesBtn": "Ya",
+  "stCancelTitle": "Batal",
+  "backBtnTitle": "Kembali"
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:recipemate/utils/constant_var.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -30,7 +30,7 @@ class RecipemateAiView extends StatelessWidget {
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),
             customText(
-              text: ConstantVar.recipeMateAi,
+              text: AppLocalizations.of(context)!.recipeMateAi,
               fontSize: DimensText.headerMenusText(context),
               fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.onSurface,

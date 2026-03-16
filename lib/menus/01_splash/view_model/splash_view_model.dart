@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/constant_var.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
@@ -41,8 +42,8 @@ class SplashViewModel extends GetxController {
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ViewDialogUtil().showOneButtonActionDialog(
-          ConstantVar.stNoConnectionMessage,
-          ConstantVar.backBtnTitle,
+          AppLocalizations.of(context)!.stNoConnectionMessage,
+          AppLocalizations.of(context)!.backBtnTitle,
           ConstantVar.noConnectionGif,
           context,
           null,

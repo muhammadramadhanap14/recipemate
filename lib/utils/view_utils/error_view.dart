@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../color_var.dart';
-import '../constant_var.dart';
 import '../dimens_text.dart';
 import '../recipemate_app_util.dart';
 
@@ -28,7 +28,7 @@ class ErrorView extends StatelessWidget {
         title: Container(
           margin: const EdgeInsets.only(left: 18.0),
           child: customText(
-            text: ConstantVar.menuErrorReport,
+            text: AppLocalizations.of(context)!.menuErrorReport,
             fontSize: DimensText.headerMenusText(context),
             color: HexColor(ColorVar.black),
             fontFamily: 'inter_regular',
