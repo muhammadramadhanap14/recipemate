@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../view_model/preference_food_view_model.dart';
 
@@ -67,7 +68,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             customText(
-              text: "STEP 2 OF 3",
+              text: AppLocalizations.of(context)!.stStep2of3,
               fontSize: DimensText.captionText(context),
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
@@ -101,7 +102,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         customText(
-          text: "Tell us your taste!",
+          text: AppLocalizations.of(context)!.stgreetPrefFood3,
           fontSize: DimensText.headerText(context),
           fontWeight: FontWeight.bold,
           color: Theme.of(context).colorScheme.onSurface,
@@ -111,7 +112,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
         SizedBox(height: screenH * 0.01),
 
         customText(
-          text: "What are your favorite food types or dietary preferences?",
+          text: AppLocalizations.of(context)!.stgreetPrefFood4,
           fontSize: DimensText.captionText(context),
           fontWeight: FontWeight.w500,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
@@ -193,7 +194,7 @@ class PreferenceFoodDuaView extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.primary,
           sideColor: Theme.of(context).colorScheme.primary,
           borderRadius: screenW * 0.04,
-          text: "Next",
+          text: AppLocalizations.of(context)!.stNextBtn,
           fontSize: DimensText.buttonText(context),
           fontColor: Theme.of(context).colorScheme.onPrimary,
           fontWeight: FontWeight.bold,

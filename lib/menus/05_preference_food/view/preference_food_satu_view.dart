@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -43,7 +44,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
                           _buildTitle(context, screenH),
                           SizedBox(height: screenH * 0.04),
                           
-                          _buildInputLabel(context, "SHORT NAME", screenW, screenH),
+                          _buildInputLabel(context, AppLocalizations.of(context)!.stShortname, screenW, screenH),
 
                           TextFormField(
                             focusNode: FocusNode(),
@@ -73,7 +74,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
                           
                           SizedBox(height: screenH * 0.025),
                           
-                          _buildInputLabel(context, "AGE", screenW, screenH),
+                          _buildInputLabel(context, AppLocalizations.of(context)!.stAge, screenW, screenH),
 
                           TextFormField(
                             focusNode: FocusNode(),
@@ -109,7 +110,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildInputLabel(context, "HEIGHT (CM)", screenW, screenH),
+                                    _buildInputLabel(context, AppLocalizations.of(context)!.stHeight, screenW, screenH),
                                     TextFormField(
                                       focusNode: FocusNode(),
                                       keyboardType: TextInputType.number,
@@ -143,7 +144,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildInputLabel(context, "WEIGHT (KG)", screenW, screenH),
+                                    _buildInputLabel(context, AppLocalizations.of(context)!.stWeight, screenW, screenH),
 
                                     TextFormField(
                                       focusNode: FocusNode(),
@@ -212,7 +213,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             customText(
-              text: "STEP 1 OF 3",
+              text: AppLocalizations.of(context)!.stStep1of3,
               fontSize: DimensText.captionText(context),
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
@@ -244,7 +245,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         customText(
-          text: "Tell us about yourself!",
+          text: AppLocalizations.of(context)!.stgreetPrefFood,
           fontSize: DimensText.headerText(context),
           fontWeight: FontWeight.bold,
           color: Theme.of(context).colorScheme.onSurface,
@@ -252,7 +253,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
         ),
         SizedBox(height: screenH * 0.01),
         customText(
-          text: "Help us personalize your experience by providing some basic information.",
+          text: AppLocalizations.of(context)!.stgreetPrefFood2,
           fontSize: DimensText.captionText(context),
           fontWeight: FontWeight.w500,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
@@ -271,7 +272,7 @@ class PreferenceFoodSatuView extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.primary,
           sideColor: Theme.of(context).colorScheme.primary,
           borderRadius: screenW * 0.04,
-          text: "Next",
+          text: AppLocalizations.of(context)!.stNextBtn,
           fontSize: DimensText.buttonText(context),
           fontColor: Theme.of(context).colorScheme.onPrimary,
           fontWeight: FontWeight.bold,
