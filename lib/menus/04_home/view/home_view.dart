@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../../utils/greeting_util.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -33,11 +35,11 @@ class HomeView extends StatelessWidget {
               ),
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
 
-              _buildSectionHeader(context, "Recommended for You", "See all"),
+              _buildSectionHeader(context, AppLocalizations.of(context)!.stRecommended, AppLocalizations.of(context)!.stSeeAll),
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
               _buildRecommendedList(context, viewModel),
 
-              _buildSectionHeader(context, "Top Searching Food", "See all"),
+              _buildSectionHeader(context, AppLocalizations.of(context)!.stTopSearching, AppLocalizations.of(context)!.stSeeAll),
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
               _buildTopSearchingList(context, viewModel),
 
@@ -75,7 +77,7 @@ class HomeView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 customText(
-                  text: "GOOD MORNING",
+                  text: GreetingUtil.getGreeting(context),
                   fontSize: DimensText.microText(context),
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary
@@ -126,7 +128,7 @@ class HomeView extends StatelessWidget {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                hintText: "Search recipes, ingredients...",
+                hintText: AppLocalizations.of(context)!.stSearchRecipes,
                 hintStyle: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                   fontSize: DimensText.captionText(context),

@@ -16,5 +16,12 @@
   "confirmLogout": "Ya, Keluar",
   "yesBtn": "Ya",
   "stCancelTitle": "Batal",
-  "backBtnTitle": "Kembali"
+  "backBtnTitle": "Kembali",
+  "stRecommended": "Rekomendasi untuk anda",
+  "stTopSearching": "Pencarian makanan teratas",
+  "stSeeAll": "Lihat semua",
+  "stSearchRecipes": "Cari resep, bahan-bahan...",
+  "stMorningGreeting": "SELAMAT PAGI",
+  "stAfternoonGreeting": "SELAMAT SORE",
+  "stEveningGreeting": "SELAMAT MALAM"
 }

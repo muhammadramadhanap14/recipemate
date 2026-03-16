@@ -126,7 +126,7 @@ Widget customText({
   return Text(
     text,
     key: key,
-    // softWrap: isMultiline ? true : isSoftWrap,
+    softWrap: isMultiline ? true : isSoftWrap,
     maxLines: intMaxLine,
     overflow: textOverflow ?? (isMultiline ? TextOverflow.visible : TextOverflow.ellipsis),
     textAlign: textAlign ?? TextAlign.left,

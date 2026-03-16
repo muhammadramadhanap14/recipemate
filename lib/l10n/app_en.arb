@@ -16,5 +16,12 @@
   "confirmLogout": "Yes, Log out",
   "yesBtn": "Yes",
   "stCancelTitle": "Cancel",
-  "backBtnTitle": "Back"
+  "backBtnTitle": "Back",
+  "stRecommended": "Recommended for you",
+  "stTopSearching": "Top searching food",
+  "stSeeAll": "See all",
+  "stSearchRecipes": "Search recipes, ingredients...",
+  "stMorningGreeting": "GOOD MORNING",
+  "stAfternoonGreeting": "GOOD AFTERNOON",
+  "stEveningGreeting": "GOOD EVENING"
 }
