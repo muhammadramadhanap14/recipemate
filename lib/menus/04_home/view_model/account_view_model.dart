@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:recipemate/utils/constant_var.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
@@ -97,28 +96,24 @@ class AccountViewModel extends GetxController {
   }
 
   void openChangePrefFoodDialog(BuildContext context) {
-    ViewDialogUtil().showYesNoActionDialog(
-      AppLocalizations.of(context)!.stConfirmChange,
-      AppLocalizations.of(context)!.yesBtn,
-      AppLocalizations.of(context)!.stCancelTitle,
-      ConstantVar.confirmGif,
-      null,
-      context,
-      (dynamic model) async {
+    ViewDialogUtil().showConfirmDialog(
+      context: context,
+      message: AppLocalizations.of(context)!.stConfirmChange,
+      positiveTitle: AppLocalizations.of(context)!.yesBtn,
+      negativeTitle: AppLocalizations.of(context)!.stCancelTitle,
+      onPositiveClick: () {
         Get.offAllNamed('/preference_food_satu');
       },
     );
   }
 
   void openLogoutDialog(BuildContext context) {
-    ViewDialogUtil().showYesNoActionDialog(
-      AppLocalizations.of(context)!.stConfirmLogout,
-      AppLocalizations.of(context)!.confirmLogout,
-      AppLocalizations.of(context)!.stCancelTitle,
-      ConstantVar.confirmGif,
-      null,
-      context,
-      (dynamic model) async {
+    ViewDialogUtil().showConfirmDialog(
+      context: context,
+      message: AppLocalizations.of(context)!.stConfirmLogout,
+      positiveTitle: AppLocalizations.of(context)!.confirmLogout,
+      negativeTitle: AppLocalizations.of(context)!.stCancelTitle,
+      onPositiveClick: () {
         Get.offAllNamed('/login');
       },
     );

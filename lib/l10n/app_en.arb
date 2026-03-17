@@ -8,6 +8,7 @@
   "theme": "Theme",
   "logout": "Logout",
   "selectLanguage": "Select Language",
+  "selectTheme": "Select Theme",
   "changeFoodTypes": "Change food types & dietary preferences",
   "stConfirmLogout": "Are you sure you want to log out?",
   "stConfirmChange": "Are you sure you want to change?",
