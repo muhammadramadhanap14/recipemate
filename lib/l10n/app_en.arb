@@ -60,5 +60,6 @@
   "stChangePhoto": "Change Profile Photo",
   "stRemovPhoto": "Remove Photo",
   "stChoosePhoto": "Choose From Gallery",
-  "stTakePhoto": "Take Photo"
+  "stTakePhoto": "Take Photo",
+  "stChangeData": "Change Data"
 }

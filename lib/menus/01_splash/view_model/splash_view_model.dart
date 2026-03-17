@@ -40,16 +40,16 @@ class SplashViewModel extends GetxController {
       await Future.delayed(splashDuration);
       Get.offAllNamed('/login');
     } else {
-      // WidgetsBinding.instance.addPostFrameCallback((_) {
-      //   ViewDialogUtil().showOneButtonActionDialog(
-      //     AppLocalizations.of(context)!.stNoConnectionMessage,
-      //     AppLocalizations.of(context)!.backBtnTitle,
-      //     ConstantVar.noConnectionGif,
-      //     context,
-      //     null,
-      //         (dynamic) {},
-      //   );
-      // });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ViewDialogUtil().showOneButtonActionDialog(
+          AppLocalizations.of(context)!.stNoConnectionMessage,
+          AppLocalizations.of(context)!.backBtnTitle,
+          ConstantVar.noConnectionGif,
+          context,
+          null,
+            (dynamic) {},
+        );
+      });
     }
   }
 

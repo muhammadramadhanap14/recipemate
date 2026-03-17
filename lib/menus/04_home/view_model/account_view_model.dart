@@ -97,6 +97,8 @@ class AccountViewModel extends GetxController {
 
   void openChangePrefFoodDialog(BuildContext context) {
     ViewDialogUtil().showConfirmDialog(
+      title: "${AppLocalizations.of(context)!.stChangeData}?",
+      icon: Icons.edit_attributes,
       context: context,
       message: AppLocalizations.of(context)!.stConfirmChange,
       positiveTitle: AppLocalizations.of(context)!.yesBtn,
@@ -109,6 +111,8 @@ class AccountViewModel extends GetxController {
 
   void openLogoutDialog(BuildContext context) {
     ViewDialogUtil().showConfirmDialog(
+      title: "${AppLocalizations.of(context)!.logout}?",
+      icon: Icons.logout,
       context: context,
       message: AppLocalizations.of(context)!.stConfirmLogout,
       positiveTitle: AppLocalizations.of(context)!.confirmLogout,

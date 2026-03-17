@@ -60,5 +60,6 @@
   "stChangePhoto": "Ubah Foto Profil",
   "stRemovPhoto": "Hapus Foto",
   "stChoosePhoto": "Pilih Dari Galeri",
-  "stTakePhoto": "Ambil Foto"
+  "stTakePhoto": "Ambil Foto",
+  "stChangeData": "Ubah Data"
 }
