@@ -123,4 +123,8 @@ class AccountViewModel extends GetxController {
       },
     );
   }
+
+  void navigateToSettingsPage(BuildContext context) {
+    Get.toNamed('/settings');
+  }
 }

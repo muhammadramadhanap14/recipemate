@@ -3,6 +3,7 @@
   "account": "Account",
   "recipeMateAi": "RecipeMate AI",
   "menuErrorReport": "Error Report",
+  "security": "Security",
   "language": "Language",
   "theme": "Theme",
   "logout": "Logout",
@@ -49,5 +50,10 @@
   "stgreetPrefFood": "Tell us about yourself!",
   "stgreetPrefFood2": "Help us personalize your experience by providing some basic information",
   "stgreetPrefFood3": "Tell us your taste!",
-  "stgreetPrefFood4": "What are your favorite food types or dietary preferences?"
+  "stgreetPrefFood4": "What are your favorite food types or dietary preferences?",
+  "stBiometric": "BIOMETRIC AUTHENTICATION",
+  "stBiometricFace": "Enable Face ID",
+  "stBiometricFingerPrint": "Enable Fingerprint ID",
+  "stPasswordManagement": "PASSWORD MANAGEMENT",
+  "stChangePassword": "Change Password"
 }

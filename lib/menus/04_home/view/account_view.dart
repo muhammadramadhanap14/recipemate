@@ -44,6 +44,18 @@ class AccountView extends StatelessWidget {
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
               _buildMenuItem(
                 context: context,
+                icon: Icons.settings,
+                title: AppLocalizations.of(context)!.security,
+                trailing: Icon(
+                  Icons.keyboard_arrow_right,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  size: RecipeMateAppUtil.screenWidth * 0.05,
+                ),
+                onTap: () => viewModel.navigateToSettingsPage(context),
+              ),
+              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+              _buildMenuItem(
+                context: context,
                 icon: Icons.language,
                 title: AppLocalizations.of(context)!.language,
                 trailing: Row(

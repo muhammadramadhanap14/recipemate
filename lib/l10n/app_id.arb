@@ -3,6 +3,7 @@
   "account": "Akun",
   "recipeMateAi": "RecipeMate AI",
   "menuErrorReport": "Laporan Kesalahan",
+  "security": "Keamanan",
   "language": "Bahasa",
   "theme": "Tema",
   "logout": "Keluar",
@@ -49,5 +50,10 @@
   "stgreetPrefFood": "Ceritakan tentang dirimu!",
   "stgreetPrefFood2": "Bantu kami mempersonalisasi pengalaman Anda dengan memberikan beberapa informasi dasar.",
   "stgreetPrefFood3": "Ceritakan selera Anda!",
-  "stgreetPrefFood4": "Apa jenis makanan favorit atau preferensi diet Anda?"
+  "stgreetPrefFood4": "Apa jenis makanan favorit atau preferensi diet Anda?",
+  "stBiometric": "OTENTIKASI BIOMETRIK",
+  "stBiometricFace": "Aktifkan Face ID",
+  "stBiometricFingerPrint": "Aktifkan Fingerprint ID",
+  "stPasswordManagement": "MANAJEMEN KATA SANDI",
+  "stChangePassword": "Ubah Kata Sandi"
 }
