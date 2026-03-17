@@ -55,5 +55,9 @@
   "stBiometricFace": "Aktifkan Face ID",
   "stBiometricFingerPrint": "Aktifkan Fingerprint ID",
   "stPasswordManagement": "MANAJEMEN KATA SANDI",
-  "stChangePassword": "Ubah Kata Sandi"
+  "stChangePassword": "Ubah Kata Sandi",
+  "stChangePhoto": "Ubah Foto Profil",
+  "stRemovPhoto": "Hapus Foto",
+  "stChoosePhoto": "Pilih Dari Galeri",
+  "stTakePhoto": "Ambil Foto"
 }

@@ -12,22 +12,21 @@ class AccountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AccountViewModel viewModel = Get.put(AccountViewModel());
-    final theme = Theme.of(context);
     RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
     });
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         title: customText(
           text: AppLocalizations.of(context)!.account,
           fontSize: DimensText.headerMenusText(context),
           fontWeight: FontWeight.bold,
-          color: theme.colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface,
           fontFamily: 'times_new_roman_bold',
         ),
         automaticallyImplyLeading: false,
@@ -158,20 +157,23 @@ class AccountView extends StatelessWidget {
             Positioned(
               bottom: RecipeMateAppUtil.screenWidth * 0.01,
               right: RecipeMateAppUtil.screenWidth * 0.01,
-              child: Container(
-                padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.015),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    width: RecipeMateAppUtil.screenWidth * 0.005,
+              child: GestureDetector(
+                onTap: () => _showEditPhotoBottomSheet(context),
+                child: Container(
+                  padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.015),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      width: RecipeMateAppUtil.screenWidth * 0.005,
+                    ),
                   ),
-                ),
-                child: Icon(
-                  Icons.edit, 
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  size: RecipeMateAppUtil.screenWidth * 0.04,
+                  child: Icon(
+                    Icons.edit,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    size: RecipeMateAppUtil.screenWidth * 0.04,
+                  ),
                 ),
               ),
             ),
@@ -193,6 +195,134 @@ class AccountView extends StatelessWidget {
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         )),
       ],
+    );
+  }
+
+  void _showEditPhotoBottomSheet(BuildContext context) {
+    final screenW = RecipeMateAppUtil.screenWidth;
+    final screenH = RecipeMateAppUtil.screenHeight;
+    final borderRadius = RecipeMateAppUtil.screenWidth * 0.04;
+
+    Get.bottomSheet(
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: screenW * 0.06, vertical: screenH * 0.02),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(screenW * 0.08)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: SizedBox(
+                width: screenW * 0.12,
+                height: screenH * 0.006,
+              ),
+            ),
+            SizedBox(height: screenH * 0.03),
+            customText(
+              text: AppLocalizations.of(context)!.stChangePhoto,
+              fontSize: DimensText.bodyText(context),
+              fontWeight: FontWeight.bold,
+              fontFamily: 'times_new_roman_bold',
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            SizedBox(height: screenH * 0.03),
+            _buildBottomSheetItem(
+              context: context,
+              icon: Icons.camera_alt,
+              title: AppLocalizations.of(context)!.stTakePhoto,
+              onTap: () {
+                Get.back();
+              },
+            ),
+            SizedBox(height: screenH * 0.015),
+            _buildBottomSheetItem(
+              context: context,
+              icon: Icons.image,
+              title: AppLocalizations.of(context)!.stChoosePhoto,
+              onTap: () {
+                Get.back();
+              },
+            ),
+            SizedBox(height: screenH * 0.015),
+            _buildBottomSheetItem(
+              context: context,
+              icon: Icons.delete,
+              title: AppLocalizations.of(context)!.stRemovPhoto,
+              titleColor: Theme.of(context).colorScheme.primary,
+              iconColor: Theme.of(context).colorScheme.primary,
+              onTap: () {
+                Get.back();
+              },
+            ),
+            SizedBox(height: screenH * 0.04),
+            SizedBox(
+              width: double.infinity,
+              child: customElevatedButton(
+                onPressed: () => Get.back(),
+                text: AppLocalizations.of(context)!.stCancelTitle,
+                fontSize: DimensText.buttonSmallText(context),
+                fontFamily: 'Poppins-Regular',
+                fontWeight: FontWeight.w600,
+                backgroundColor: Theme.of(context).cardColor,
+                sideColor: Theme.of(context).cardColor,
+                fontColor: Theme.of(context).colorScheme.onSurface,
+                borderRadius: borderRadius,
+              ),
+            ),
+            SizedBox(height: screenH * 0.02),
+          ],
+        ),
+      ),
+      isScrollControlled: true,
+    );
+  }
+
+  Widget _buildBottomSheetItem({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color? titleColor,
+    Color? iconColor,
+  }) {
+    final screenW = RecipeMateAppUtil.screenWidth;
+    final borderRadius = RecipeMateAppUtil.screenWidth * 0.04;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          vertical: RecipeMateAppUtil.screenHeight * 0.015,
+          horizontal: screenW * 0.04,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: iconColor ?? Theme.of(context).colorScheme.onSurface,
+              size: screenW * 0.06,
+            ),
+            SizedBox(width: screenW * 0.04),
+            customText(
+              text: title,
+              fontSize: DimensText.bodySmallText(context),
+              fontWeight: FontWeight.w600,
+              color: titleColor ?? Theme.of(context).colorScheme.onSurface,
+            ),
+          ],
+        ),
+      ),
     );
   }
 

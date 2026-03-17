@@ -55,5 +55,9 @@
   "stBiometricFace": "Enable Face ID",
   "stBiometricFingerPrint": "Enable Fingerprint ID",
   "stPasswordManagement": "PASSWORD MANAGEMENT",
-  "stChangePassword": "Change Password"
+  "stChangePassword": "Change Password",
+  "stChangePhoto": "Change Profile Photo",
+  "stRemovPhoto": "Remove Photo",
+  "stChoosePhoto": "Choose From Gallery",
+  "stTakePhoto": "Take Photo"
 }
