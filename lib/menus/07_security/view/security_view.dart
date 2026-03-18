@@ -53,17 +53,6 @@ class SecurityView extends StatelessWidget {
               SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
               _buildMenuItem(
                 context: context,
-                icon: Icons.face_retouching_natural,
-                title: AppLocalizations.of(context)!.stBiometricFace,
-                trailing: Obx(() => Switch(
-                  value: viewModel.isFaceIdEnabled.value,
-                  activeThumbColor: theme.colorScheme.primary,
-                  onChanged: viewModel.toggleFaceId,
-                )),
-              ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-              _buildMenuItem(
-                context: context,
                 icon: Icons.fingerprint,
                 title: AppLocalizations.of(context)!.stBiometricFingerPrint,
                 trailing: Obx(() => Switch(

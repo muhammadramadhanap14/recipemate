@@ -8,7 +8,6 @@ import '../../../utils/view_utils/app_snackbar.dart';
 class SecurityViewModel extends GetxController {
   final userName = 'Axel Darmawan'.obs;
   final userId = 'axel.darmawan@recipemate.io'.obs;
-  final RxBool isFaceIdEnabled = false.obs;
   final RxBool isFingerprintEnabled = false.obs;
   final LocalAuthentication auth = LocalAuthentication();
   bool _canCheckBiometrics = false;
@@ -51,7 +50,7 @@ class SecurityViewModel extends GetxController {
     if (value) {
       try {
         final authenticated = await auth.authenticate(
-          localizedReason: "Scan untuk aktifkan sidik jari Anda",
+          localizedReason: AppLocalizations.of(context)!.stEnableFingerprint,
           options: const AuthenticationOptions(
             stickyAuth: true,
             biometricOnly: true,
@@ -88,9 +87,5 @@ class SecurityViewModel extends GetxController {
         message: AppLocalizations.of(context)!.stFingerprintInfo
       );
     }
-  }
-
-  void toggleFaceId(bool value) {
-    isFaceIdEnabled.value = value;
   }
 }

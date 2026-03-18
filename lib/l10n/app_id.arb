@@ -72,6 +72,7 @@
   "stFingerprintFailed": "Autentikasi gagal",
   "stFingerprintError": "Terjadi kesalahan: ",
   "stFingerprintInfo": "Fingerprint dinonaktifkan",
-  "stDontHaveBiometric": "Fingerprint tidak tersedia di perangkat ini",
-  "stFailedOnBoarding": "Gagal menyelesaikan onboarding"
+  "stDontHaveBiometric": "Biometrik tidak tersedia di perangkat ini",
+  "stFailedOnBoarding": "Gagal menyelesaikan onboarding",
+  "stEnableFingerprint": "Pindai untuk mengaktifkan fitur Biometrik"
 }

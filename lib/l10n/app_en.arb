@@ -72,6 +72,7 @@
   "stFingerprintFailed": "Authentication failed",
   "stFingerprintError": "There is an error: ",
   "stFingerprintInfo": "Fingerprint is disabled",
-  "stDontHaveBiometric": "Fingerprint is not available on this device",
-  "stFailedOnBoarding": "Failed to finish onboarding"
+  "stDontHaveBiometric": "Biometric is not available on this device",
+  "stFailedOnBoarding": "Failed to finish onboarding",
+  "stEnableFingerprint": "Scan to activate Biometric feature"
 }
