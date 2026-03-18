@@ -61,5 +61,17 @@
   "stRemovPhoto": "Remove Photo",
   "stChoosePhoto": "Choose From Gallery",
   "stTakePhoto": "Take Photo",
-  "stChangeData": "Change Data"
+  "stChangeData": "Change Data",
+  "stQuitApp": "Exit Application",
+  "stDoubleTapToExit": "Press again to exit",
+  "stSuccess": "Success",
+  "stFailed": "Failed",
+  "stInfo": "Info",
+  "stError": "Error",
+  "stFingerprintSuccess": "Fingerprint has been successfully activated",
+  "stFingerprintFailed": "Authentication failed",
+  "stFingerprintError": "There is an error: ",
+  "stFingerprintInfo": "Fingerprint is disabled",
+  "stDontHaveBiometric": "Fingerprint is not available on this device",
+  "stFailedOnBoarding": "Failed to finish onboarding"
 }

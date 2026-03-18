@@ -61,5 +61,17 @@
   "stRemovPhoto": "Hapus Foto",
   "stChoosePhoto": "Pilih Dari Galeri",
   "stTakePhoto": "Ambil Foto",
-  "stChangeData": "Ubah Data"
+  "stChangeData": "Ubah Data",
+  "stQuitApp": "Keluar Aplikasi",
+  "stDoubleTapToExit": "Tekan sekali lagi untuk keluar",
+  "stSuccess": "Sukses",
+  "stFailed": "Gagal",
+  "stInfo": "Informasi",
+  "stError": "Kesalahan",
+  "stFingerprintSuccess": "Fingerprint berhasil diaktifkan",
+  "stFingerprintFailed": "Autentikasi gagal",
+  "stFingerprintError": "Terjadi kesalahan: ",
+  "stFingerprintInfo": "Fingerprint dinonaktifkan",
+  "stDontHaveBiometric": "Fingerprint tidak tersedia di perangkat ini",
+  "stFailedOnBoarding": "Gagal menyelesaikan onboarding"
 }

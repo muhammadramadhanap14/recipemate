@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/l10n/app_localizations.dart';
 
 import '../../../utils/view_utils/app_snackbar.dart';
 import '../view/account_view.dart';
@@ -28,8 +29,8 @@ class HomeNavViewModel extends GetxController {
     if (lastPressed.value == null || now.difference(lastPressed.value!) > const Duration(seconds: 2)) {
       lastPressed.value = now;
       AppSnackbar.show(
-        title: "Keluar Aplikasi",
-        message: "Tekan sekali lagi untuk keluar"
+        title: AppLocalizations.of(context)!.stQuitApp,
+        message: AppLocalizations.of(context)!.stDoubleTapToExit
       );
       return;
     }

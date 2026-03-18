@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../utils/view_utils/app_snackbar.dart';
@@ -39,10 +40,11 @@ class SecurityViewModel extends GetxController {
   }
 
   Future<void> toggleFingerprint(bool value) async {
+    final context = Get.context!;
     if (!_canCheckBiometrics) {
       AppSnackbar.show(
-        title: "Error",
-        message: "Biometric tidak tersedia di device ini"
+        title: AppLocalizations.of(context)!.stError,
+        message: AppLocalizations.of(context)!.stDontHaveBiometric
       );
       return;
     }
@@ -60,21 +62,21 @@ class SecurityViewModel extends GetxController {
           final prefs = await SharedPreferences.getInstance();
           await prefs.setBool('fingerprint_enabled', true);
           AppSnackbar.show(
-            title: "Success",
-            message: "Fingerprint berhasil diaktifkan"
+            title: AppLocalizations.of(context)!.stSuccess,
+            message: AppLocalizations.of(context)!.stFingerprintSuccess
           );
         } else {
           isFingerprintEnabled.value = false;
           AppSnackbar.show(
-            title: "Failed",
-            message: "Autentikasi gagal"
+            title: AppLocalizations.of(context)!.stFailed,
+            message: AppLocalizations.of(context)!.stFingerprintFailed
           );
         }
       } catch (e) {
         isFingerprintEnabled.value = false;
         AppSnackbar.show(
-          title: "Error",
-          message: "Terjadi kesalahan: $e"
+          title: AppLocalizations.of(context)!.stError,
+          message: AppLocalizations.of(context)!.stFingerprintError + e.toString()
         );
       }
     } else {
@@ -82,8 +84,8 @@ class SecurityViewModel extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('fingerprint_enabled', false);
       AppSnackbar.show(
-        title: "Info",
-        message: "Fingerprint dinonaktifkan"
+        title: AppLocalizations.of(context)!.stInfo,
+        message: AppLocalizations.of(context)!.stFingerprintInfo
       );
     }
   }

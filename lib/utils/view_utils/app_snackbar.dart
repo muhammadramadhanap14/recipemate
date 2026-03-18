@@ -19,8 +19,7 @@ class AppSnackbar {
       title,
       message,
       snackPosition: SnackPosition.TOP,
-      backgroundColor:
-      backgroundColor ?? theme.colorScheme.primary.withValues(alpha: 0.5),
+      backgroundColor: backgroundColor ?? theme.colorScheme.primary.withValues(alpha: 0.5),
       colorText: textColor ?? theme.colorScheme.onSurface,
       margin: const EdgeInsets.all(16),
       duration: duration,

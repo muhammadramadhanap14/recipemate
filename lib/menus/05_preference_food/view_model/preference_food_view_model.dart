@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/l10n/app_localizations.dart';
+import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 
 class PreferenceFoodViewModel extends GetxController {
 
@@ -44,14 +47,17 @@ class PreferenceFoodViewModel extends GetxController {
     }
   }
 
-  Future<void> finishOnboarding() async {
+  Future<void> finishOnboarding(BuildContext context) async {
     isLoading.value = true;
     try {
       //TODO logic simpan all data ke local
       await Future.delayed(const Duration(milliseconds: 800));
       Get.offAllNamed('/home');
     } catch (e) {
-      Get.snackbar("Error", "Failed to finish onboarding");
+      AppSnackbar.show(
+        title: AppLocalizations.of(context)!.stError,
+        message: AppLocalizations.of(context)!.stFailedOnBoarding
+      );
     } finally {
       isLoading.value = false;
     }
