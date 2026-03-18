@@ -1,16 +1,21 @@
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:recipemate/utils/data_session_util.dart';
 
 import '../../../utils/view_utils/app_snackbar.dart';
 
 class SecurityViewModel extends GetxController {
+  final DataSessionUtil dataSessionUtil;
   final userName = 'Axel Darmawan'.obs;
   final userId = 'axel.darmawan@recipemate.io'.obs;
   final RxBool isFingerprintEnabled = false.obs;
   final LocalAuthentication auth = LocalAuthentication();
   bool _canCheckBiometrics = false;
+
+  SecurityViewModel({
+    required this.dataSessionUtil
+  });
 
   @override
   void onInit() {
@@ -34,8 +39,7 @@ class SecurityViewModel extends GetxController {
   }
 
   Future<void> _loadBiometricStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    isFingerprintEnabled.value = prefs.getBool('fingerprint_enabled') ?? false;
+    isFingerprintEnabled.value = dataSessionUtil.getFingerprint();
   }
 
   Future<void> toggleFingerprint(bool value) async {
@@ -58,8 +62,7 @@ class SecurityViewModel extends GetxController {
         );
         if (authenticated) {
           isFingerprintEnabled.value = true;
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setBool('fingerprint_enabled', true);
+          await dataSessionUtil.setFingerprint(true);
           AppSnackbar.show(
             title: AppLocalizations.of(context)!.stSuccess,
             message: AppLocalizations.of(context)!.stFingerprintSuccess
@@ -80,8 +83,7 @@ class SecurityViewModel extends GetxController {
       }
     } else {
       isFingerprintEnabled.value = false;
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('fingerprint_enabled', false);
+      await dataSessionUtil.setFingerprint(true);
       AppSnackbar.show(
         title: AppLocalizations.of(context)!.stInfo,
         message: AppLocalizations.of(context)!.stFingerprintInfo

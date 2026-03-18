@@ -12,6 +12,7 @@ import 'package:recipemate/menus/06_recipemate_ai/view/recipemate_ai_view.dart';
 import 'package:recipemate/menus/07_security/view/security_view.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
+import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/view_utils/error_view.dart';
 import 'package:recipemate/utils/view_utils/theme_controller.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -32,6 +33,7 @@ void main() {
     Get.put<ApiRepository>(ApiRepository(), permanent: true);
     Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
     Get.put<ThemeController>(ThemeController(), permanent: true);
+    Get.putAsync<DataSessionUtil>(() async => await DataSessionUtil().init(), permanent: true,);
 
     // Set Flutter's error handler
     FlutterError.onError = (FlutterErrorDetails details) {

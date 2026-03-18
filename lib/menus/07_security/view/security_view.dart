@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/menus/07_security/view_model/security_view_model.dart';
+import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 
@@ -12,7 +13,10 @@ class SecurityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SecurityViewModel viewModel = Get.put(SecurityViewModel());
+    final SecurityViewModel viewModel = Get.put(
+      SecurityViewModel(
+        dataSessionUtil: Get.find<DataSessionUtil>()
+    ));
     final theme = Theme.of(context);
     RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
