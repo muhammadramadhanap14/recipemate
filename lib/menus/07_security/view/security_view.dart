@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:recipemate/menus/07_settings/view_model/settings_view_model.dart';
+import 'package:recipemate/menus/07_security/view_model/security_view_model.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/dimens_text.dart';
 
-class SettingsView extends StatelessWidget {
-  const SettingsView({super.key});
+class SecurityView extends StatelessWidget {
+  const SecurityView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final SettingsViewModel viewModel = Get.put(SettingsViewModel());
+    final SecurityViewModel viewModel = Get.put(SecurityViewModel());
     final theme = Theme.of(context);
     RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -101,7 +101,7 @@ class SettingsView extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader(BuildContext context, SettingsViewModel viewModel) {
+  Widget _buildProfileHeader(BuildContext context, SecurityViewModel viewModel) {
     final double profileSize = RecipeMateAppUtil.screenWidth * 0.28;
 
     return Center(

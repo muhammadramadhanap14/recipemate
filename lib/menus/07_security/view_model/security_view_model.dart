@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class SettingsViewModel extends GetxController {
+class SecurityViewModel extends GetxController {
   final userName = 'Axel Darmawan'.obs;
   final userId = 'axel.darmawan@recipemate.io'.obs;
 
