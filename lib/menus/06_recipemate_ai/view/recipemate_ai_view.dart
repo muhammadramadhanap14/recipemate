@@ -25,7 +25,7 @@ class RecipemateAiView extends StatelessWidget {
         title: Row(
           children: [
             Image.asset(
-              "assets/images/cover_logo_recipemate.png",
+              "assets/images/logo_recipemate_ai.png",
               width: RecipeMateAppUtil.screenWidth * 0.08,
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),

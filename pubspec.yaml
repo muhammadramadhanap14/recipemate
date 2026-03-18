@@ -70,7 +70,7 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: "assets/images/cover_logo_recipemate.png"
+  image_path: "assets/images/cover_logo_recipemate_2.png"
 
 # The following section is specific to Flutter packages.
 flutter:
