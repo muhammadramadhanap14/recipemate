@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../utils/view_utils/app_snackbar.dart';
 import '../view/account_view.dart';
 import '../view/home_view.dart';
 
@@ -26,14 +27,9 @@ class HomeNavViewModel extends GetxController {
     final now = DateTime.now();
     if (lastPressed.value == null || now.difference(lastPressed.value!) > const Duration(seconds: 2)) {
       lastPressed.value = now;
-      Get.snackbar(
-        "Keluar Aplikasi",
-        "Tekan sekali lagi untuk keluar",
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-        colorText: Theme.of(context).colorScheme.onSurface,
-        margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 2),
+      AppSnackbar.show(
+        title: "Keluar Aplikasi",
+        message: "Tekan sekali lagi untuk keluar"
       );
       return;
     }
