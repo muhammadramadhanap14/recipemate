@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
@@ -12,7 +14,11 @@ class AccountView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AccountViewModel viewModel = Get.put(AccountViewModel());
+    final AccountViewModel viewModel = Get.put(
+      AccountViewModel(
+        dataSessionUtil: Get.find<DataSessionUtil>(),
+      )
+    );
     RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
@@ -142,7 +148,7 @@ class AccountView extends StatelessWidget {
       children: [
         Stack(
           children: [
-            Container(
+            Obx(() => Container(
               width: profileSize,
               height: profileSize,
               decoration: BoxDecoration(
@@ -152,16 +158,18 @@ class AccountView extends StatelessWidget {
                   width: RecipeMateAppUtil.screenWidth * 0.01,
                 ),
               ),
-              child: const CircleAvatar(
-                backgroundImage: AssetImage("assets/images/profile_pict_icon.png"),
+              child: CircleAvatar(
+                backgroundImage: viewModel.profileImage.value != null
+                    ? FileImage(viewModel.profileImage.value!)
+                    : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
                 backgroundColor: Colors.transparent,
               ),
-            ),
+            )),
             Positioned(
               bottom: RecipeMateAppUtil.screenWidth * 0.01,
               right: RecipeMateAppUtil.screenWidth * 0.01,
               child: GestureDetector(
-                onTap: () => _showEditPhotoBottomSheet(context),
+                onTap: () => _showEditPhotoBottomSheet(context, viewModel),
                 child: Container(
                   padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.015),
                   decoration: BoxDecoration(
@@ -196,12 +204,13 @@ class AccountView extends StatelessWidget {
           fontWeight: FontWeight.w400,
           fontSize: DimensText.captionText(context),
           color: Theme.of(context).colorScheme.onSurfaceVariant,
+          textAlign: TextAlign.center,
         )),
       ],
     );
   }
 
-  void _showEditPhotoBottomSheet(BuildContext context) {
+  void _showEditPhotoBottomSheet(BuildContext context, AccountViewModel viewModel) {
     final screenW = RecipeMateAppUtil.screenWidth;
     final screenH = RecipeMateAppUtil.screenHeight;
     final borderRadius = RecipeMateAppUtil.screenWidth * 0.04;
@@ -218,9 +227,13 @@ class AccountView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: SizedBox(
+              child: Container(
                 width: screenW * 0.12,
                 height: screenH * 0.006,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
             SizedBox(height: screenH * 0.03),
@@ -238,6 +251,7 @@ class AccountView extends StatelessWidget {
               title: AppLocalizations.of(context)!.stTakePhoto,
               onTap: () {
                 Get.back();
+                viewModel.pickImage(ImageSource.camera);
               },
             ),
             SizedBox(height: screenH * 0.015),
@@ -247,6 +261,7 @@ class AccountView extends StatelessWidget {
               title: AppLocalizations.of(context)!.stChoosePhoto,
               onTap: () {
                 Get.back();
+                viewModel.pickImage(ImageSource.gallery);
               },
             ),
             SizedBox(height: screenH * 0.015),
@@ -258,6 +273,7 @@ class AccountView extends StatelessWidget {
               iconColor: Theme.of(context).colorScheme.primary,
               onTap: () {
                 Get.back();
+                viewModel.removeImage();
               },
             ),
             SizedBox(height: screenH * 0.04),

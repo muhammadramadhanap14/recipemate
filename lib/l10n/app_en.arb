@@ -77,5 +77,6 @@
   "stEnableFingerprint": "Scan to activate Biometric feature",
   "stNoConnectionInternetTitle": "No Internet Connection",
   "stNoConnectionInternetMessage": "Please check your internet settings and try again",
-  "stRetryBtn": "Retry"
+  "stRetryBtn": "Retry",
+  "stReasonFailedPhoto": "Failed to pick image:"
 }

@@ -77,5 +77,6 @@
   "stEnableFingerprint": "Pindai untuk mengaktifkan fitur Biometrik",
   "stNoConnectionInternetTitle": "Tidak Ada Koneksi Internet",
   "stNoConnectionInternetMessage": "Silakan periksa pengaturan internet Anda dan coba lagi",
-  "stRetryBtn": "Coba Lagi"
+  "stRetryBtn": "Coba Lagi",
+  "stReasonFailedPhoto": "Gagal memilih gambar:"
 }
