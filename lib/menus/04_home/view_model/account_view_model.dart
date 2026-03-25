@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -6,10 +5,12 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recipemate/utils/data_session_util.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../utils/session_controller.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 
 class AccountViewModel extends GetxController {
   final DataSessionUtil dataSessionUtil;
+  final DataSessionUtilController session = Get.find<DataSessionUtilController>();
   final userName = 'Axel Darmawan'.obs;
   final userId = 'axel.darmawan@example.com'.obs;
   final appVersion = '-'.obs;
@@ -17,7 +18,6 @@ class AccountViewModel extends GetxController {
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
   RxString currentLanguage = "".obs;
   RxString currentTheme = "".obs;
-  final Rx<File?> profileImage = Rx<File?>(null);
   final ImagePicker _picker = ImagePicker();
 
   AccountViewModel({
@@ -29,17 +29,9 @@ class AccountViewModel extends GetxController {
     super.onInit();
     initializeLanguage();
     initializeTheme();
-    loadProfileImage();
     Future.microtask(() async {
       await initAppVersion();
     });
-  }
-
-  Future<void> loadProfileImage() async {
-    final String? path = await dataSessionUtil.getProfileImagePath();
-    if (path != null && path.isNotEmpty) {
-      profileImage.value = File(path);
-    }
   }
 
   Future<void> initAppVersion() async {
@@ -57,20 +49,15 @@ class AccountViewModel extends GetxController {
         imageQuality: 80,
       );
       if (pickedFile != null) {
-        profileImage.value = File(pickedFile.path);
-        await dataSessionUtil.setProfileImagePath(pickedFile.path);
+        await session.setProfileImage(pickedFile.path);
       }
     } catch (e) {
-      Get.snackbar(
-          l10n.stError,
-          l10n.stReasonFailedPhoto + e.toString()
-      );
+      Get.snackbar(l10n.stError, l10n.stReasonFailedPhoto + e.toString());
     }
   }
 
   Future<void> removeImage() async {
-    profileImage.value = null;
-    await dataSessionUtil.clearProfileImagePath();
+    await session.clearProfileImage();
   }
 
   void initializeLanguage() {

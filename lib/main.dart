@@ -13,6 +13,7 @@ import 'package:recipemate/menus/07_security/view/security_view.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
+import 'package:recipemate/utils/session_controller.dart';
 import 'package:recipemate/utils/view_utils/error_view.dart';
 import 'package:recipemate/utils/view_utils/theme_controller.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -34,6 +35,11 @@ void main() {
     Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
     Get.put<ThemeController>(ThemeController(), permanent: true);
     Get.put<DataSessionUtil>(DataSessionUtil(), permanent: true);
+
+    Get.put<DataSessionUtilController>(
+      DataSessionUtilController(dataSessionUtil: Get.find()),
+      permanent: true,
+    );
 
     // Set Flutter's error handler
     FlutterError.onError = (FlutterErrorDetails details) {

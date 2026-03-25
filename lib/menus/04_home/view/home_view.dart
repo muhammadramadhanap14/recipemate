@@ -4,6 +4,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../utils/greeting_util.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
+import '../../../utils/session_controller.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../../../utils/view_utils/connection_wrapper.dart';
 import '../view_model/home_view_model.dart';
@@ -58,21 +59,22 @@ class HomeView extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
       child: Row(
         children: [
-          Container(
-            width: RecipeMateAppUtil.screenWidth * 0.13,
-            height: RecipeMateAppUtil.screenWidth * 0.13,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Theme.of(context).colorScheme.primary,
-                width: RecipeMateAppUtil.screenWidth * 0.005,
+          Obx(() {
+            final session = Get.find<DataSessionUtilController>();
+            return Container(
+              width: RecipeMateAppUtil.screenWidth * 0.13,
+              height: RecipeMateAppUtil.screenWidth * 0.13,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: session.profileImage.value != null
+                      ? FileImage(session.profileImage.value!)
+                      : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
+                  fit: BoxFit.cover,
+                ),
               ),
-              image: const DecorationImage(
-                image: AssetImage("assets/images/profile_pict_icon.png"),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+            );
+          }),
           SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),
           Expanded(
             child: Column(

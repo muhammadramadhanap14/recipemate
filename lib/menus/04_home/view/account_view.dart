@@ -159,8 +159,8 @@ class AccountView extends StatelessWidget {
                 ),
               ),
               child: CircleAvatar(
-                backgroundImage: viewModel.profileImage.value != null
-                    ? FileImage(viewModel.profileImage.value!)
+                backgroundImage: viewModel.session.profileImage.value != null
+                    ? FileImage(viewModel.session.profileImage.value!)
                     : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
                 backgroundColor: Colors.transparent,
               ),
