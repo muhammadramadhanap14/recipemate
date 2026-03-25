@@ -4,6 +4,7 @@ import '../utils/data_session_util.dart';
 
 class DataSessionUtilController extends GetxController {
   final DataSessionUtil dataSessionUtil;
+  final RxBool isFingerprintEnabled = false.obs;
   final Rx<File?> profileImage = Rx<File?>(null);
 
   DataSessionUtilController({
@@ -13,7 +14,17 @@ class DataSessionUtilController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    loadFingerprint();
     loadProfileImage();
+  }
+
+  Future<void> loadFingerprint() async {
+    isFingerprintEnabled.value = await dataSessionUtil.getFingerprint();
+  }
+
+  Future<void> setFingerprint(bool value) async {
+    isFingerprintEnabled.value = value;
+    await dataSessionUtil.setFingerprint(value);
   }
 
   Future<void> loadProfileImage() async {

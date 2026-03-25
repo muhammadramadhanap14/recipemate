@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/menus/07_security/view_model/security_view_model.dart';
-import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/dimens_text.dart';
 
 class SecurityView extends StatelessWidget {
@@ -16,8 +16,9 @@ class SecurityView extends StatelessWidget {
   Widget build(BuildContext context) {
     final SecurityViewModel viewModel = Get.put(
       SecurityViewModel(
-        dataSessionUtil: Get.find<DataSessionUtil>()
-    ));
+        session: Get.find<DataSessionUtilController>(),
+      )
+    );
     final theme = Theme.of(context);
     RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -62,7 +63,7 @@ class SecurityView extends StatelessWidget {
                   icon: Icons.fingerprint,
                   title: AppLocalizations.of(context)!.stBiometricFingerPrint,
                   trailing: Obx(() => Switch(
-                    value: viewModel.isFingerprintEnabled.value,
+                    value: viewModel.session.isFingerprintEnabled.value,
                     activeThumbColor: theme.colorScheme.primary,
                     onChanged: viewModel.toggleFingerprint,
                   )),

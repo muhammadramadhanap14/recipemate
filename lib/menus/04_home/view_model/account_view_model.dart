@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:recipemate/utils/data_session_util.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 
 class AccountViewModel extends GetxController {
-  final DataSessionUtil dataSessionUtil;
-  final DataSessionUtilController session = Get.find<DataSessionUtilController>();
+  final DataSessionUtilController session;
   final userName = 'Axel Darmawan'.obs;
   final userId = 'axel.darmawan@example.com'.obs;
   final appVersion = '-'.obs;
@@ -21,7 +19,7 @@ class AccountViewModel extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
   AccountViewModel({
-    required this.dataSessionUtil
+    required this.session
   });
 
   @override

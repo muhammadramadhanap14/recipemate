@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -16,7 +16,7 @@ class AccountView extends StatelessWidget {
   Widget build(BuildContext context) {
     final AccountViewModel viewModel = Get.put(
       AccountViewModel(
-        dataSessionUtil: Get.find<DataSessionUtil>(),
+        session: Get.find<DataSessionUtilController>(),
       )
     );
     RecipeMateAppUtil.init(context);
