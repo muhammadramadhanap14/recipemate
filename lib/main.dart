@@ -33,7 +33,7 @@ void main() {
     Get.put<ApiRepository>(ApiRepository(), permanent: true);
     Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
     Get.put<ThemeController>(ThemeController(), permanent: true);
-    Get.putAsync<DataSessionUtil>(() async => await DataSessionUtil().init(), permanent: true,);
+    Get.put<DataSessionUtil>(DataSessionUtil(), permanent: true);
 
     // Set Flutter's error handler
     FlutterError.onError = (FlutterErrorDetails details) {

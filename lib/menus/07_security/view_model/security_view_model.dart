@@ -39,22 +39,22 @@ class SecurityViewModel extends GetxController {
   }
 
   Future<void> _loadBiometricStatus() async {
-    isFingerprintEnabled.value = dataSessionUtil.getFingerprint();
+    isFingerprintEnabled.value = await dataSessionUtil.getFingerprint();
   }
 
   Future<void> toggleFingerprint(bool value) async {
-    final context = Get.context!;
+    final l10n = AppLocalizations.of(Get.context!)!;
     if (!_canCheckBiometrics) {
       AppSnackbar.show(
-        title: AppLocalizations.of(context)!.stError,
-        message: AppLocalizations.of(context)!.stDontHaveBiometric
+        title: l10n.stError,
+        message: l10n.stDontHaveBiometric
       );
       return;
     }
     if (value) {
       try {
         final authenticated = await auth.authenticate(
-          localizedReason: AppLocalizations.of(context)!.stEnableFingerprint,
+          localizedReason: l10n.stEnableFingerprint,
           options: const AuthenticationOptions(
             stickyAuth: true,
             biometricOnly: true,
@@ -64,29 +64,29 @@ class SecurityViewModel extends GetxController {
           isFingerprintEnabled.value = true;
           await dataSessionUtil.setFingerprint(true);
           AppSnackbar.show(
-            title: AppLocalizations.of(context)!.stSuccess,
-            message: AppLocalizations.of(context)!.stFingerprintSuccess
+            title: l10n.stSuccess,
+            message: l10n.stFingerprintSuccess
           );
         } else {
           isFingerprintEnabled.value = false;
           AppSnackbar.show(
-            title: AppLocalizations.of(context)!.stFailed,
-            message: AppLocalizations.of(context)!.stFingerprintFailed
+            title: l10n.stFailed,
+            message: l10n.stFingerprintFailed
           );
         }
       } catch (e) {
         isFingerprintEnabled.value = false;
         AppSnackbar.show(
-          title: AppLocalizations.of(context)!.stError,
-          message: AppLocalizations.of(context)!.stFingerprintError + e.toString()
+          title: l10n.stError,
+          message: "${l10n.stFingerprintError} $e"
         );
       }
     } else {
       isFingerprintEnabled.value = false;
-      await dataSessionUtil.setFingerprint(true);
+      await dataSessionUtil.setFingerprint(false);
       AppSnackbar.show(
-        title: AppLocalizations.of(context)!.stInfo,
-        message: AppLocalizations.of(context)!.stFingerprintInfo
+        title: l10n.stInfo,
+        message: l10n.stFingerprintInfo
       );
     }
   }

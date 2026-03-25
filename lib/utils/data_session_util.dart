@@ -1,24 +1,18 @@
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DataSessionUtil extends GetxService {
-  late SharedPreferences _prefs;
-
-  Future<DataSessionUtil> init() async {
-    _prefs = await SharedPreferences.getInstance();
-    return this;
-  }
-
+class DataSessionUtil {
   // Key
-  static const _keyFingerprint = 'fingerprint_enabled';
+  static const String _fingerprintKey = 'fingerprint_enabled';
 
   // Setter
   Future<void> setFingerprint(bool value) async {
-    await _prefs.setBool(_keyFingerprint, value);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_fingerprintKey, value);
   }
 
   // Getter
-  bool getFingerprint() {
-    return _prefs.getBool(_keyFingerprint) ?? false;
+  Future<bool> getFingerprint() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_fingerprintKey) ?? false;
   }
 }
