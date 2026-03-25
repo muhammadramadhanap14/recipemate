@@ -14,7 +14,11 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeViewModel viewModel = Get.put(HomeViewModel());
+    final HomeViewModel viewModel = Get.put(
+      HomeViewModel(
+        session: Get.find<DataSessionUtilController>(),
+      )
+    );
     RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
@@ -60,15 +64,14 @@ class HomeView extends StatelessWidget {
       child: Row(
         children: [
           Obx(() {
-            final session = Get.find<DataSessionUtilController>();
             return Container(
               width: RecipeMateAppUtil.screenWidth * 0.13,
               height: RecipeMateAppUtil.screenWidth * 0.13,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: session.profileImage.value != null
-                      ? FileImage(session.profileImage.value!)
+                  image: viewModel.session.profileImage.value != null
+                      ? FileImage(viewModel.session.profileImage.value!)
                       : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
                   fit: BoxFit.cover,
                 ),

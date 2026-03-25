@@ -104,21 +104,21 @@ class SecurityView extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Container(
-            width: profileSize,
-            height: profileSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                width: RecipeMateAppUtil.screenWidth * 0.01,
+          Obx(() {
+            return Container(
+              width: profileSize,
+              height: profileSize,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: viewModel.session.profileImage.value != null
+                      ? FileImage(viewModel.session.profileImage.value!)
+                      : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: const CircleAvatar(
-              backgroundImage: AssetImage("assets/images/profile_pict_icon.png"),
-              backgroundColor: Colors.transparent,
-            ),
-          ),
+            );
+          }),
           SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
           Obx(() => customText(
               text: viewModel.userName.value,
