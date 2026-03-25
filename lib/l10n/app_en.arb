@@ -74,5 +74,8 @@
   "stFingerprintInfo": "Fingerprint is disabled",
   "stDontHaveBiometric": "Biometric is not available on this device",
   "stFailedOnBoarding": "Failed to finish onboarding",
-  "stEnableFingerprint": "Scan to activate Biometric feature"
+  "stEnableFingerprint": "Scan to activate Biometric feature",
+  "stNoConnectionInternetTitle": "No Internet Connection",
+  "stNoConnectionInternetMessage": "Please check your internet settings and try again",
+  "stRetryBtn": "Retry"
 }

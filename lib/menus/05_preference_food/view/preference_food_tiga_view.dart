@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/recipemate_app_util.dart';
@@ -29,31 +30,34 @@ class PreferenceFoodTigaView extends StatelessWidget {
 
     return PopScope(
       canPop: true,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: screenW * 0.06,
+      child: ConnectionWrapper(
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenW * 0.06,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: screenH * 0.025),
+                  _buildProgress(context, viewModel, screenW, screenH),
+                  SizedBox(height: screenH * 0.03),
+                  _buildTitle(context, viewModel, screenH),
+                  SizedBox(height: screenH * 0.03),
+                  Expanded(
+                    child: _buildGrid(context, viewModel, screenW, screenH),
+                  ),
+                  SizedBox(height: screenH * 0.02),
+                  _buildFinishButton(context, viewModel, screenW, screenH),
+                  SizedBox(height: screenH * 0.025),
+                ],
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: screenH * 0.025),
-                _buildProgress(context, viewModel, screenW, screenH),
-                SizedBox(height: screenH * 0.03),
-                _buildTitle(context, viewModel, screenH),
-                SizedBox(height: screenH * 0.03),
-                Expanded(
-                  child: _buildGrid(context, viewModel, screenW, screenH),
-                ),
-                SizedBox(height: screenH * 0.02),
-                _buildFinishButton(context, viewModel, screenW, screenH),
-                SizedBox(height: screenH * 0.025),
-              ],
-            ),
-          ),
-        )),
+          )
+        ),
+      )
     );
   }
 

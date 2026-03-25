@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
@@ -17,115 +18,117 @@ class AccountView extends StatelessWidget {
       await RecipeMateAppUtil.lockToPortrait();
     });
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
+    return ConnectionWrapper (
+      child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        centerTitle: true,
-        title: customText(
-          text: AppLocalizations.of(context)!.account,
-          fontSize: DimensText.headerMenusText(context),
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSurface,
-          fontFamily: 'times_new_roman_bold',
-        ),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: RecipeMateAppUtil.screenWidth * 0.06,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          centerTitle: true,
+          title: customText(
+            text: AppLocalizations.of(context)!.account,
+            fontSize: DimensText.headerMenusText(context),
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
+            fontFamily: 'times_new_roman_bold',
           ),
-          child: Column(
-            children: [
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.025),
-              _buildProfileHeader(context, viewModel),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
-              _buildMenuItem(
-                context: context,
-                icon: Icons.security,
-                title: AppLocalizations.of(context)!.security,
-                trailing: Icon(
-                  Icons.keyboard_arrow_right,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  size: RecipeMateAppUtil.screenWidth * 0.05,
+          automaticallyImplyLeading: false,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: RecipeMateAppUtil.screenWidth * 0.06,
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.025),
+                _buildProfileHeader(context, viewModel),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
+                _buildMenuItem(
+                  context: context,
+                  icon: Icons.security,
+                  title: AppLocalizations.of(context)!.security,
+                  trailing: Icon(
+                    Icons.keyboard_arrow_right,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: RecipeMateAppUtil.screenWidth * 0.05,
+                  ),
+                  onTap: () => viewModel.navigateToSecurityPage(context),
                 ),
-                onTap: () => viewModel.navigateToSecurityPage(context),
-              ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-              _buildMenuItem(
-                context: context,
-                icon: Icons.language,
-                title: AppLocalizations.of(context)!.language,
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Obx(() => customText(
-                      text: viewModel.currentLanguage.value,
-                      fontSize: DimensText.captionText(context),
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    )),
-                    SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
-                    Icon(
-                      Icons.keyboard_arrow_right,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      size: RecipeMateAppUtil.screenWidth * 0.05,
-                    ),
-                  ],
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                _buildMenuItem(
+                  context: context,
+                  icon: Icons.language,
+                  title: AppLocalizations.of(context)!.language,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Obx(() => customText(
+                        text: viewModel.currentLanguage.value,
+                        fontSize: DimensText.captionText(context),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      )),
+                      SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+                      Icon(
+                        Icons.keyboard_arrow_right,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        size: RecipeMateAppUtil.screenWidth * 0.05,
+                      ),
+                    ],
+                  ),
+                  onTap: () => viewModel.openLanguageDialog(),
                 ),
-                onTap: () => viewModel.openLanguageDialog(),
-              ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-              _buildMenuItem(
-                context: context,
-                icon: Icons.dark_mode,
-                title: AppLocalizations.of(context)!.theme,
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Obx(() => customText(
-                      text: viewModel.currentTheme.value,
-                      fontSize: DimensText.captionText(context),
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    )),
-                    SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
-                    Icon(
-                      Icons.keyboard_arrow_right,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      size: RecipeMateAppUtil.screenWidth * 0.05,
-                    ),
-                  ]
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                _buildMenuItem(
+                  context: context,
+                  icon: Icons.dark_mode,
+                  title: AppLocalizations.of(context)!.theme,
+                  trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Obx(() => customText(
+                          text: viewModel.currentTheme.value,
+                          fontSize: DimensText.captionText(context),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        )),
+                        SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          size: RecipeMateAppUtil.screenWidth * 0.05,
+                        ),
+                      ]
+                  ),
+                  onTap: () => viewModel.openThemeDialog(context),
                 ),
-                onTap: () => viewModel.openThemeDialog(context),
-              ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-              _buildMenuItem(
-                context: context,
-                icon: Icons.change_circle,
-                title: AppLocalizations.of(context)!.changeFoodTypes,
-                trailing: Icon(
-                  Icons.keyboard_arrow_right,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  size: RecipeMateAppUtil.screenWidth * 0.05,
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                _buildMenuItem(
+                  context: context,
+                  icon: Icons.change_circle,
+                  title: AppLocalizations.of(context)!.changeFoodTypes,
+                  trailing: Icon(
+                    Icons.keyboard_arrow_right,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: RecipeMateAppUtil.screenWidth * 0.05,
+                  ),
+                  onTap: () => viewModel.openChangePrefFoodDialog(context),
                 ),
-                onTap: () => viewModel.openChangePrefFoodDialog(context),
-              ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-              _buildMenuItem(
-                context: context,
-                icon: Icons.logout_rounded,
-                title: AppLocalizations.of(context)!.logout,
-                titleColor: Theme.of(context).colorScheme.primary,
-                iconColor: Theme.of(context).colorScheme.primary,
-                trailing: Icon(
-                  Icons.keyboard_arrow_right,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  size: RecipeMateAppUtil.screenWidth * 0.05,
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                _buildMenuItem(
+                  context: context,
+                  icon: Icons.logout_rounded,
+                  title: AppLocalizations.of(context)!.logout,
+                  titleColor: Theme.of(context).colorScheme.primary,
+                  iconColor: Theme.of(context).colorScheme.primary,
+                  trailing: Icon(
+                    Icons.keyboard_arrow_right,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: RecipeMateAppUtil.screenWidth * 0.05,
+                  ),
+                  onTap: () => viewModel.openLogoutDialog(context),
                 ),
-                onTap: () => viewModel.openLogoutDialog(context),
-              ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
-            ],
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
+              ],
+            ),
           ),
         ),
       ),

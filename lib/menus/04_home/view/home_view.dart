@@ -5,6 +5,7 @@ import '../../../utils/greeting_util.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
+import '../../../utils/view_utils/connection_wrapper.dart';
 import '../view_model/home_view_model.dart';
 
 class HomeView extends StatelessWidget {
@@ -17,34 +18,35 @@ class HomeView extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
     });
+    return ConnectionWrapper(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                _buildHeader(context, viewModel),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-              _buildHeader(context, viewModel),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
+                  child: _buildSearchBar(context),
+                ),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
 
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
-                child: _buildSearchBar(context),
-              ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                _buildSectionHeader(context, AppLocalizations.of(context)!.stRecommended, AppLocalizations.of(context)!.stSeeAll),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
+                _buildRecommendedList(context, viewModel),
 
-              _buildSectionHeader(context, AppLocalizations.of(context)!.stRecommended, AppLocalizations.of(context)!.stSeeAll),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
-              _buildRecommendedList(context, viewModel),
+                _buildSectionHeader(context, AppLocalizations.of(context)!.stTopSearching, AppLocalizations.of(context)!.stSeeAll),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
+                _buildTopSearchingList(context, viewModel),
 
-              _buildSectionHeader(context, AppLocalizations.of(context)!.stTopSearching, AppLocalizations.of(context)!.stSeeAll),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
-              _buildTopSearchingList(context, viewModel),
-
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-            ],
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+              ],
+            ),
           ),
         ),
       ),

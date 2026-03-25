@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
@@ -18,35 +19,37 @@ class HomeDetailView extends StatelessWidget {
 
     final recipe = viewModel.recipeDetail;
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildImageHeader(context, recipe['image']),
+    return ConnectionWrapper(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildImageHeader(context, recipe['image']),
 
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.06),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.06),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
 
-                  _buildTitleSection(context, recipe),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                    _buildTitleSection(context, recipe),
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
 
-                  _buildNutritionalCard(context, recipe),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                    _buildNutritionalCard(context, recipe),
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
 
-                  _buildSmartMatchSection(context, recipe),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
+                    _buildSmartMatchSection(context, recipe),
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
 
-                  _buildIngredientsSection(context, recipe['ingredients']),
-                ],
+                    _buildIngredientsSection(context, recipe['ingredients']),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
