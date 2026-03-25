@@ -5,7 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recipemate/utils/data_session_util.dart';
 
 import '../../../l10n/app_localizations.dart';
-import '../../../utils/session_controller.dart';
+import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 
 class AccountViewModel extends GetxController {
