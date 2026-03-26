@@ -77,7 +77,9 @@ class SecurityView extends StatelessWidget {
                   icon: Icons.history,
                   title: AppLocalizations.of(context)!.stChangePassword,
                   trailing: Icon(Icons.chevron_right, color: theme.colorScheme.onSurfaceVariant),
-                  onTap: () {},
+                  onTap: () {
+                    viewModel.openChangePasswordDialog(context);
+                  },
                 ),
                 SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
               ],

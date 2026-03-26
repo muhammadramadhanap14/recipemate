@@ -78,5 +78,8 @@
   "stNoConnectionInternetTitle": "No Internet Connection",
   "stNoConnectionInternetMessage": "Please check your internet settings and try again",
   "stRetryBtn": "Retry",
-  "stReasonFailedPhoto": "Failed to pick image:"
+  "stReasonFailedPhoto": "Failed to pick image:",
+  "stNewPaswword": "New Password",
+  "stOldPassword": "Old Password",
+  "confirmBtn": "Confirm"
 }

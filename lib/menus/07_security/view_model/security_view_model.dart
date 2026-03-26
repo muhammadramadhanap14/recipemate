@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 
 import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/view_utils/app_snackbar.dart';
+import '../../../utils/view_utils/view_dialog_util.dart';
 
 class SecurityViewModel extends GetxController {
   final DataSessionUtilController session;
@@ -79,5 +81,14 @@ class SecurityViewModel extends GetxController {
         message: l10n.stFingerprintInfo
       );
     }
+  }
+
+  void openChangePasswordDialog (BuildContext context) {
+    ViewDialogUtil().dialogChangePassword(
+      context: context,
+      onConfirm: (oldPassword, newPassword) {
+        //TODO Fungsi untuk mengubah kata sandi
+      }
+    );
   }
 }

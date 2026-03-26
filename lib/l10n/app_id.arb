@@ -78,5 +78,8 @@
   "stNoConnectionInternetTitle": "Tidak Ada Koneksi Internet",
   "stNoConnectionInternetMessage": "Silakan periksa pengaturan internet Anda dan coba lagi",
   "stRetryBtn": "Coba Lagi",
-  "stReasonFailedPhoto": "Gagal memilih gambar:"
+  "stReasonFailedPhoto": "Gagal memilih gambar:",
+  "stNewPaswword": "Sandi Baru",
+  "stOldPassword": "Sandi Lama",
+  "confirmBtn": "Confirm"
 }
