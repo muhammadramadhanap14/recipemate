@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../../utils/data_session_util_controller.dart';
+import '../../../repository/data_session_util_controller.dart';
 
 class HomeViewModel extends GetxController {
   final DataSessionUtilController session;

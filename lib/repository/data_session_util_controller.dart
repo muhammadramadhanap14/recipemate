@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:get/get.dart';
-import '../utils/data_session_util.dart';
+import 'data_session_util.dart';
 
 class DataSessionUtilController extends GetxController {
   final DataSessionUtil dataSessionUtil;

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../utils/data_session_util_controller.dart';
+import '../../../repository/data_session_util_controller.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
