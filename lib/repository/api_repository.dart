@@ -42,6 +42,7 @@ class ApiRepository {
       String terminal,
       BuildContext context,
     ) async {
+    final l10n = AppLocalizations.of(context)!;
     String basicAuth = 'Basic ${base64.encode(utf8.encode('$username:$password'))}';
     _dio.options.headers["content-Type"] = 'application/json';
 
@@ -67,7 +68,7 @@ class ApiRepository {
       if (e is DioException) {
         if(e.type == DioExceptionType.connectionTimeout) {
           log("Connection Timeout Exception: ${e.message}");
-          return AppLocalizations.of(context)!.stTimeOutConnection;
+          return l10n.stTimeOutConnection;
         } else {
           log("DioException: ${e.message}");
           log("Request options: ${e.requestOptions}");
