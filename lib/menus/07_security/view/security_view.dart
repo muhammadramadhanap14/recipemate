@@ -6,7 +6,7 @@ import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 
 import '../../../l10n/app_localizations.dart';
-import '../../../repository/data_session_util_controller.dart';
+import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/dimens_text.dart';
 
 class SecurityView extends StatelessWidget {

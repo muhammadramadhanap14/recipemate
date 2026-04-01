@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 
-import '../../../repository/data_session_util_controller.dart';
+import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/view_utils/app_snackbar.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 
