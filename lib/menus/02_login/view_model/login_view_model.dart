@@ -58,15 +58,37 @@ class LoginViewModel extends GetxController {
       return;
     }
 
-    final result = await apiRepository.postApiLogin(
-      username.value,
-      password.value,
-    );
+    Map<String, dynamic>? result;
 
+    /// 🔥 1. COBA API DULU
+    try {
+      result = await apiRepository.postApiLogin(
+        username.value,
+        password.value,
+      );
+    } catch (e) {
+      print("API error, fallback ke mock");
+    }
+
+    /// 🔥 2. CEK HASIL API
     if (result != null && result["token"] != null) {
+      /// ✅ LOGIN DARI API
       Get.offNamed('/preference_food_satu');
+      return;
+    }
+
+    /// 🔥 3. MOCK FALLBACK
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (username.value == "axel@gmail.com" &&
+        password.value == "123") {
+
+      /// ✅ LOGIN MOCK
+      Get.offNamed('/preference_food_satu');
+
     } else {
-      final message = result?["message"] ?? "Akun belum terdaftar";
+      /// ❌ SEMUA GAGAL
+      final message = result?["message"] ?? "Email atau password salah";
 
       _fail(message);
 
