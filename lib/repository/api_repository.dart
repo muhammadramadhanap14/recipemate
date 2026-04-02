@@ -37,50 +37,72 @@ class ApiRepository {
   }
 
   Future<dynamic> postApiLogin(
-      String username,
-      String password,
-      String terminal,
-      BuildContext context,
-    ) async {
-    final l10n = AppLocalizations.of(context)!;
-    String basicAuth = 'Basic ${base64.encode(utf8.encode('$username:$password'))}';
-    _dio.options.headers["content-Type"] = 'application/json';
+  String email,
+  String password,
+) async {
+  try {
+    final response = await _dio.post(
+      "http://localhost:3000/login", // 🔥 endpoint kamu
+      data: {
+        "email": email,
+        "password": password,
+      },
+      options: Options(
+        headers: {
+          "Content-Type": "application/json",
+        },
+      ),
+    );
 
-    try {
-      var response = await _dio.post('PP0001',
-          options:
-          Options(headers: <String, String>{'authorization': basicAuth}),
-          data: {
-            "useid" : username,
-            "zpass" : password,
-            "terminal" : terminal
-      });
+    debugPrint("response login: ${response.data}");
 
-      // debugPrint("response login  ${jsonEncode(response.data)}");
-      debugPrint("response login  ${response.data}");
-
-      if (response.statusCode == 200) {
-        return response.data;
-      } else {
-        throw Exception(response.statusMessage);
-      }
-    } catch (e) {
-      if (e is DioException) {
-        if(e.type == DioExceptionType.connectionTimeout) {
-          log("Connection Timeout Exception: ${e.message}");
-          return l10n.stTimeOutConnection;
-        } else {
-          log("DioException: ${e.message}");
-          log("Request options: ${e.requestOptions}");
-          debugPrint(e.toString());
-          return null;
-        }
-      } else {
-        log("Exception: $e");
-        debugPrint(e.toString());
-        return null;
-      }
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception("Login gagal");
+    }
+  } catch (e) {
+    if (e is DioException) {
+      debugPrint("Dio error: ${e.response?.data}");
+      return e.response?.data;
+    } else {
+      debugPrint("Error: $e");
+      return null;
     }
   }
+}
+
+Future<dynamic> postApiRegister(
+  String fullname,
+  String email,
+  String password,
+) async {
+  try {
+    final response = await _dio.post(
+      "http://localhost:3000/register",
+      data: {
+        "name": fullname,
+        "email": email,
+        "password": password,
+      },
+    );
+
+    debugPrint("response register: ${response.data}");
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.data;
+    } else {
+      throw Exception("Register gagal");
+    }
+  } catch (e) {
+    if (e is DioException) {
+      debugPrint("Dio error: ${e.response?.data}");
+      return e.response?.data;
+    } else {
+      debugPrint("Error: $e");
+      return null;
+    }
+  }
+}
 
 }

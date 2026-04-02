@@ -44,70 +44,41 @@ class RegisterViewModel extends GetxController {
     isValidButton.value = fullname.value.isNotEmpty && username.value.isNotEmpty && password.value.length >= 4;
   }
 
-  Future<void> onLoginPressed() async {
-    if (isLoading.value) return;
-    errMessage.value = '';
-    isLoading.value = true;
-    try {
-      /// TODO Check internet connection
-      final hasConnection = await RecipeMateAppUtil.checkConnection();
-      if (!hasConnection) {
-        _fail('No internet connection');
-        return;
-      }
-      /// TODO Replace with real login API when backend ready
-      await _mockRegisterFlow();
-      Get.offNamed('/login');
+  Future<void> onRegisterPressed() async {
+  if (isLoading.value) return;
+  errMessage.value = '';
+  isLoading.value = true;
 
+  try {
+    final hasConnection = await RecipeMateAppUtil.checkConnection();
+    if (!hasConnection) {
+      _fail('No internet connection');
+      return;
     }
-    catch (e) {
-      _fail(e.toString());
-    }
-    finally {
-      isLoading.value = false;
-    }
-  }
 
-  Future<void> _mockRegisterFlow() async {
-    /// TODO Remove this when backend ready
-
-    await Future.delayed(
-      const Duration(seconds: 2),
+    /// 🔥 CALL API REGISTER
+    final result = await apiRepository.postApiRegister(
+      fullname.value,
+      username.value,
+      password.value,
     );
 
-    /// TODO:
-    /// Replace with real API call:
-    ///
-    /// final handset =
-    ///   await RecipeMateAppUtil.getUniqueDeviceId();
-    ///
-    /// final response =
-    ///   await apiRepository.postApiLogin(
-    ///      username.value,
-    ///      password.value,
-    ///      handset,
-    ///   );
-    ///
-    /// TODO Parse response
-    ///
-    /// TODO Validate response code
-    ///
-    /// TODO Extract user data
-    ///
-    /// TODO Save to local storage
-    ///
-    /// Example:
-    /// await LocalStorage.saveUser(user);
+    /// 🔥 HANDLE RESPONSE
+    if (result != null && result["message"] != null) {
+      Get.snackbar("Success", result["message"]);
 
+      /// pindah ke login
+      Get.offNamed('/login');
+    } else {
+      _fail(result?["message"] ?? "Register gagal");
+    }
 
-    /// TODO:
-    /// Example local save using SharedPreferences / SQLite
-    ///
-    /// await LocalStorage.saveLoginSession(
-    ///   username: username.value,
-    ///   token: "dummy_token",
-    /// );
+  } catch (e) {
+    _fail(e.toString());
+  } finally {
+    isLoading.value = false;
   }
+}
 
   Future<void> registerTrc(BuildContext context) async {
     try {
@@ -115,8 +86,7 @@ class RegisterViewModel extends GetxController {
       final response = await apiRepository.postApiLogin(
         username.value,
         password.value,
-        handset,
-        context
+        
       );
       /// TODO Parse JSON
       ///

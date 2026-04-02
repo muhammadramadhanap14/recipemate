@@ -39,69 +39,61 @@ class LoginViewModel extends GetxController {
   }
 
   Future<void> onLoginPressed() async {
-    if (isLoading.value) return;
-    errMessage.value = '';
-    isLoading.value = true;
-    try {
-      /// TODO Check internet connection
-      final hasConnection = await RecipeMateAppUtil.checkConnection();
-      if (!hasConnection) {
-        _fail('No internet connection');
-        return;
-      }
-      /// TODO Replace with real login API when backend ready
-      await _mockLoginFlow();
-      Get.offNamed('/preference_food_satu');
+  if (isLoading.value) return;
+  errMessage.value = '';
+  isLoading.value = true;
 
-    }
-    catch (e) {
-      _fail(e.toString());
-    }
-    finally {
-      isLoading.value = false;
-    }
-  }
+  try {
+    final hasConnection = await RecipeMateAppUtil.checkConnection();
+    if (!hasConnection) {
+      _fail('No internet connection');
 
-  Future<void> _mockLoginFlow() async {
-    /// TODO Remove this when backend ready
+      Get.snackbar(
+        "Error",
+        "Tidak ada koneksi internet",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
-    await Future.delayed(
-      const Duration(seconds: 2),
+    final result = await apiRepository.postApiLogin(
+      username.value,
+      password.value,
     );
 
-    /// TODO:
-    /// Replace with real API call:
-    ///
-    /// final handset =
-    ///   await RecipeMateAppUtil.getUniqueDeviceId();
-    ///
-    /// final response =
-    ///   await apiRepository.postApiLogin(
-    ///      username.value,
-    ///      password.value,
-    ///      handset,
-    ///   );
-    ///
-    /// TODO Parse response
-    ///
-    /// TODO Validate response code
-    ///
-    /// TODO Extract user data
-    ///
-    /// TODO Save to local storage
-    ///
-    /// Example:
-    /// await LocalStorage.saveUser(user);
+    if (result != null && result["token"] != null) {
+      Get.offNamed('/preference_food_satu');
+    } else {
+      final message = result?["message"] ?? "Akun belum terdaftar";
 
+      _fail(message);
 
-    /// TODO:
-    /// Example local save using SharedPreferences / SQLite
-    ///
-    /// await LocalStorage.saveLoginSession(
-    ///   username: username.value,
-    ///   token: "dummy_token",
-    /// );
+      Get.snackbar(
+        "Login Gagal",
+        message,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+      );
+    }
+
+  } catch (e) {
+    _fail(e.toString());
+
+    Get.snackbar(
+      "Error",
+      "Terjadi kesalahan",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
+  } finally {
+    isLoading.value = false;
   }
+}
 
   Future<void> loginTrc(BuildContext context) async {
     try {
@@ -109,8 +101,7 @@ class LoginViewModel extends GetxController {
       final response = await apiRepository.postApiLogin(
         username.value,
         password.value,
-        handset,
-        context
+        
       );
       /// TODO Parse JSON
       ///

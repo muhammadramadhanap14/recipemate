@@ -224,7 +224,7 @@ class RegisterView extends StatelessWidget {
                         Obx(() => SizedBox(
                           width: double.infinity,
                           child: customElevatedButton(
-                            onPressed: viewModel.isValidButton.value ? viewModel.onLoginPressed : null,
+                            onPressed: viewModel.isValidButton.value ? viewModel.onRegisterPressed : null,
                             backgroundColor: Theme.of(context).colorScheme.primary,
                             sideColor: Theme.of(context).colorScheme.primary,
                             borderRadius: screenW * 0.04,
