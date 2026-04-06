@@ -83,5 +83,6 @@
   "stOldPassword": "Old Password",
   "confirmBtn": "Confirm",
   "stFailedLogin": "Login Failed",
-  "stFailedRegister": "Register Failed"
+  "stFailedRegister": "Register Failed",
+  "stInternalServerError": "Internal Server Error"
 }

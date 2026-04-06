@@ -268,4 +268,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stFailedRegister => 'Register Failed';
+
+  @override
+  String get stInternalServerError => 'Internal Server Error';
 }

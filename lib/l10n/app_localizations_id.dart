@@ -268,4 +268,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get stFailedRegister => 'Register Gagal';
+
+  @override
+  String get stInternalServerError => 'Kesalahan Server Internal';
 }

@@ -54,19 +54,13 @@ class ApiRepository {
 
       debugPrint("response login: ${response.data}");
 
-      if (response.statusCode == 200) {
-        return response.data;
-      } else {
-        throw Exception("Login gagal");
-      }
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Dio error: ${e.response?.data}");
+      return e.response?.data;
     } catch (e) {
-      if (e is DioException) {
-        debugPrint("Dio error: ${e.response?.data}");
-        return e.response?.data;
-      } else {
-        debugPrint("Error: $e");
-        return null;
-      }
+      debugPrint("Error: $e");
+      return null;
     }
   }
 
@@ -87,19 +81,13 @@ class ApiRepository {
 
       debugPrint("response register: ${response.data}");
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-      } else {
-        throw Exception("Register gagal");
-      }
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Dio error: ${e.response?.data}");
+      return e.response?.data;
     } catch (e) {
-      if (e is DioException) {
-        debugPrint("Dio error: ${e.response?.data}");
-        return e.response?.data;
-      } else {
-        debugPrint("Error: $e");
-        return null;
-      }
+      debugPrint("Error: $e");
+      return null;
     }
   }
 }

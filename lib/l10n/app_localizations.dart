@@ -607,6 +607,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Register Failed'**
   String get stFailedRegister;
+
+  /// No description provided for @stInternalServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Internal Server Error'**
+  String get stInternalServerError;
 }
 
 class _AppLocalizationsDelegate

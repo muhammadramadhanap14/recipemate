@@ -83,5 +83,6 @@
   "stOldPassword": "Sandi Lama",
   "confirmBtn": "Confirm",
   "stFailedLogin": "Login Gagal",
-  "stFailedRegister": "Register Gagal"
+  "stFailedRegister": "Register Gagal",
+  "stInternalServerError": "Kesalahan Server Internal"
 }

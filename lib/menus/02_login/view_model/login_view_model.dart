@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../models/model_response/login_response.dart';
 import '../../../repository/api_repository.dart';
+import '../../../utils/constant_var.dart';
 import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/recipemate_app_util.dart';
 
@@ -50,10 +52,10 @@ class LoginViewModel extends GetxController {
     try {
       final hasConnection = await RecipeMateAppUtil.checkConnection();
       if (!hasConnection) {
-        _fail('Tidak ada koneksi internet');
+        _fail(l10n.stNoConnectionMessage);
         AppSnackbar.show(
           title: l10n.stError,
-          message: l10n.stNoConnectionMessage
+          message: l10n.stNoConnectionMessage,
         );
         return;
       }
@@ -61,23 +63,37 @@ class LoginViewModel extends GetxController {
         email.value,
         password.value,
       );
-      if (result != null && result["token"] != null) {
-        final token = result["token"];
-        await sessionController.setToken(token);
+      if (result == null) {
+        _fail(l10n.stInternalServerError);
+        AppSnackbar.show(
+          title: l10n.stError,
+          message: l10n.stInternalServerError,
+        );
+        return;
+      }
+      final response = LoginResponse.fromJson(result);
+      final isSuccess = response.status == ConstantVar.stSuccess;
+      final message = response.message ?? l10n.stFailedLogin;
+      if (isSuccess && response.token != null) {
+        await sessionController.setToken(response.token!);
+        AppSnackbar.show(
+          title: l10n.stSuccess,
+          message: message,
+        );
         Get.offNamed('/home');
       } else {
-        final message = result?["message"] ?? "Login gagal";
         _fail(message);
         AppSnackbar.show(
           title: l10n.stFailedLogin,
-          message: message
+          message: message,
         );
       }
     } catch (e) {
-      _fail("Terjadi kesalahan");
+      final message = e.toString();
+      _fail(message);
       AppSnackbar.show(
         title: l10n.stError,
-        message: e.toString()
+        message: message,
       );
     } finally {
       isLoading.value = false;

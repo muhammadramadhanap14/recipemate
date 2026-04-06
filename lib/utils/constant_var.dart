@@ -25,8 +25,8 @@ class ConstantVar {
   static const String errorGif = "error_3.gif";
 
   //return api :
-  static int intSuccess = 200;
-  static int intFailed = 500;
+  static String stSuccess = "success";
+  static String stError = "error";
 
   //status transaksi
   static const stNewData = 'new_data';
