@@ -595,6 +595,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm'**
   String get confirmBtn;
+
+  /// No description provided for @stFailedLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Failed'**
+  String get stFailedLogin;
+
+  /// No description provided for @stFailedRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Register Failed'**
+  String get stFailedRegister;
 }
 
 class _AppLocalizationsDelegate

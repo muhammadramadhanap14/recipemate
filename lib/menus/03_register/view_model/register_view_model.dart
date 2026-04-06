@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/recipemate_app_util.dart';
+import '../../../utils/view_utils/app_snackbar.dart';
 
 class RegisterViewModel extends GetxController {
   final ApiRepository apiRepository;
@@ -42,71 +44,48 @@ class RegisterViewModel extends GetxController {
 
   void _validate() {
     final isEmailValid = email.value.contains("@");
-
-    isValidButton.value =
-        fullname.value.isNotEmpty &&
-            isEmailValid &&
-            password.value.length >= 4;
+    isValidButton.value = fullname.value.isNotEmpty && isEmailValid && password.value.length >= 4;
   }
 
   Future<void> onRegisterPressed() async {
+    final l10n = AppLocalizations.of(Get.context!)!;
     if (isLoading.value) return;
-
     errMessage.value = '';
     isLoading.value = true;
-
     try {
       final hasConnection = await RecipeMateAppUtil.checkConnection();
       if (!hasConnection) {
         _fail('Tidak ada koneksi internet');
-
-        Get.snackbar(
-          "Error",
-          "Tidak ada koneksi internet",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
+        AppSnackbar.show(
+            title: l10n.stError,
+            message: l10n.stNoConnectionMessage
         );
         return;
       }
-
       final result = await apiRepository.postApiRegister(
         fullname.value,
         email.value,
         password.value,
       );
-
       if (result != null && result["message"] != null) {
-        Get.snackbar(
-          "Success",
-          result["message"],
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
+        AppSnackbar.show(
+          title: l10n.stSuccess,
+          message: result["message"]
         );
-
         Get.offNamed('/login');
       } else {
-        final message = result?["message"] ?? "Register gagal";
+        final message = result?["message"] ?? l10n.stFailedRegister;
         _fail(message);
-
-        Get.snackbar(
-          "Register Gagal",
-          message,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+        AppSnackbar.show(
+          title: l10n.stFailed,
+          message: message
         );
       }
     } catch (e) {
       _fail("Terjadi kesalahan");
-
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+      AppSnackbar.show(
+        title: l10n.stError,
+        message: e.toString()
       );
     } finally {
       isLoading.value = false;

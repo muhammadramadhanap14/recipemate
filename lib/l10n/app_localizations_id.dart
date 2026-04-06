@@ -262,4 +262,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get confirmBtn => 'Confirm';
+
+  @override
+  String get stFailedLogin => 'Login Gagal';
+
+  @override
+  String get stFailedRegister => 'Register Gagal';
 }

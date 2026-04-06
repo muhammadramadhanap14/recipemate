@@ -262,4 +262,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirmBtn => 'Confirm';
+
+  @override
+  String get stFailedLogin => 'Login Failed';
+
+  @override
+  String get stFailedRegister => 'Register Failed';
 }

@@ -81,5 +81,7 @@
   "stReasonFailedPhoto": "Failed to pick image:",
   "stNewPaswword": "New Password",
   "stOldPassword": "Old Password",
-  "confirmBtn": "Confirm"
+  "confirmBtn": "Confirm",
+  "stFailedLogin": "Login Failed",
+  "stFailedRegister": "Register Failed"
 }

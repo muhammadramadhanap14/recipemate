@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/data_session_util_controller.dart';
@@ -50,7 +51,10 @@ class AccountViewModel extends GetxController {
         await session.setProfileImage(pickedFile.path);
       }
     } catch (e) {
-      Get.snackbar(l10n.stError, l10n.stReasonFailedPhoto + e.toString());
+      AppSnackbar.show(
+        title: l10n.stError,
+        message: l10n.stReasonFailedPhoto + e.toString()
+      );
     }
   }
 

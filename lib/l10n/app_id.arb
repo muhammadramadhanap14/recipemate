@@ -81,5 +81,7 @@
   "stReasonFailedPhoto": "Gagal memilih gambar:",
   "stNewPaswword": "Sandi Baru",
   "stOldPassword": "Sandi Lama",
-  "confirmBtn": "Confirm"
+  "confirmBtn": "Confirm",
+  "stFailedLogin": "Login Gagal",
+  "stFailedRegister": "Register Gagal"
 }
