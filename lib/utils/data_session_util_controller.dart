@@ -6,6 +6,7 @@ class DataSessionUtilController extends GetxController {
   final DataSessionUtil dataSessionUtil;
   final RxBool isFingerprintEnabled = false.obs;
   final Rx<File?> profileImage = Rx<File?>(null);
+  final RxString stToken = "".obs;
 
   DataSessionUtilController({
     required this.dataSessionUtil
@@ -16,6 +17,17 @@ class DataSessionUtilController extends GetxController {
     super.onInit();
     loadFingerprint();
     loadProfileImage();
+    loadToken();
+  }
+
+  Future<void> loadToken() async {
+    final token = await dataSessionUtil.getToken();
+    stToken.value = token ?? "";
+  }
+
+  Future<void> setToken(String token) async {
+    stToken.value = token;
+    await dataSessionUtil.setToken(token);
   }
 
   Future<void> loadFingerprint() async {

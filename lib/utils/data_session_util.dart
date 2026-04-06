@@ -4,6 +4,21 @@ class DataSessionUtil {
   // Key
   static const String _fingerprintKey = 'fingerprint_enabled';
   static const String _profileImagePathKey = 'profile_image_path';
+  static const String _stToken = 'st_token';
+
+  // --- TOKEN
+
+  // Setter
+  Future<void> setToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_stToken, token);
+  }
+
+  // Getter
+  Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_stToken);
+  }
 
   // --- FINGERPRINT
   
