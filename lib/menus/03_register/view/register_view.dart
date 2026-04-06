@@ -137,7 +137,7 @@ class RegisterView extends StatelessWidget {
                         TextFormField(
                           focusNode: FocusNode(),
                           keyboardType: TextInputType.emailAddress,
-                          onChanged: viewModel.setUsername,
+                          onChanged: viewModel.setEmail,
                           style: TextStyle(
                             fontSize: DimensText.captionText(context),
                             color: Theme.of(context).colorScheme.onSurface,

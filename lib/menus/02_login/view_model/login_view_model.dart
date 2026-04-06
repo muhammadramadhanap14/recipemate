@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../repository/api_repository.dart';
+import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/recipemate_app_util.dart';
 
 class LoginViewModel extends GetxController {
   final ApiRepository apiRepository;
+  final DataSessionUtilController sessionController;
   final BuildContext context;
 
   LoginViewModel({
     required this.apiRepository,
+    required this.sessionController,
     required this.context,
   });
 
-  final username = ''.obs;
+  final email = ''.obs;
   final password = ''.obs;
   final errMessage = ''.obs;
   final isLoading = false.obs;
   final isValidButton = false.obs;
   final isObscureText = true.obs;
 
-  void setUsername(String value) {
-    username.value = value.trim();
+  void setEmail(String value) {
+    email.value = value.trim();
     _validate();
   }
 
@@ -34,115 +37,71 @@ class LoginViewModel extends GetxController {
   }
 
   void _validate() {
-    /// TODO replace with real validation
-    isValidButton.value = username.value.isNotEmpty && password.value.length >= 4;
+    isValidButton.value = email.value.isNotEmpty && password.value.length >= 4;
   }
 
   Future<void> onLoginPressed() async {
-  if (isLoading.value) return;
-  errMessage.value = '';
-  isLoading.value = true;
+    if (isLoading.value) return;
 
-  try {
-    final hasConnection = await RecipeMateAppUtil.checkConnection();
-    if (!hasConnection) {
-      _fail('No internet connection');
+    errMessage.value = '';
+    isLoading.value = true;
+
+    try {
+      /// 🔍 Check internet
+      final hasConnection = await RecipeMateAppUtil.checkConnection();
+      if (!hasConnection) {
+        _fail('Tidak ada koneksi internet');
+
+        Get.snackbar(
+          "Error",
+          "Tidak ada koneksi internet",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      /// 🔥 CALL API
+      final result = await apiRepository.postApiLogin(
+        email.value,
+        password.value,
+      );
+
+      /// 🔥 VALIDASI RESPONSE
+      if (result != null && result["token"] != null) {
+        final token = result["token"];
+
+        /// ✅ SIMPAN TOKEN
+        await sessionController.setToken(token);
+
+        /// ✅ SUCCESS NAVIGATION
+        Get.offNamed('/home');
+      } else {
+        final message = result?["message"] ?? "Login gagal";
+        _fail(message);
+
+        Get.snackbar(
+          "Login Gagal",
+          message,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+        );
+      }
+    } catch (e) {
+      _fail("Terjadi kesalahan");
 
       Get.snackbar(
         "Error",
-        "Tidak ada koneksi internet",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    Map<String, dynamic>? result;
-
-    /// 🔥 1. COBA API DULU
-    try {
-      result = await apiRepository.postApiLogin(
-        username.value,
-        password.value,
-      );
-    } catch (e) {
-      print("API error, fallback ke mock");
-    }
-
-    /// 🔥 2. CEK HASIL API
-    if (result != null && result["token"] != null) {
-      /// ✅ LOGIN DARI API
-      Get.offNamed('/preference_food_satu');
-      return;
-    }
-
-    /// 🔥 3. MOCK FALLBACK
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    if (username.value == "axel@gmail.com" &&
-        password.value == "123") {
-
-      /// ✅ LOGIN MOCK
-      Get.offNamed('/preference_food_satu');
-
-    } else {
-      /// ❌ SEMUA GAGAL
-      final message = result?["message"] ?? "Email atau password salah";
-
-      _fail(message);
-
-      Get.snackbar(
-        "Login Gagal",
-        message,
+        e.toString(),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
-        margin: const EdgeInsets.all(16),
       );
-    }
-
-  } catch (e) {
-    _fail(e.toString());
-
-    Get.snackbar(
-      "Error",
-      "Terjadi kesalahan",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-    );
-  } finally {
-    isLoading.value = false;
-  }
-}
-
-  Future<void> loginTrc(BuildContext context) async {
-    try {
-      final handset = await RecipeMateAppUtil.getUniqueDeviceId();
-      final response = await apiRepository.postApiLogin(
-        username.value,
-        password.value,
-        
-      );
-      /// TODO Parse JSON
-      ///
-      /// Example:
-      ///
-      /// final loginResponse =
-      ///    LoginResponse.fromJson(response);
-      ///
-      /// if (!loginResponse.success)
-      ///    throw Exception(loginResponse.message);
-
-      /// TODO Save user to local DB
-      ///
-      /// await UserLocalRepository.saveUser(
-      ///   loginResponse.user,
-      /// );
-    }
-    catch (e) {
-      rethrow;
+    } finally {
+      isLoading.value = false;
     }
   }
 

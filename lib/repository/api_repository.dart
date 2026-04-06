@@ -8,7 +8,7 @@ class ApiRepository {
 
   ApiRepository() {
     BaseOptions options = BaseOptions(
-        // baseUrl: ConstantUrl.recipemateUrl, // nanti ini di un comment
+        baseUrl: ConstantUrl.recipemateUrl, // nanti ini di un comment
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(minutes: 4),
         receiveTimeout: const Duration(minutes: 4));
@@ -40,7 +40,7 @@ class ApiRepository {
   ) async {
     try {
       final response = await _dio.post(
-        "http://localhost:3000/login", // 🔥 endpoint kamu
+        "${ConstantUrl.recipemateUrl}/auth/login",
         data: {
           "email": email,
           "password": password,
@@ -77,7 +77,7 @@ class ApiRepository {
     ) async {
     try {
       final response = await _dio.post(
-        "http://localhost:3000/register",
+        "${ConstantUrl.recipemateUrl}/auth/register",
         data: {
           "name": fullname,
           "email": email,

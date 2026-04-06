@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../repository/api_repository.dart';
+import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../view_model/login_view_model.dart';
@@ -17,6 +18,7 @@ class LoginView extends StatelessWidget {
     final LoginViewModel viewModel = Get.put(
       LoginViewModel(
         apiRepository: Get.find<ApiRepository>(),
+        sessionController: Get.find<DataSessionUtilController>(),
         context: context,
       ),
     );
@@ -92,7 +94,7 @@ class LoginView extends StatelessWidget {
                         TextFormField(
                           focusNode: FocusNode(),
                           keyboardType: TextInputType.emailAddress,
-                          onChanged: viewModel.setUsername,
+                          onChanged: viewModel.setEmail,
                           style: TextStyle(
                             fontSize: DimensText.captionText(context),
                             color: Theme.of(context).colorScheme.onSurface,

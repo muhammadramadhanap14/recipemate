@@ -1,4 +1,3 @@
 class ConstantUrl {
-  // static const String recipemateUrl = "http://10.0.2.2:3000"; // url server, untuk server harusnya di branch prod
-  static const String recipemateUrl = "http://localhost:3000";
+  static const String recipemateUrl = "http://192.168.61.70:3000/api";
 }
