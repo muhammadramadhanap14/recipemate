@@ -7,14 +7,13 @@ class HomeViewModel extends GetxController {
   final ApiRepository apiRepository;
   final DataSessionUtilController session;
   final RxString userName = ''.obs;
+  final RxList<Results> searchResults = <Results>[].obs;
+  final RxBool isSearching = false.obs;
 
   HomeViewModel({
     required this.apiRepository,
     required this.session,
   });
-
-  final RxList<Results> searchResults = <Results>[].obs;
-  final RxBool isSearching = false.obs;
 
   @override
   void onInit() {
@@ -44,5 +43,12 @@ class HomeViewModel extends GetxController {
     } finally {
       isSearching.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    searchResults.clear();
+    isSearching.value = false;
+    super.onClose();
   }
 }

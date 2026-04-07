@@ -67,8 +67,8 @@ class HomeView extends StatelessWidget {
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: viewModel.session.profileImage.value != null
-                      ? FileImage(viewModel.session.profileImage.value!)
-                      : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
+                    ? FileImage(viewModel.session.profileImage.value!)
+                    : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
