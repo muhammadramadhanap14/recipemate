@@ -613,6 +613,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Internal Server Error'**
   String get stInternalServerError;
+
+  /// No description provided for @stNoDataFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Data Found'**
+  String get stNoDataFound;
+
+  /// No description provided for @stNoDataFoundMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available to display'**
+  String get stNoDataFoundMessage;
 }
 
 class _AppLocalizationsDelegate

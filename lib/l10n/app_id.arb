@@ -84,5 +84,7 @@
   "confirmBtn": "Confirm",
   "stFailedLogin": "Login Gagal",
   "stFailedRegister": "Register Gagal",
-  "stInternalServerError": "Kesalahan Server Internal"
+  "stInternalServerError": "Kesalahan Server Internal",
+  "stNoDataFound": "Tidak Ada Data yang Ditemukan",
+  "stNoDataFoundMessage": "Tidak ada data yang tersedia untuk ditampilkan."
 }

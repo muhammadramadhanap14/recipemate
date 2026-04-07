@@ -271,4 +271,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get stInternalServerError => 'Kesalahan Server Internal';
+
+  @override
+  String get stNoDataFound => 'Tidak Ada Data yang Ditemukan';
+
+  @override
+  String get stNoDataFoundMessage =>
+      'Tidak ada data yang tersedia untuk ditampilkan.';
 }

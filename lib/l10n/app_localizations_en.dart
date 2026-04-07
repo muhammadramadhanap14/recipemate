@@ -271,4 +271,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stInternalServerError => 'Internal Server Error';
+
+  @override
+  String get stNoDataFound => 'No Data Found';
+
+  @override
+  String get stNoDataFoundMessage => 'No data available to display';
 }

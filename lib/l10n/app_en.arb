@@ -84,5 +84,7 @@
   "confirmBtn": "Confirm",
   "stFailedLogin": "Login Failed",
   "stFailedRegister": "Register Failed",
-  "stInternalServerError": "Internal Server Error"
+  "stInternalServerError": "Internal Server Error",
+  "stNoDataFound": "No Data Found",
+  "stNoDataFoundMessage": "No data available to display"
 }

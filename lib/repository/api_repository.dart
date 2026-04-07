@@ -8,7 +8,7 @@ class ApiRepository {
 
   ApiRepository() {
     BaseOptions options = BaseOptions(
-        baseUrl: ConstantUrl.recipemateUrl, // nanti ini di un comment
+        baseUrl: ConstantUrl.spoonacularUrl,
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(minutes: 4),
         receiveTimeout: const Duration(minutes: 4));
@@ -80,6 +80,54 @@ class ApiRepository {
       );
 
       debugPrint("response register: ${response.data}");
+
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Dio error: ${e.response?.data}");
+      return e.response?.data;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return null;
+    }
+  }
+
+  Future<dynamic> getRecipesComplexSearch({
+    required String query,
+    int number = 20,
+  }) async {
+    try {
+      final response = await _dio.get(
+        "/recipes/complexSearch",
+        queryParameters: {
+          "query": query,
+          "number": number,
+          "apiKey": ConstantUrl.spoonacularApiKey,
+        },
+      );
+
+      debugPrint("response search: ${response.data}");
+
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Dio error: ${e.response?.data}");
+      return e.response?.data;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return null;
+    }
+  }
+
+  Future<dynamic> getRecipeInformation(int recipeId) async {
+    try {
+      final response = await _dio.get(
+        "/recipes/$recipeId/information",
+        queryParameters: {
+          "includeNutrition": true,
+          "apiKey": ConstantUrl.spoonacularApiKey,
+        },
+      );
+
+      debugPrint("response detail: ${response.data}");
 
       return response.data;
     } on DioException catch (e) {
