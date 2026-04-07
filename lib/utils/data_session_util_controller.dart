@@ -7,6 +7,8 @@ class DataSessionUtilController extends GetxController {
   final RxBool isFingerprintEnabled = false.obs;
   final Rx<File?> profileImage = Rx<File?>(null);
   final RxString stToken = "".obs;
+  final RxString stFullName = "".obs;
+  final RxString stEmail = "".obs;
 
   DataSessionUtilController({
     required this.dataSessionUtil
@@ -18,6 +20,28 @@ class DataSessionUtilController extends GetxController {
     loadFingerprint();
     loadProfileImage();
     loadToken();
+    loadFullName();
+    loadEmail();
+  }
+
+  Future<void> loadEmail() async {
+    final email = await dataSessionUtil.getEmail();
+    stEmail.value = email ?? "";
+  }
+
+  Future<void> setEmail(String email) async {
+    stEmail.value = email;
+    await dataSessionUtil.setEmail(email);
+  }
+
+  Future<void> loadFullName() async {
+    final fullName = await dataSessionUtil.getFullName();
+    stFullName.value = fullName ?? "";
+  }
+
+  Future<void> setFullName(String fullName) async {
+    stFullName.value = fullName;
+    await dataSessionUtil.setFullName(fullName);
   }
 
   Future<void> loadToken() async {

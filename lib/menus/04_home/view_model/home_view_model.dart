@@ -6,7 +6,7 @@ import '../../../utils/data_session_util_controller.dart';
 class HomeViewModel extends GetxController {
   final ApiRepository apiRepository;
   final DataSessionUtilController session;
-  final RxString userName = 'Axel Darmawan'.obs;
+  final RxString userName = ''.obs;
 
   HomeViewModel({
     required this.apiRepository,
@@ -19,6 +19,12 @@ class HomeViewModel extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    getUserName();
+  }
+
+  Future<void> getUserName() async {
+    await session.loadFullName();
+    userName.value = session.stFullName.value;
   }
 
   Future<void> searchRecipes(String query) async {
@@ -26,7 +32,6 @@ class HomeViewModel extends GetxController {
       searchResults.clear();
       return;
     }
-
     isSearching.value = true;
     try {
       final response = await apiRepository.getRecipesComplexSearch(query: query);

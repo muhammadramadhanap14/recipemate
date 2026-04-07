@@ -10,8 +10,8 @@ import '../../../utils/view_utils/view_dialog_util.dart';
 
 class AccountViewModel extends GetxController {
   final DataSessionUtilController session;
-  final userName = 'Axel Darmawan'.obs;
-  final userId = 'axel.darmawan@example.com'.obs;
+  final fullName = ''.obs;
+  final emailId = ''.obs;
   final appVersion = '-'.obs;
   final RxBool isDarkMode = false.obs;
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
@@ -28,9 +28,21 @@ class AccountViewModel extends GetxController {
     super.onInit();
     initializeLanguage();
     initializeTheme();
+    getUserFullName();
+    getUserEmail();
     Future.microtask(() async {
       await initAppVersion();
     });
+  }
+
+  Future<void> getUserFullName() async {
+    await session.loadFullName();
+    fullName.value = session.stFullName.value;
+  }
+
+  Future<void> getUserEmail() async {
+    await session.loadEmail();
+    emailId.value = session.stEmail.value;
   }
 
   Future<void> initAppVersion() async {

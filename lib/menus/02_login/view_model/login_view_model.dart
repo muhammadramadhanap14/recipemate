@@ -74,8 +74,10 @@ class LoginViewModel extends GetxController {
       final response = LoginResponse.fromJson(result);
       final isSuccess = response.status == ConstantVar.stSuccess;
       final message = response.message ?? l10n.stFailedLogin;
-      if (isSuccess && response.token != null) {
-        await sessionController.setToken(response.token!);
+      if (isSuccess && response.data?.token != null) {
+        await sessionController.setToken(response.data?.token ?? '');
+        await sessionController.setFullName(response.data?.user?.name ?? '');
+        await sessionController.setEmail(response.data?.user?.email ?? '');
         AppSnackbar.show(
           title: l10n.stSuccess,
           message: message,

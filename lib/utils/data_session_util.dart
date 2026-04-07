@@ -5,6 +5,36 @@ class DataSessionUtil {
   static const String _fingerprintKey = 'fingerprint_enabled';
   static const String _profileImagePathKey = 'profile_image_path';
   static const String _stToken = 'st_token';
+  static const String _stFullName = 'st_full_name';
+  static const String _stEmail = 'st_email';
+
+  // --- EMAIL
+
+  // Setter
+  Future<void> setEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_stEmail, email);
+  }
+
+  // Getter
+  Future<String?> getEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_stEmail);
+  }
+
+  // --- NAME
+
+  // Setter
+  Future<void> setFullName(String fullName) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_stFullName, fullName);
+  }
+
+  // Getter
+  Future<String?> getFullName() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_stFullName);
+  }
 
   // --- TOKEN
 
