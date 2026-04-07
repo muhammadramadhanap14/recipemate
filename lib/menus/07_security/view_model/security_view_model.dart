@@ -9,8 +9,8 @@ import '../../../utils/view_utils/view_dialog_util.dart';
 
 class SecurityViewModel extends GetxController {
   final DataSessionUtilController session;
-  final userName = 'Axel Darmawan'.obs;
-  final userId = 'axel.darmawan@recipemate.io'.obs;
+  final fullName = ''.obs;
+  final emailId = ''.obs;
   final LocalAuthentication auth = LocalAuthentication();
   bool _canCheckBiometrics = false;
 
@@ -22,6 +22,18 @@ class SecurityViewModel extends GetxController {
   void onInit() {
     super.onInit();
     _initBiometric();
+    getUserFullName();
+    getUserEmail();
+  }
+
+  Future<void> getUserFullName() async {
+    await session.loadFullName();
+    fullName.value = session.stFullName.value;
+  }
+
+  Future<void> getUserEmail() async {
+    await session.loadEmail();
+    emailId.value = session.stEmail.value;
   }
 
   Future<void> _initBiometric() async {

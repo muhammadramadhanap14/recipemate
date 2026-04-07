@@ -123,18 +123,22 @@ class SecurityView extends StatelessWidget {
           }),
           SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
           Obx(() => customText(
-              text: viewModel.userName.value,
-              fontSize: DimensText.subHeaderLargeText(context),
-              fontWeight: FontWeight.w900,
-              color: Theme.of(context).colorScheme.onSurface,
-              fontFamily: 'times_new_roman_bold'
+            text: viewModel.fullName.value,
+            fontSize: DimensText.subHeaderLargeText(context),
+            fontWeight: FontWeight.w900,
+            color: Theme.of(context).colorScheme.onSurface,
+            fontFamily: 'times_new_roman_bold',
+            intMaxLine: null,
+            textAlign: TextAlign.center
           )),
           SizedBox(height: RecipeMateAppUtil.screenHeight * 0.002),
           Obx(() => customText(
-            text: viewModel.userId.value,
+            text: viewModel.emailId.value,
             fontWeight: FontWeight.w400,
             fontSize: DimensText.captionText(context),
             color: Theme.of(context).colorScheme.onSurfaceVariant,
+            intMaxLine: null,
+            textAlign: TextAlign.center
           )),
         ],
       ),
