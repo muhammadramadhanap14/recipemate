@@ -66,7 +66,8 @@ class LoginView extends StatelessWidget {
                           fontWeight: FontWeight.w800,
                           fontFamily: 'times_new_roman_med_italic',
                           color: Theme.of(context).colorScheme.onSurface,
-                          textAlign: TextAlign.center
+                          textAlign: TextAlign.center,
+                          intMaxLine: null
                         ),
 
                         customText(
@@ -187,21 +188,43 @@ class LoginView extends StatelessWidget {
 
                         SizedBox(height: screenH * 0.025),
 
-                        Obx(() => SizedBox(
-                          width: double.infinity,
-                          child: customElevatedButton(
-                            onPressed: viewModel.isValidButton.value ? viewModel.onLoginPressed : null,
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            sideColor: Theme.of(context).colorScheme.primary,
-                            borderRadius: screenW * 0.04,
-                            text: AppLocalizations.of(context)!.stSignIn,
-                            fontSize: DimensText.buttonText(context),
-                            fontColor: Theme.of(context).colorScheme.onPrimary,
-                            fontWeight: FontWeight.bold,
-                            padding: EdgeInsets.symmetric(
-                              vertical: screenH * 0.02,
+                        Obx(() => Row(
+                          children: [
+                            Expanded(
+                              child: customElevatedButton(
+                                onPressed: viewModel.isValidButton.value ? viewModel.onLoginPressed : null,
+                                backgroundColor: Theme.of(context).colorScheme.primary,
+                                sideColor: Theme.of(context).colorScheme.primary,
+                                borderRadius: screenW * 0.04,
+                                text: AppLocalizations.of(context)!.stSignIn,
+                                fontSize: DimensText.buttonText(context),
+                                fontColor: Theme.of(context).colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: screenH * 0.02,
+                                ),
+                              ),
                             ),
-                          ),
+                            if (viewModel.canUseBiometric.value) ...[
+                              SizedBox(width: screenW * 0.03),
+                              InkWell(
+                                onTap: viewModel.loginWithBiometric,
+                                child: Container(
+                                  padding: EdgeInsets.all(screenH * 0.015),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(screenW * 0.04),
+                                    border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1.5)
+                                  ),
+                                  child: Icon(
+                                    Icons.fingerprint,
+                                    color: Theme.of(context).colorScheme.primary,
+                                    size: screenW * 0.08,
+                                  ),
+                                ),
+                              )
+                            ]
+                          ],
                         )),
 
                         const Spacer(),

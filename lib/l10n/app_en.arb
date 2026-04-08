@@ -89,5 +89,7 @@
   "stNoDataFoundMessage": "No data available to display",
   "stNutritionalPrediction": "Nutritional Prediction",
   "stRecipeSummary": "Recipe Summary",
-  "stCoreIngredients": "Core Ingredients"
+  "stCoreIngredients": "Core Ingredients",
+  "stLoginFingerprint": "Scan to Login",
+  "stLoginFingerprintErrorMessage": "Saved credentials not found. Please login manually once."
 }

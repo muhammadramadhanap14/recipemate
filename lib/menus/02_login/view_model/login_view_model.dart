@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../models/model_response/login_response.dart';
@@ -12,6 +13,7 @@ class LoginViewModel extends GetxController {
   final ApiRepository apiRepository;
   final DataSessionUtilController sessionController;
   final BuildContext context;
+  final LocalAuthentication auth = LocalAuthentication();
 
   LoginViewModel({
     required this.apiRepository,
@@ -25,6 +27,19 @@ class LoginViewModel extends GetxController {
   final isLoading = false.obs;
   final isValidButton = false.obs;
   final isObscureText = true.obs;
+  final canUseBiometric = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _checkBiometricSupport();
+  }
+
+  Future<void> _checkBiometricSupport() async {
+    final bool hasFingerprint = sessionController.isFingerprintEnabled.value;
+    final bool canCheck = await auth.canCheckBiometrics || await auth.isDeviceSupported();
+    canUseBiometric.value = hasFingerprint && canCheck;
+  }
 
   void setEmail(String value) {
     email.value = value.trim();
@@ -42,6 +57,35 @@ class LoginViewModel extends GetxController {
 
   void _validate() {
     isValidButton.value = email.value.isNotEmpty && password.value.length >= 4;
+  }
+
+  Future<void> loginWithBiometric() async {
+    final l10n = AppLocalizations.of(Get.context!)!;
+    try {
+      final bool authenticated = await auth.authenticate(
+        localizedReason: l10n.stLoginFingerprint,
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
+      );
+      if (authenticated) {
+        final savedEmail = sessionController.stEmail.value;
+        final savedPassword = await sessionController.getSavedPassword();
+        if (savedEmail.isNotEmpty && savedPassword != null) {
+          email.value = savedEmail;
+          password.value = savedPassword;
+          await onLoginPressed();
+        } else {
+          AppSnackbar.show(
+            title: l10n.stError,
+            message: l10n.stLoginFingerprintErrorMessage
+          );
+        }
+      }
+    } catch (e) {
+      AppSnackbar.show(title: l10n.stError, message: e.toString());
+    }
   }
 
   Future<void> onLoginPressed() async {
@@ -78,6 +122,7 @@ class LoginViewModel extends GetxController {
         await sessionController.setToken(response.data?.token ?? '');
         await sessionController.setFullName(response.data?.user?.name ?? '');
         await sessionController.setEmail(response.data?.user?.email ?? '');
+        await sessionController.setSavedPassword(password.value);
         AppSnackbar.show(
           title: l10n.stSuccess,
           message: message,

@@ -286,4 +286,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stCoreIngredients => 'Core Ingredients';
+
+  @override
+  String get stLoginFingerprint => 'Scan to Login';
+
+  @override
+  String get stLoginFingerprintErrorMessage =>
+      'Saved credentials not found. Please login manually once.';
 }

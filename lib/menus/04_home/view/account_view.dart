@@ -107,18 +107,18 @@ class AccountView extends StatelessWidget {
                   onTap: () => viewModel.openThemeDialog(context),
                 ),
                 SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.change_circle,
-                  title: AppLocalizations.of(context)!.changeFoodTypes,
-                  trailing: Icon(
-                    Icons.keyboard_arrow_right,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    size: RecipeMateAppUtil.screenWidth * 0.05,
-                  ),
-                  onTap: () => viewModel.openChangePrefFoodDialog(context),
-                ),
-                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                // _buildMenuItem(
+                //   context: context,
+                //   icon: Icons.change_circle,
+                //   title: AppLocalizations.of(context)!.changeFoodTypes,
+                //   trailing: Icon(
+                //     Icons.keyboard_arrow_right,
+                //     color: Theme.of(context).colorScheme.onSurfaceVariant,
+                //     size: RecipeMateAppUtil.screenWidth * 0.05,
+                //   ),
+                //   onTap: () => viewModel.openChangePrefFoodDialog(context),
+                // ),
+                // SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
                 _buildMenuItem(
                   context: context,
                   icon: Icons.logout_rounded,

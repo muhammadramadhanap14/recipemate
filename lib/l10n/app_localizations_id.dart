@@ -287,4 +287,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get stCoreIngredients => 'Bahan Inti';
+
+  @override
+  String get stLoginFingerprint => 'Pindai untuk Masuk';
+
+  @override
+  String get stLoginFingerprintErrorMessage =>
+      'Kredensial tersimpan tidak ditemukan. Silakan masuk secara manual.';
 }

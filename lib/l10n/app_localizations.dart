@@ -643,6 +643,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Core Ingredients'**
   String get stCoreIngredients;
+
+  /// No description provided for @stLoginFingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to Login'**
+  String get stLoginFingerprint;
+
+  /// No description provided for @stLoginFingerprintErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved credentials not found. Please login manually once.'**
+  String get stLoginFingerprintErrorMessage;
 }
 
 class _AppLocalizationsDelegate

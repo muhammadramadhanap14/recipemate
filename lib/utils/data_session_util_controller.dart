@@ -79,4 +79,12 @@ class DataSessionUtilController extends GetxController {
     profileImage.value = null;
     await dataSessionUtil.clearProfileImagePath();
   }
+
+  Future<void> setSavedPassword(String password) async {
+    await dataSessionUtil.setPassword(password);
+  }
+  
+  Future<String?> getSavedPassword() async {
+    return await dataSessionUtil.getPassword();
+  }
 }
