@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
+import '../../../models/model_response/detail_recipe_response.dart';
+import '../../../repository/api_repository.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
+import '../../../utils/view_utils/no_data_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
+import '../../../utils/view_utils/connection_wrapper.dart';
 import '../view_model/home_detail_view_model.dart';
 
 class HomeDetailView extends StatelessWidget {
@@ -11,46 +14,54 @@ class HomeDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeDetailViewModel viewModel = Get.put(HomeDetailViewModel());
+    final int recipeId = Get.arguments as int;
+    final HomeDetailViewModel viewModel = Get.put(
+      HomeDetailViewModel(
+        apiRepository: Get.find<ApiRepository>(),
+        recipeId: recipeId,
+      )
+    );
     RecipeMateAppUtil.init(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
     });
-
-    final recipe = viewModel.recipeDetail;
-
     return ConnectionWrapper(
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildImageHeader(context, recipe['image']),
-
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.06),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-
-                    _buildTitleSection(context, recipe),
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-
-                    _buildNutritionalCard(context, recipe),
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-
-                    _buildSmartMatchSection(context, recipe),
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
-
-                    _buildIngredientsSection(context, recipe['ingredients']),
-                  ],
+        body: Obx(() {
+          if (viewModel.isLoading.value) {
+            return Center(child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
+            ));
+          }
+          final DetailRecipeResponse? recipe = viewModel.recipeDetail.value;
+          if (recipe == null) {
+            return const Center(child: NoDataUtil());
+          }
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildImageHeader(context, recipe.image ?? ""),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.06),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                      _buildTitleSection(context, recipe),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                      _buildNutritionalCard(context, recipe),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
+                      _buildIngredientsSection(context, recipe.extendedIngredients ?? []),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }
@@ -80,15 +91,8 @@ class HomeDetailView extends StatelessWidget {
                 _buildCircleButton(
                   context: context,
                   onTap: () => Get.back(),
-                  iconColor: Theme.of(context).colorScheme.onTertiary,
-                  icon: Icons.keyboard_arrow_left,
-                ),
-                _buildCircleButton(
-                  context: context,
-                  onTap: () {},
-                  icon: Icons.favorite,
-                  iconColor: Theme.of(context).colorScheme.primary,
-                ),
+                  icon: Icons.chevron_left,
+                )
               ],
             ),
           ),
@@ -115,12 +119,12 @@ class HomeDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildTitleSection(BuildContext context, Map<String, dynamic> recipe) {
+  Widget _buildTitleSection(BuildContext context, DetailRecipeResponse recipe) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         customText(
-          text: recipe['title'],
+          text: recipe.title ?? "",
           color: Theme.of(context).colorScheme.onSurface,
           fontSize: DimensText.headerText(context),
           fontWeight: FontWeight.bold,
@@ -136,7 +140,7 @@ class HomeDetailView extends StatelessWidget {
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.015),
             customText(
-              text: recipe['time'], 
+              text: "${recipe.readyInMinutes} mins", 
               fontSize: DimensText.captionText(context), 
               color: Theme.of(context).colorScheme.onSurface
             ),
@@ -148,7 +152,7 @@ class HomeDetailView extends StatelessWidget {
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.015),
             customText(
-              text: "${recipe['rating']} (${recipe['reviews']})",
+              text: "Score: ${recipe.spoonacularScore?.toStringAsFixed(1) ?? "0"}",
               fontSize: DimensText.captionText(context),
               color: Theme.of(context).colorScheme.onSurface
             ),
@@ -158,7 +162,18 @@ class HomeDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildNutritionalCard(BuildContext context, Map<String, dynamic> recipe) {
+  Widget _buildNutritionalCard(BuildContext context, DetailRecipeResponse recipe) {
+    final nutrients = recipe.nutrition?.nutrients ?? [];
+    final kcalNutrient = nutrients.firstWhere(
+      (n) => n.name == "Calories", 
+      orElse: () => Nutrients(amount: 0, percentOfDailyNeeds: 0)
+    );
+    
+    final kcal = kcalNutrient.amount;
+    final kcalPercent = ((kcalNutrient.percentOfDailyNeeds ?? 0) / 100).clamp(0.0, 1.0);
+    final protein = nutrients.firstWhere((n) => n.name == "Protein", orElse: () => Nutrients(amount: 0, unit: "g"));
+    final carbs = nutrients.firstWhere((n) => n.name == "Carbohydrates", orElse: () => Nutrients(amount: 0, unit: "g"));
+    final fat = nutrients.firstWhere((n) => n.name == "Fat", orElse: () => Nutrients(amount: 0, unit: "g"));
     return Container(
       padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.05),
       decoration: BoxDecoration(
@@ -206,7 +221,7 @@ class HomeDetailView extends StatelessWidget {
                     width: RecipeMateAppUtil.screenWidth * 0.25,
                     height: RecipeMateAppUtil.screenWidth * 0.25,
                     child: CircularProgressIndicator(
-                      value: 0.75,
+                      value: kcalPercent,
                       strokeWidth: RecipeMateAppUtil.screenWidth * 0.025,
                       backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       color: Theme.of(context).colorScheme.primary,
@@ -215,7 +230,7 @@ class HomeDetailView extends StatelessWidget {
                   Column(
                     children: [
                       customText(
-                        text: recipe['calories'].toString(),
+                        text: kcal?.toInt().toString() ?? "0",
                         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                         fontSize: DimensText.bodyText(context), 
                         fontWeight: FontWeight.bold
@@ -232,11 +247,11 @@ class HomeDetailView extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildNutrientRow(context, "PROTEIN", recipe['protein'], "High", Theme.of(context).colorScheme.primary),
+                  _buildNutrientRow(context, "PROTEIN", "${protein.amount?.toInt()}${protein.unit}", "High", Theme.of(context).colorScheme.primary),
                   SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-                  _buildNutrientRow(context, "CARBS", recipe['carbs'], "Normal", Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
+                  _buildNutrientRow(context, "CARBS", "${carbs.amount?.toInt()}${carbs.unit}", "Normal", Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                   SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-                  _buildNutrientRow(context, "FATS", recipe['fats'], "Healthy", Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
+                  _buildNutrientRow(context, "FATS", "${fat.amount?.toInt()}${fat.unit}", "Healthy", Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                 ],
               ),
             ],
@@ -274,90 +289,12 @@ class HomeDetailView extends StatelessWidget {
             ),
           ],
         ),
-      ],
-    );
-  }
-
-  Widget _buildSmartMatchSection(BuildContext context, Map<String, dynamic> recipe) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(
-              Icons.auto_awesome,
-              size: RecipeMateAppUtil.screenWidth * 0.05,
-              color: Theme.of(context).colorScheme.primary
-            ),
-            SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
-            customText(
-              text: "Smart Match",
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: DimensText.bodyText(context),
-              fontWeight: FontWeight.bold
-            ),
-          ],
-        ),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-        Container(
-          padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.04),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.04),
-          ),
-          child: RichText(
-            text: TextSpan(
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSecondary,
-                fontSize: DimensText.captionText(context),
-                height: 1.5,
-              ),
-              children: [
-                TextSpan(
-                  text: "This recipe is a ",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                    fontSize: DimensText.captionText(context)
-                  ),
-                ),
-                TextSpan(
-                  text: "${recipe['match_percent']}% match",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: DimensText.captionText(context),
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-                TextSpan(
-                  text: " for your goal of ",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                    fontSize: DimensText.captionText(context)
-                  ),
-                ),
-                TextSpan(
-                  text: "increasing lean muscle mass. ",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                    fontSize: DimensText.captionText(context)
-                  ),
-                ),
-                TextSpan(
-                  text: recipe['match_reason'].toString().split("mass. ").last,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                      fontSize: DimensText.captionText(context)
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }
 
-  Widget _buildIngredientsSection(BuildContext context, List<dynamic> ingredients) {
+  Widget _buildIngredientsSection(BuildContext context, List<ExtendedIngredients> ingredients) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -377,6 +314,7 @@ class HomeDetailView extends StatelessWidget {
             itemBuilder: (context, index) {
               final item = ingredients[index];
               final double size = RecipeMateAppUtil.screenWidth * 0.18;
+              final String fullImageUrl = "https://spoonacular.com/cdn/ingredients_100x100/${item.image}";
               return Column(
                 children: [
                   Container(
@@ -386,17 +324,20 @@ class HomeDetailView extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: Theme.of(context).cardColor, width: 2),
                       image: DecorationImage(
-                        image: NetworkImage(item['image']),
+                        image: NetworkImage(fullImageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                   SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
-                  customText(
-                    text: item['name'],
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: DimensText.microText(context),
-                    fontWeight: FontWeight.bold
+                  SizedBox(
+                    width: size,
+                    child: customText(
+                      text: item.name ?? "",
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: DimensText.microText(context),
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                 ],
               );

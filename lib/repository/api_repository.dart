@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -105,7 +107,7 @@ class ApiRepository {
         },
       );
 
-      debugPrint("response search: ${response.data}");
+      log("response search: ${response.data}");
 
       return response.data;
     } on DioException catch (e) {
@@ -127,7 +129,7 @@ class ApiRepository {
         },
       );
 
-      debugPrint("response detail: ${response.data}");
+      log("response detail: ${response.data}");
 
       return response.data;
     } on DioException catch (e) {

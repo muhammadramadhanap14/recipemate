@@ -1,35 +1,35 @@
 import 'package:get/get.dart';
+import '../../../models/model_response/detail_recipe_response.dart';
+import '../../../repository/api_repository.dart';
 
 class HomeDetailViewModel extends GetxController {
-  final Map<String, dynamic> recipeDetail = {
-    'title': 'Spicy Avocado Toast',
-    'time': '15 mins',
-    'rating': 4.9,
-    'reviews': '1.2k reviews',
-    'calories': 385,
-    'protein': '18g',
-    'carbs': '24g',
-    'fats': '22g',
-    'match_percent': 98,
-    'match_reason': 'This recipe is a 98% match for your goal of increasing lean muscle mass. The high healthy fat content from avocados paired with sourdough\'s low GI carbs provides sustained energy for your evening workout.',
-    'image': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=800',
-    'ingredients': [
-      {
-        'name': 'Avocado', 
-        'image': 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?q=80&w=200'
-      },
-      {
-        'name': 'Sourdough', 
-        'image': 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=200'
-      },
-      {
-        'name': 'Chili Flakes', 
-        'image': 'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=200'
-      },
-      {
-        'name': 'Radish', 
-        'image': 'https://images.unsplash.com/photo-1594498653385-d5172c532c00?q=80&w=200'
-      },
-    ]
-  };
+  final ApiRepository apiRepository;
+  final int recipeId;
+  final Rx<DetailRecipeResponse?> recipeDetail = Rx<DetailRecipeResponse?>(null);
+  final RxBool isLoading = false.obs;
+
+  HomeDetailViewModel({
+    required this.apiRepository,
+    required this.recipeId,
+  });
+
+  @override
+  void onInit() {
+    super.onInit();
+    getRecipeDetail();
+  }
+
+  Future<void> getRecipeDetail() async {
+    isLoading.value = true;
+    try {
+      final response = await apiRepository.getRecipeInformation(recipeId);
+      if (response != null) {
+        recipeDetail.value = DetailRecipeResponse.fromJson(response);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch recipe detail: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

@@ -169,7 +169,9 @@ class HomeView extends StatelessWidget {
       if (viewModel.isSearching.value) {
         return SizedBox(
           height: RecipeMateAppUtil.screenHeight * 0.48,
-          child: const Center(child: CircularProgressIndicator()),
+          child: Center(child: CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.primary,
+          )),
         );
       }
       if (viewModel.searchResults.isEmpty) {
@@ -266,20 +268,20 @@ class HomeView extends StatelessWidget {
                     ),
                     SizedBox(height: RecipeMateAppUtil.screenHeight * 0.004),
                     Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: customText(
-                          text: "ID Recipe: ${recipe.id}",
-                          fontSize: DimensText.captionText(context),
-                          intMaxLine: null,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        )
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: customText(
+                        text: "ID Recipe: ${recipe.id}",
+                        fontSize: DimensText.captionText(context),
+                        intMaxLine: null,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      )
                     ),
                   ],
                 ),

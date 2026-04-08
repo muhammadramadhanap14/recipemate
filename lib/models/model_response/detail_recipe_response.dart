@@ -87,8 +87,8 @@ class DetailRecipeResponse {
     image = json['image'];
     imageType = json['imageType'];
     title = json['title'];
-    readyInMinutes = json['readyInMinutes'];
-    servings = json['servings'];
+    readyInMinutes = (json['readyInMinutes'] as num?)?.toInt();
+    servings = (json['servings'] as num?)?.toInt();
     sourceUrl = json['sourceUrl'];
     vegetarian = json['vegetarian'];
     vegan = json['vegan'];
@@ -99,12 +99,12 @@ class DetailRecipeResponse {
     veryPopular = json['veryPopular'];
     sustainable = json['sustainable'];
     lowFodmap = json['lowFodmap'];
-    weightWatcherSmartPoints = json['weightWatcherSmartPoints'];
+    weightWatcherSmartPoints = (json['weightWatcherSmartPoints'] as num?)?.toInt();
     gaps = json['gaps'];
-    preparationMinutes = json['preparationMinutes'];
-    cookingMinutes = json['cookingMinutes'];
-    aggregateLikes = json['aggregateLikes'];
-    healthScore = json['healthScore'];
+    preparationMinutes = (json['preparationMinutes'] as num?)?.toInt();
+    cookingMinutes = (json['cookingMinutes'] as num?)?.toInt();
+    aggregateLikes = (json['aggregateLikes'] as num?)?.toInt();
+    healthScore = (json['healthScore'] as num?)?.toInt();
     creditsText = json['creditsText'];
     license = json['license'];
     sourceName = json['sourceName'];
@@ -513,7 +513,7 @@ class WeightPerServing {
   WeightPerServing({this.amount, this.unit});
 
   WeightPerServing.fromJson(Map<String, dynamic> json) {
-    amount = json['amount'];
+    amount = (json['amount'] as num?)?.toInt();
     unit = json['unit'];
   }
 
@@ -626,7 +626,7 @@ class ProductMatches {
     price = json['price'];
     imageUrl = json['imageUrl'];
     averageRating = (json['averageRating'] as num?)?.toDouble();
-    ratingCount = json['ratingCount'];
+    ratingCount = (json['ratingCount'] as num?)?.toInt();
     score = (json['score'] as num?)?.toDouble();
     link = json['link'];
   }
@@ -683,7 +683,7 @@ class Steps {
       {this.number, this.step, this.ingredients, this.equipment, this.length});
 
   Steps.fromJson(Map<String, dynamic> json) {
-    number = json['number'];
+    number = (json['number'] as num?)?.toInt();
     step = json['step'];
     if (json['ingredients'] != null) {
       ingredients = <StepIngredients>[];
@@ -778,13 +778,13 @@ class Equipment {
 }
 
 class Temperature {
-  int? number;
+  double? number;
   String? unit;
 
   Temperature({this.number, this.unit});
 
   Temperature.fromJson(Map<String, dynamic> json) {
-    number = json['number'];
+    number = (json['number'] as num?)?.toDouble();
     unit = json['unit'];
   }
 
