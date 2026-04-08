@@ -57,7 +57,7 @@ class HomeNavView extends StatelessWidget {
             backgroundColor: Theme.of(context).colorScheme.primary,
             shape: CircleBorder(
               side: BorderSide(
-                color: Theme.of(context).colorScheme.surface,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 width: RecipeMateAppUtil.screenWidth * 0.01,
               ),
             ),

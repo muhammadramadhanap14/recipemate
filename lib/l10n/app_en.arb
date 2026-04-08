@@ -86,5 +86,8 @@
   "stFailedRegister": "Register Failed",
   "stInternalServerError": "Internal Server Error",
   "stNoDataFound": "No Data Found",
-  "stNoDataFoundMessage": "No data available to display"
+  "stNoDataFoundMessage": "No data available to display",
+  "stNutritionalPrediction": "Nutritional Prediction",
+  "stRecipeSummary": "Recipe Summary",
+  "stCoreIngredients": "Core Ingredients"
 }

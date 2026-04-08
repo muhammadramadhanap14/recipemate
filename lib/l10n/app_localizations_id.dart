@@ -278,4 +278,13 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get stNoDataFoundMessage =>
       'Tidak ada data yang tersedia untuk ditampilkan.';
+
+  @override
+  String get stNutritionalPrediction => 'Prediksi Nutrisi';
+
+  @override
+  String get stRecipeSummary => 'Ringkasan Resep';
+
+  @override
+  String get stCoreIngredients => 'Bahan Inti';
 }

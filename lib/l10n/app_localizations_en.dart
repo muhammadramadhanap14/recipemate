@@ -277,4 +277,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stNoDataFoundMessage => 'No data available to display';
+
+  @override
+  String get stNutritionalPrediction => 'Nutritional Prediction';
+
+  @override
+  String get stRecipeSummary => 'Recipe Summary';
+
+  @override
+  String get stCoreIngredients => 'Core Ingredients';
 }

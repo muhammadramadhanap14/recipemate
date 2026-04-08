@@ -86,5 +86,8 @@
   "stFailedRegister": "Register Gagal",
   "stInternalServerError": "Kesalahan Server Internal",
   "stNoDataFound": "Tidak Ada Data yang Ditemukan",
-  "stNoDataFoundMessage": "Tidak ada data yang tersedia untuk ditampilkan."
+  "stNoDataFoundMessage": "Tidak ada data yang tersedia untuk ditampilkan.",
+  "stNutritionalPrediction": "Prediksi Nutrisi",
+  "stRecipeSummary": "Ringkasan Resep",
+  "stCoreIngredients": "Bahan Inti"
 }

@@ -625,6 +625,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No data available to display'**
   String get stNoDataFoundMessage;
+
+  /// No description provided for @stNutritionalPrediction.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritional Prediction'**
+  String get stNutritionalPrediction;
+
+  /// No description provided for @stRecipeSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe Summary'**
+  String get stRecipeSummary;
+
+  /// No description provided for @stCoreIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Core Ingredients'**
+  String get stCoreIngredients;
 }
 
 class _AppLocalizationsDelegate

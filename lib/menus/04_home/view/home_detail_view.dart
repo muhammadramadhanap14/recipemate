@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../models/model_response/detail_recipe_response.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/recipemate_app_util.dart';
@@ -52,9 +54,10 @@ class HomeDetailView extends StatelessWidget {
                       _buildTitleSection(context, recipe),
                       SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                       _buildNutritionalCard(context, recipe),
-                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                      _buildSummaryCard(context, recipe.summary ?? ''),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                       _buildIngredientsSection(context, recipe.extendedIngredients ?? []),
-                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
                     ],
                   ),
                 ),
@@ -107,12 +110,12 @@ class HomeDetailView extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.02),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.5),
+          color: Theme.of(context).scaffoldBackgroundColor,
           shape: BoxShape.circle,
         ),
         child: Icon(
           icon,
-          color: iconColor ?? Theme.of(context).colorScheme.onPrimary,
+          color: iconColor ?? Theme.of(context).colorScheme.onSurface,
           size: RecipeMateAppUtil.screenWidth * 0.07,
         ),
       ),
@@ -126,9 +129,9 @@ class HomeDetailView extends StatelessWidget {
         customText(
           text: recipe.title ?? "",
           color: Theme.of(context).colorScheme.onSurface,
-          fontSize: DimensText.headerText(context),
-          fontWeight: FontWeight.bold,
-          fontFamily: 'times_new_roman_bold',
+          fontSize: DimensText.subHeaderLargeText(context),
+          fontWeight: FontWeight.w700,
+          intMaxLine: null
         ),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
         Row(
@@ -164,95 +167,109 @@ class HomeDetailView extends StatelessWidget {
 
   Widget _buildNutritionalCard(BuildContext context, DetailRecipeResponse recipe) {
     final nutrients = recipe.nutrition?.nutrients ?? [];
-    final kcalNutrient = nutrients.firstWhere(
-      (n) => n.name == "Calories", 
-      orElse: () => Nutrients(amount: 0, percentOfDailyNeeds: 0)
+    Nutrients getNutrient(String name) => nutrients.firstWhere(
+          (n) => n.name == name,
+      orElse: () => Nutrients(amount: 0, unit: "", percentOfDailyNeeds: 0),
     );
-    
+    final spacingH = RecipeMateAppUtil.screenWidth * 0.04;
+    final spacingV = RecipeMateAppUtil.screenHeight * 0.015;
+
+    final kcalNutrient = getNutrient("Calories");
     final kcal = kcalNutrient.amount;
-    final kcalPercent = ((kcalNutrient.percentOfDailyNeeds ?? 0) / 100).clamp(0.0, 1.0);
-    final protein = nutrients.firstWhere((n) => n.name == "Protein", orElse: () => Nutrients(amount: 0, unit: "g"));
-    final carbs = nutrients.firstWhere((n) => n.name == "Carbohydrates", orElse: () => Nutrients(amount: 0, unit: "g"));
-    final fat = nutrients.firstWhere((n) => n.name == "Fat", orElse: () => Nutrients(amount: 0, unit: "g"));
+    final kcalPercent =
+    ((kcalNutrient.percentOfDailyNeeds ?? 0) / 100).clamp(0.0, 1.0);
+
+    final protein = getNutrient("Protein");
+    final carbs = getNutrient("Carbohydrates");
+    final fat = getNutrient("Fat");
+    final sugar = getNutrient("Sugar");
+    final cholesterol = getNutrient("Cholesterol");
+    final sodium = getNutrient("Sodium");
+
     return Container(
       padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.05),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.06),
+        borderRadius:
+        BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.06),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  customText(
-                    text: "Nutritional Prediction", 
-                    fontSize: DimensText.bodyText(context),
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold
-                  ),
-                  customText(
-                    text: "ML ANALYZED ANALYSIS",
-                    fontSize: DimensText.microText(context),
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary
-                  ),
-                ],
-              ),
-              Icon(
-                Icons.info_outline,
-                size: RecipeMateAppUtil.screenWidth * 0.05,
-                color: Theme.of(context).colorScheme.onSecondary
+              customText(
+                text: AppLocalizations.of(context)!.stNutritionalPrediction,
+                fontSize: DimensText.bodyText(context),
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
               ),
             ],
           ),
-          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.025),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox(
-                    width: RecipeMateAppUtil.screenWidth * 0.25,
-                    height: RecipeMateAppUtil.screenWidth * 0.25,
-                    child: CircularProgressIndicator(
-                      value: kcalPercent,
-                      strokeWidth: RecipeMateAppUtil.screenWidth * 0.025,
-                      backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                      color: Theme.of(context).colorScheme.primary,
+              SizedBox(
+                width: RecipeMateAppUtil.screenWidth * 0.28,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox(
+                          width: RecipeMateAppUtil.screenWidth * 0.22,
+                          height: RecipeMateAppUtil.screenWidth * 0.22,
+                          child: CircularProgressIndicator(
+                            value: kcalPercent,
+                            strokeWidth: RecipeMateAppUtil.screenWidth * 0.02,
+                            backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            customText(
+                              text: kcal?.toInt().toString() ?? "0",
+                              fontSize: DimensText.bodyText(context),
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                            customText(
+                              text: "KCAL",
+                              fontSize:
+                              DimensText.microText(context),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                  Column(
-                    children: [
-                      customText(
-                        text: kcal?.toInt().toString() ?? "0",
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                        fontSize: DimensText.bodyText(context), 
-                        fontWeight: FontWeight.bold
-                      ),
-                      customText(
-                        text: "CALORIES", 
-                        fontSize: DimensText.microText(context), 
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildNutrientRow(context, "PROTEIN", "${protein.amount?.toInt()}${protein.unit}", "High", Theme.of(context).colorScheme.primary),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-                  _buildNutrientRow(context, "CARBS", "${carbs.amount?.toInt()}${carbs.unit}", "Normal", Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-                  _buildNutrientRow(context, "FATS", "${fat.amount?.toInt()}${fat.unit}", "Healthy", Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
-                ],
+              SizedBox(width: spacingH),
+              Expanded(
+                child: Column(
+                  children: [
+                    _buildRowNutrient(context,
+                      _buildNutrientItem(context, "PROTEIN", "${protein.amount?.toInt()}${protein.unit}"),
+                      _buildNutrientItem(context, "SUGAR", "${sugar.amount?.toInt()}${sugar.unit}"),
+                    ),
+                    SizedBox(height: spacingV),
+                    _buildRowNutrient(context,
+                      _buildNutrientItem(context, "CARBS", "${carbs.amount?.toInt()}${carbs.unit}"),
+                      _buildNutrientItem(context, "CHOL.", "${cholesterol.amount?.toInt()}${cholesterol.unit}"),
+                    ),
+                    SizedBox(height: spacingV),
+                    _buildRowNutrient(context,
+                      _buildNutrientItem(context, "FATS", "${fat.amount?.toInt()}${fat.unit}"),
+                      _buildNutrientItem(context, "SODIUM", "${sodium.amount?.toInt()}${sodium.unit}"),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -261,7 +278,18 @@ class HomeDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildNutrientRow(BuildContext context, String label, String value, String status, Color statusColor) {
+  Widget _buildRowNutrient(
+      BuildContext context, Widget left, Widget right) {
+    return Row(
+      children: [
+        Expanded(child: left),
+        SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),
+        Expanded(child: right),
+      ],
+    );
+  }
+
+  Widget _buildNutrientItem(BuildContext context, String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -271,26 +299,67 @@ class HomeDetailView extends StatelessWidget {
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
           fontWeight: FontWeight.bold
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            customText(
-              text: value,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-              fontSize: DimensText.bodyText(context), 
-              fontWeight: FontWeight.bold
-            ),
-            SizedBox(width: RecipeMateAppUtil.screenWidth * 0.1),
-            customText(
-              text: status, 
-              fontSize: DimensText.microText(context), 
-              color: statusColor, 
-              fontWeight: FontWeight.bold
-            ),
-          ],
+        customText(
+          text: value,
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+          fontSize: DimensText.bodyText(context),
+          fontWeight: FontWeight.bold
         ),
-        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
       ],
+    );
+  }
+
+  Widget _buildSummaryCard(BuildContext context, String summary) {
+    return Container(
+      padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.05),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.06),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              customText(
+                text: AppLocalizations.of(context)!.stRecipeSummary,
+                fontSize: DimensText.bodyText(context),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ],
+          ),
+          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+          Container(
+            padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.04),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.04),
+            ),
+            child: Html(
+              data: summary,
+              style: {
+                "body": Style(
+                  margin: Margins.zero,
+                  padding: HtmlPaddings.zero,
+                  fontSize: FontSize(DimensText.bodySmallText(context)),
+                  color: Theme.of(context).colorScheme.onSurface,
+                  lineHeight: LineHeight(1.5),
+                ),
+                "b": Style(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                "a": Style(
+                  color: Colors.blue,
+                  textDecoration: TextDecoration.none,
+                ),
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -299,7 +368,7 @@ class HomeDetailView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         customText(
-          text: "Core Ingredients",
+            text: AppLocalizations.of(context)!.stCoreIngredients,
           color: Theme.of(context).colorScheme.onSurface,
           fontSize: DimensText.bodyText(context), 
           fontWeight: FontWeight.bold
@@ -336,7 +405,9 @@ class HomeDetailView extends StatelessWidget {
                       text: item.name ?? "",
                       color: Theme.of(context).colorScheme.onSurface,
                       fontSize: DimensText.microText(context),
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.bold,
+                      textAlign: TextAlign.center,
+                      intMaxLine: null
                     ),
                   ),
                 ],
