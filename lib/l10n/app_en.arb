@@ -91,5 +91,9 @@
   "stRecipeSummary": "Recipe Summary",
   "stCoreIngredients": "Core Ingredients",
   "stLoginFingerprint": "Scan to Login",
-  "stLoginFingerprintErrorMessage": "Saved credentials not found. Please login manually once."
+  "stLoginFingerprintErrorMessage": "Saved credentials not found. Please login manually once.",
+  "stEnableFingerprintNowTitle": "Enable Fingerprint?",
+  "stEnableFingerprintNowMessage": "Unlock faster and more securely with your fingerprint. Would you like to enable it now?",
+  "stRemindMeLaterBtn": "Remind me later",
+  "stRemindMeLaterMessage": "We will remind you after 48 hours."
 }

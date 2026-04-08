@@ -293,4 +293,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get stLoginFingerprintErrorMessage =>
       'Saved credentials not found. Please login manually once.';
+
+  @override
+  String get stEnableFingerprintNowTitle => 'Enable Fingerprint?';
+
+  @override
+  String get stEnableFingerprintNowMessage =>
+      'Unlock faster and more securely with your fingerprint. Would you like to enable it now?';
+
+  @override
+  String get stRemindMeLaterBtn => 'Remind me later';
+
+  @override
+  String get stRemindMeLaterMessage => 'We will remind you after 48 hours.';
 }

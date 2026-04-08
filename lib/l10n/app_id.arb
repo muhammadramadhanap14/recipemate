@@ -91,6 +91,9 @@
   "stRecipeSummary": "Ringkasan Resep",
   "stCoreIngredients": "Bahan Inti",
   "stLoginFingerprint": "Pindai untuk Masuk",
-  "stLoginFingerprintErrorMessage": "Kredensial tersimpan tidak ditemukan. Silakan masuk secara manual."
-
+  "stLoginFingerprintErrorMessage": "Kredensial tersimpan tidak ditemukan. Silakan masuk secara manual.",
+  "stEnableFingerprintNowTitle": "Aktifkan Sidik Jari?",
+  "stEnableFingerprintNowMessage": "Buka kunci lebih cepat dan aman dengan sidik jari Anda. Apakah Anda ingin mengaktifkannya sekarang?",
+  "stRemindMeLaterBtn": "Ingatkan saya nanti",
+  "stRemindMeLaterMessage": "Kami akan mengingatkan Anda setelah 48 jam."
 }

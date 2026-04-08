@@ -294,4 +294,18 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get stLoginFingerprintErrorMessage =>
       'Kredensial tersimpan tidak ditemukan. Silakan masuk secara manual.';
+
+  @override
+  String get stEnableFingerprintNowTitle => 'Aktifkan Sidik Jari?';
+
+  @override
+  String get stEnableFingerprintNowMessage =>
+      'Buka kunci lebih cepat dan aman dengan sidik jari Anda. Apakah Anda ingin mengaktifkannya sekarang?';
+
+  @override
+  String get stRemindMeLaterBtn => 'Ingatkan saya nanti';
+
+  @override
+  String get stRemindMeLaterMessage =>
+      'Kami akan mengingatkan Anda setelah 48 jam.';
 }

@@ -8,6 +8,7 @@ class DataSessionUtil {
   static const String _fullNameKey = 'full_name';
   static const String _emailKey = 'user_email';
   static const String _passwordKey = 'user_password';
+  static const String _lastFingerprintReminderKey = 'last_fingerprint_reminder';
 
   Future<void> setFingerprint(bool value) async {
     final prefs = await SharedPreferences.getInstance();
@@ -17,6 +18,16 @@ class DataSessionUtil {
   Future<bool> getFingerprint() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_fingerprintKey) ?? false;
+  }
+
+  Future<void> setLastFingerprintReminder(int timestamp) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_lastFingerprintReminderKey, timestamp);
+  }
+
+  Future<int?> getLastFingerprintReminder() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_lastFingerprintReminderKey);
   }
 
   Future<void> setToken(String token) async {

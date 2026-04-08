@@ -655,6 +655,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved credentials not found. Please login manually once.'**
   String get stLoginFingerprintErrorMessage;
+
+  /// No description provided for @stEnableFingerprintNowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Fingerprint?'**
+  String get stEnableFingerprintNowTitle;
+
+  /// No description provided for @stEnableFingerprintNowMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock faster and more securely with your fingerprint. Would you like to enable it now?'**
+  String get stEnableFingerprintNowMessage;
+
+  /// No description provided for @stRemindMeLaterBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me later'**
+  String get stRemindMeLaterBtn;
+
+  /// No description provided for @stRemindMeLaterMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We will remind you after 48 hours.'**
+  String get stRemindMeLaterMessage;
 }
 
 class _AppLocalizationsDelegate
