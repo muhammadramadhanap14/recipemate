@@ -20,14 +20,11 @@ class HomeNavViewModel extends GetxController {
   Widget get currentPage => _pages[selectedIndex.value];
 
   void changePage(int index) {
-    if (index == 0) {
-      try {
-        final homeVM = Get.find<HomeViewModel>();
-        homeVM.searchResults.clear();
-        homeVM.isSearching.value = false;
-      } catch (_) {
-        // Jika belum di-inject, abaikan
-      }
+    try {
+      final homeVM = Get.find<HomeViewModel>();
+      homeVM.resetSearch();
+    } catch (_) {
+      // Jika belum di-inject, abaikan
     }
     selectedIndex.value = index;
     update();

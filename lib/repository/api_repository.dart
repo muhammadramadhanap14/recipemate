@@ -129,7 +129,7 @@ class ApiRepository {
         queryParameters: {
           "query": query,
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 

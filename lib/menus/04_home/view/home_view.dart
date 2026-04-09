@@ -44,7 +44,7 @@ class HomeView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildSearchBar(context, viewModel),
-                      // _buildAutoCompleteList(context, viewModel), // Uncomment kalau mau pakai autocomplete cuma boros token api nya, cepat kena limit
+                      _buildAutoCompleteList(context, viewModel),
                     ],
                   ),
                 ),
@@ -137,9 +137,10 @@ class HomeView extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: viewModel.searchController,
-              onChanged: (value) {
-                viewModel.getAutoComplete(value);
-              },
+              // // Uncomment kalau mau pakai autocomplete cuma boros token api nya, cepat kena daily limit
+              // onChanged: (value) {
+              //   viewModel.getAutoComplete(value);
+              // },
               onSubmitted: (value) => viewModel.searchRecipes(value),
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.stSearchRecipes,

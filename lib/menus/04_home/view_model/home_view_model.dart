@@ -33,6 +33,15 @@ class HomeViewModel extends GetxController {
     });
   }
 
+  void resetSearch() {
+    searchController.clear();
+    searchResults.clear();
+    autoCompleteResults.clear();
+    isSearching.value = false;
+    isAutoCompleteLoading.value = false;
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
   Future<void> getUserName() async {
     await session.loadFullName();
     userName.value = session.stFullName.value;
@@ -116,7 +125,9 @@ class HomeViewModel extends GetxController {
 
   @override
   void onClose() {
+    searchController.dispose();
     searchResults.clear();
+    autoCompleteResults.clear();
     isSearching.value = false;
     super.onClose();
   }
