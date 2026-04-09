@@ -301,7 +301,7 @@ class HomeDetailView extends StatelessWidget {
         ),
         customText(
           text: value,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+          color: Theme.of(context).colorScheme.onSurface,
           fontSize: DimensText.bodyText(context),
           fontWeight: FontWeight.bold
         ),

@@ -273,7 +273,7 @@ class HomeView extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: customText(
