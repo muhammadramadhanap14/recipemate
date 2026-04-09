@@ -51,6 +51,7 @@ class HomeNavView extends StatelessWidget {
             ],
           ),
           child: FloatingActionButton(
+            heroTag: null,
             onPressed: () {
               Get.toNamed('/recipemate_ai');
             },

@@ -127,7 +127,7 @@ class AccountView extends StatelessWidget {
                   iconColor: Theme.of(context).colorScheme.primary,
                   trailing: Icon(
                     Icons.keyboard_arrow_right,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    color: Theme.of(context).colorScheme.primary,
                     size: RecipeMateAppUtil.screenWidth * 0.05,
                   ),
                   onTap: () => viewModel.openLogoutDialog(context),
