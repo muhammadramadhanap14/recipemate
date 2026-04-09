@@ -40,7 +40,13 @@ class HomeView extends StatelessWidget {
 
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
-                  child: _buildSearchBar(context, viewModel),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSearchBar(context, viewModel),
+                      // _buildAutoCompleteList(context, viewModel), // Uncomment kalau mau pakai autocomplete cuma boros token api nya, cepat kena limit
+                    ],
+                  ),
                 ),
                 SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
                 _buildRecommendedList(context, viewModel),
@@ -130,6 +136,10 @@ class HomeView extends StatelessWidget {
           SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),
           Expanded(
             child: TextField(
+              controller: viewModel.searchController,
+              onChanged: (value) {
+                viewModel.getAutoComplete(value);
+              },
               onSubmitted: (value) => viewModel.searchRecipes(value),
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.stSearchRecipes,
@@ -144,6 +154,87 @@ class HomeView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // JANGAN DIHAPUS, INI AUTOCOMPLETE
+  Widget _buildAutoCompleteList(BuildContext context, HomeViewModel viewModel) {
+    return Obx(() {
+      if (viewModel.autoCompleteResults.isEmpty) {
+        return const SizedBox();
+      }
+      return Container(
+        margin: EdgeInsets.only(top: RecipeMateAppUtil.screenHeight * 0.01),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            )
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: ListView.separated(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: viewModel.autoCompleteResults.length,
+            separatorBuilder: (context, index) => Divider(
+              height: 1,
+              indent: 16,
+              endIndent: 16,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
+            ),
+            itemBuilder: (context, index) {
+              final item = viewModel.autoCompleteResults[index];
+              final String title = item['title'] ?? "";
+              return InkWell(
+                onTap: () {
+                  viewModel.searchController.text = title;
+                  viewModel.searchController.selection = TextSelection.fromPosition(
+                    TextPosition(offset: title.length),
+                  );
+                  viewModel.searchRecipes(title);
+                  viewModel.autoCompleteResults.clear();
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: RecipeMateAppUtil.screenHeight * 0.015,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.history_rounded,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: customText(
+                          text: title,
+                          fontSize: DimensText.bodySmallText(context),
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Icon(
+                        Icons.north_west_rounded,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildSectionHeader(BuildContext context, String title) {

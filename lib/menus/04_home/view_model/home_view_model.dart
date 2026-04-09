@@ -15,6 +15,9 @@ class HomeViewModel extends GetxController {
   final RxList<Results> searchResults = <Results>[].obs;
   final RxBool isSearching = false.obs;
   final RxBool isFingerprintEnabled = false.obs;
+  final RxList<dynamic> autoCompleteResults = <dynamic>[].obs;
+  final RxBool isAutoCompleteLoading = false.obs;
+  final TextEditingController searchController = TextEditingController();
 
   HomeViewModel({
     required this.apiRepository,
@@ -33,6 +36,24 @@ class HomeViewModel extends GetxController {
   Future<void> getUserName() async {
     await session.loadFullName();
     userName.value = session.stFullName.value;
+  }
+
+  Future<void> getAutoComplete(String query) async {
+    if (query.trim().isEmpty) {
+      autoCompleteResults.clear();
+      return;
+    }
+    isAutoCompleteLoading.value = true;
+    try {
+      final response = await apiRepository.getRecipeAutocomplete(query: query);
+      if (response != null) {
+        autoCompleteResults.assignAll(response);
+      }
+    } catch (e) {
+      debugPrint("Autocomplete error: $e");
+    } finally {
+      isAutoCompleteLoading.value = false;
+    }
   }
 
   Future<void> searchRecipes(String query) async {

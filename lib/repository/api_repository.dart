@@ -119,6 +119,32 @@ class ApiRepository {
     }
   }
 
+  Future<dynamic> getRecipeAutocomplete({
+    required String query,
+    int number = 5,
+  }) async {
+    try {
+      final response = await _dio.get(
+        "/recipes/autocomplete",
+        queryParameters: {
+          "query": query,
+          "number": number,
+          "apiKey": ConstantUrl.spoonacularApiKey,
+        },
+      );
+
+      log("response autocomplete: ${response.data}");
+
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Dio error: ${e.response?.data}");
+      return e.response?.data;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return null;
+    }
+  }
+
   Future<dynamic> getRecipeInformation(int recipeId) async {
     try {
       final response = await _dio.get(
