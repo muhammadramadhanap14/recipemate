@@ -47,6 +47,10 @@ dependencies:
   connectivity_plus: ^6.1.5
   device_info_plus: ^11.3.3
   package_info_plus: ^8.3.1
+  local_auth: ^2.1.7
+  shared_preferences: ^2.5.4
+  image_picker: ^1.2.1
+  sqflite: ^2.4.2
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1
@@ -65,9 +69,9 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
-flutter_icons:
+flutter_launcher_icons:
+  android: "launcher_icon"
   ios: true
-  android: true
   image_path: "assets/images/cover_logo_recipemate.png"
 
 # The following section is specific to Flutter packages.

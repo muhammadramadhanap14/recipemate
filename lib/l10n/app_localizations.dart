@@ -122,6 +122,12 @@ abstract class AppLocalizations {
   /// **'Error Report'**
   String get menuErrorReport;
 
+  /// No description provided for @security.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get security;
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:
@@ -145,6 +151,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Language'**
   String get selectLanguage;
+
+  /// No description provided for @selectTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Theme'**
+  String get selectTheme;
 
   /// No description provided for @changeFoodTypes.
   ///
@@ -403,6 +415,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'What are your favorite food types or dietary preferences?'**
   String get stgreetPrefFood4;
+
+  /// No description provided for @stBiometric.
+  ///
+  /// In en, this message translates to:
+  /// **'BIOMETRIC AUTHENTICATION'**
+  String get stBiometric;
+
+  /// No description provided for @stBiometricFace.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Face ID'**
+  String get stBiometricFace;
+
+  /// No description provided for @stBiometricFingerPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Fingerprint ID'**
+  String get stBiometricFingerPrint;
+
+  /// No description provided for @stPasswordManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'PASSWORD MANAGEMENT'**
+  String get stPasswordManagement;
+
+  /// No description provided for @stChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get stChangePassword;
+
+  /// No description provided for @stChangePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Profile Photo'**
+  String get stChangePhoto;
+
+  /// No description provided for @stRemovPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Photo'**
+  String get stRemovPhoto;
+
+  /// No description provided for @stChoosePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose From Gallery'**
+  String get stChoosePhoto;
+
+  /// No description provided for @stTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get stTakePhoto;
+
+  /// No description provided for @stChangeData.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Data'**
+  String get stChangeData;
+
+  /// No description provided for @stQuitApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Application'**
+  String get stQuitApp;
+
+  /// No description provided for @stDoubleTapToExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Press again to exit'**
+  String get stDoubleTapToExit;
+
+  /// No description provided for @stSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get stSuccess;
+
+  /// No description provided for @stFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get stFailed;
+
+  /// No description provided for @stInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get stInfo;
+
+  /// No description provided for @stError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get stError;
+
+  /// No description provided for @stFingerprintSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Fingerprint has been successfully activated'**
+  String get stFingerprintSuccess;
+
+  /// No description provided for @stFingerprintFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed'**
+  String get stFingerprintFailed;
+
+  /// No description provided for @stFingerprintError.
+  ///
+  /// In en, this message translates to:
+  /// **'There is an error: '**
+  String get stFingerprintError;
+
+  /// No description provided for @stFingerprintInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Fingerprint is disabled'**
+  String get stFingerprintInfo;
+
+  /// No description provided for @stDontHaveBiometric.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric is not available on this device'**
+  String get stDontHaveBiometric;
+
+  /// No description provided for @stFailedOnBoarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to finish onboarding'**
+  String get stFailedOnBoarding;
+
+  /// No description provided for @stEnableFingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to activate Biometric feature'**
+  String get stEnableFingerprint;
+
+  /// No description provided for @stNoConnectionInternetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get stNoConnectionInternetTitle;
+
+  /// No description provided for @stNoConnectionInternetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet settings and try again'**
+  String get stNoConnectionInternetMessage;
+
+  /// No description provided for @stRetryBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get stRetryBtn;
+
+  /// No description provided for @stReasonFailedPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to pick image:'**
+  String get stReasonFailedPhoto;
+
+  /// No description provided for @stNewPaswword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get stNewPaswword;
+
+  /// No description provided for @stOldPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Old Password'**
+  String get stOldPassword;
+
+  /// No description provided for @confirmBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirmBtn;
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/recipemate_app_util.dart';
@@ -22,175 +23,177 @@ class PreferenceFoodSatuView extends StatelessWidget {
 
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenW * 0.06,
-                    ),
-                    child: IntrinsicHeight(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: screenH * 0.025),
-                          _buildProgress(context, screenW, screenH),
-                          SizedBox(height: screenH * 0.03),
-                          _buildTitle(context, screenH),
-                          SizedBox(height: screenH * 0.04),
-                          
-                          _buildInputLabel(context, AppLocalizations.of(context)!.stShortname, screenW, screenH),
+      child: ConnectionWrapper(
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenW * 0.06,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: screenH * 0.025),
+                            _buildProgress(context, screenW, screenH),
+                            SizedBox(height: screenH * 0.03),
+                            _buildTitle(context, screenH),
+                            SizedBox(height: screenH * 0.04),
 
-                          TextFormField(
-                            focusNode: FocusNode(),
-                            keyboardType: TextInputType.name,
-                            onChanged: viewModel.setName,
-                            style: TextStyle(
-                              fontSize: DimensText.captionText(context),
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'e.g. Alex Dards',
-                              hintStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                              ),
-                              filled: true,
-                              fillColor: Theme.of(context).cardColor,
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: screenH * 0.02,
-                                horizontal: screenW * 0.04,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          ),
-                          
-                          SizedBox(height: screenH * 0.025),
-                          
-                          _buildInputLabel(context, AppLocalizations.of(context)!.stAge, screenW, screenH),
+                            _buildInputLabel(context, AppLocalizations.of(context)!.stShortname, screenW, screenH),
 
-                          TextFormField(
-                            focusNode: FocusNode(),
-                            keyboardType: TextInputType.number,
-                            onChanged: viewModel.setAge,
-                            style: TextStyle(
-                              fontSize: DimensText.captionText(context),
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'e.g. 25',
-                              hintStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                            TextFormField(
+                              focusNode: FocusNode(),
+                              keyboardType: TextInputType.name,
+                              onChanged: viewModel.setName,
+                              style: TextStyle(
+                                fontSize: DimensText.captionText(context),
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              filled: true,
-                              fillColor: Theme.of(context).cardColor,
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: screenH * 0.02,
-                                horizontal: screenW * 0.04,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          ),
-                          
-                          SizedBox(height: screenH * 0.025),
-                          
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildInputLabel(context, AppLocalizations.of(context)!.stHeight, screenW, screenH),
-                                    TextFormField(
-                                      focusNode: FocusNode(),
-                                      keyboardType: TextInputType.number,
-                                      onChanged: viewModel.setHeight,
-                                      style: TextStyle(
-                                        fontSize: DimensText.captionText(context),
-                                        color: Theme.of(context).colorScheme.onSurface,
-                                      ),
-                                      decoration: InputDecoration(
-                                        hintText: '170',
-                                        hintStyle: TextStyle(
-                                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                                        ),
-                                        filled: true,
-                                        fillColor: Theme.of(context).cardColor,
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: screenH * 0.02,
-                                          horizontal: screenW * 0.04,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              decoration: InputDecoration(
+                                hintText: 'e.g. Alex Dards',
+                                hintStyle: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                ),
+                                filled: true,
+                                fillColor: Theme.of(context).cardColor,
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: screenH * 0.02,
+                                  horizontal: screenW * 0.04,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
                                 ),
                               ),
-                              SizedBox(width: screenW * 0.04),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildInputLabel(context, AppLocalizations.of(context)!.stWeight, screenW, screenH),
+                            ),
 
-                                    TextFormField(
-                                      focusNode: FocusNode(),
-                                      keyboardType: TextInputType.number,
-                                      onChanged: viewModel.setWeight,
-                                      style: TextStyle(
-                                        fontSize: DimensText.captionText(context),
-                                        color: Theme.of(context).colorScheme.onSurface,
-                                      ),
-                                      decoration: InputDecoration(
-                                        hintText: '65',
-                                        hintStyle: TextStyle(
-                                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                                        ),
-                                        filled: true,
-                                        fillColor: Theme.of(context).cardColor,
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: screenH * 0.02,
-                                          horizontal: screenW * 0.04,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                            SizedBox(height: screenH * 0.025),
+
+                            _buildInputLabel(context, AppLocalizations.of(context)!.stAge, screenW, screenH),
+
+                            TextFormField(
+                              focusNode: FocusNode(),
+                              keyboardType: TextInputType.number,
+                              onChanged: viewModel.setAge,
+                              style: TextStyle(
+                                fontSize: DimensText.captionText(context),
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: 'e.g. 25',
+                                hintStyle: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                ),
+                                filled: true,
+                                fillColor: Theme.of(context).cardColor,
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: screenH * 0.02,
+                                  horizontal: screenW * 0.04,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
                                 ),
                               ),
-                            ],
-                          ),
-                          
-                          const Spacer(),
-                          SizedBox(height: screenH * 0.03),
-                          _buildNextButton(context, viewModel, screenW, screenH),
-                          SizedBox(height: screenH * 0.025),
-                        ],
+                            ),
+
+                            SizedBox(height: screenH * 0.025),
+
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _buildInputLabel(context, AppLocalizations.of(context)!.stHeight, screenW, screenH),
+                                      TextFormField(
+                                        focusNode: FocusNode(),
+                                        keyboardType: TextInputType.number,
+                                        onChanged: viewModel.setHeight,
+                                        style: TextStyle(
+                                          fontSize: DimensText.captionText(context),
+                                          color: Theme.of(context).colorScheme.onSurface,
+                                        ),
+                                        decoration: InputDecoration(
+                                          hintText: '170',
+                                          hintStyle: TextStyle(
+                                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                          ),
+                                          filled: true,
+                                          fillColor: Theme.of(context).cardColor,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: screenH * 0.02,
+                                            horizontal: screenW * 0.04,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: screenW * 0.04),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _buildInputLabel(context, AppLocalizations.of(context)!.stWeight, screenW, screenH),
+
+                                      TextFormField(
+                                        focusNode: FocusNode(),
+                                        keyboardType: TextInputType.number,
+                                        onChanged: viewModel.setWeight,
+                                        style: TextStyle(
+                                          fontSize: DimensText.captionText(context),
+                                          color: Theme.of(context).colorScheme.onSurface,
+                                        ),
+                                        decoration: InputDecoration(
+                                          hintText: '65',
+                                          hintStyle: TextStyle(
+                                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                          ),
+                                          filled: true,
+                                          fillColor: Theme.of(context).cardColor,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: screenH * 0.02,
+                                            horizontal: screenW * 0.04,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const Spacer(),
+                            SizedBox(height: screenH * 0.03),
+                            _buildNextButton(context, viewModel, screenW, screenH),
+                            SizedBox(height: screenH * 0.025),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
-      ),
+      )
     );
   }
 

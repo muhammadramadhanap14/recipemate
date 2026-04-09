@@ -21,6 +21,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get menuErrorReport => 'Laporan Kesalahan';
 
   @override
+  String get security => 'Keamanan';
+
+  @override
   String get language => 'Bahasa';
 
   @override
@@ -31,6 +34,9 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Pilih Bahasa';
+
+  @override
+  String get selectTheme => 'Pilih Tema';
 
   @override
   String get changeFoodTypes => 'Ubah jenis makanan & preferensi diet';
@@ -165,4 +171,95 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get stgreetPrefFood4 =>
       'Apa jenis makanan favorit atau preferensi diet Anda?';
+
+  @override
+  String get stBiometric => 'OTENTIKASI BIOMETRIK';
+
+  @override
+  String get stBiometricFace => 'Aktifkan Face ID';
+
+  @override
+  String get stBiometricFingerPrint => 'Aktifkan Fingerprint ID';
+
+  @override
+  String get stPasswordManagement => 'MANAJEMEN KATA SANDI';
+
+  @override
+  String get stChangePassword => 'Ubah Kata Sandi';
+
+  @override
+  String get stChangePhoto => 'Ubah Foto Profil';
+
+  @override
+  String get stRemovPhoto => 'Hapus Foto';
+
+  @override
+  String get stChoosePhoto => 'Pilih Dari Galeri';
+
+  @override
+  String get stTakePhoto => 'Ambil Foto';
+
+  @override
+  String get stChangeData => 'Ubah Data';
+
+  @override
+  String get stQuitApp => 'Keluar Aplikasi';
+
+  @override
+  String get stDoubleTapToExit => 'Tekan sekali lagi untuk keluar';
+
+  @override
+  String get stSuccess => 'Sukses';
+
+  @override
+  String get stFailed => 'Gagal';
+
+  @override
+  String get stInfo => 'Informasi';
+
+  @override
+  String get stError => 'Kesalahan';
+
+  @override
+  String get stFingerprintSuccess => 'Fingerprint berhasil diaktifkan';
+
+  @override
+  String get stFingerprintFailed => 'Autentikasi gagal';
+
+  @override
+  String get stFingerprintError => 'Terjadi kesalahan: ';
+
+  @override
+  String get stFingerprintInfo => 'Fingerprint dinonaktifkan';
+
+  @override
+  String get stDontHaveBiometric => 'Biometrik tidak tersedia di perangkat ini';
+
+  @override
+  String get stFailedOnBoarding => 'Gagal menyelesaikan onboarding';
+
+  @override
+  String get stEnableFingerprint => 'Pindai untuk mengaktifkan fitur Biometrik';
+
+  @override
+  String get stNoConnectionInternetTitle => 'Tidak Ada Koneksi Internet';
+
+  @override
+  String get stNoConnectionInternetMessage =>
+      'Silakan periksa pengaturan internet Anda dan coba lagi';
+
+  @override
+  String get stRetryBtn => 'Coba Lagi';
+
+  @override
+  String get stReasonFailedPhoto => 'Gagal memilih gambar:';
+
+  @override
+  String get stNewPaswword => 'Sandi Baru';
+
+  @override
+  String get stOldPassword => 'Sandi Lama';
+
+  @override
+  String get confirmBtn => 'Confirm';
 }

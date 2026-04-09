@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
@@ -17,106 +18,108 @@ class RecipemateAiView extends StatelessWidget {
       await RecipeMateAppUtil.lockToPortrait();
     });
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
+    return ConnectionWrapper(
+      child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        centerTitle: false,
-        title: Row(
-          children: [
-            Image.asset(
-              "assets/images/cover_logo_recipemate.png",
-              width: RecipeMateAppUtil.screenWidth * 0.08,
-            ),
-            SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),
-            customText(
-              text: AppLocalizations.of(context)!.recipeMateAi,
-              fontSize: DimensText.headerMenusText(context),
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications,
-              color: Theme.of(context).colorScheme.primary,
-              size: RecipeMateAppUtil.screenWidth * 0.065,
-            ),
-          ),
-          SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
-        ],
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          centerTitle: false,
+          title: Row(
             children: [
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-              _buildSearchBar(context, viewModel),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-              _buildSuggestions(context, viewModel),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      customText(
-                        text: "Best Match",
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: DimensText.subHeaderText(context),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: RecipeMateAppUtil.screenWidth * 0.02, 
-                          vertical: RecipeMateAppUtil.screenHeight * 0.005,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.05),
-                        ),
-                        child: customText(
-                          text: "AI DRIVEN",
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: DimensText.microText(context),
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: customText(
-                      text: "View All",
-                      fontSize: DimensText.captionText(context),
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+              Image.asset(
+                "assets/images/logo_recipemate_ai.png",
+                width: RecipeMateAppUtil.screenWidth * 0.08,
               ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: viewModel.bestMatches.length,
-                separatorBuilder: (_, _) => SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                itemBuilder: (context, index) {
-                  final recipe = viewModel.bestMatches[index];
-                  return _buildRecipeCard(context, recipe);
-                },
+              SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),
+              customText(
+                text: AppLocalizations.of(context)!.recipeMateAi,
+                fontSize: DimensText.headerMenusText(context),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
-              SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
             ],
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.notifications,
+                color: Theme.of(context).colorScheme.primary,
+                size: RecipeMateAppUtil.screenWidth * 0.065,
+              ),
+            ),
+            SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+          ],
+          automaticallyImplyLeading: false,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                _buildSearchBar(context, viewModel),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
+                _buildSuggestions(context, viewModel),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        customText(
+                          text: "Best Match",
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: DimensText.subHeaderText(context),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: RecipeMateAppUtil.screenWidth * 0.02,
+                            vertical: RecipeMateAppUtil.screenHeight * 0.005,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.05),
+                          ),
+                          child: customText(
+                              text: "AI DRIVEN",
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: DimensText.microText(context),
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: customText(
+                        text: "View All",
+                        fontSize: DimensText.captionText(context),
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: viewModel.bestMatches.length,
+                  separatorBuilder: (_, _) => SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                  itemBuilder: (context, index) {
+                    final recipe = viewModel.bestMatches[index];
+                    return _buildRecipeCard(context, recipe);
+                  },
+                ),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+              ],
+            ),
           ),
         ),
       ),

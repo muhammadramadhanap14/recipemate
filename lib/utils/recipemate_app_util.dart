@@ -13,7 +13,6 @@ class RecipeMateAppUtil {
     screenHeight = MediaQuery.of(context).size.height;
   }
 
-
   static Future<bool> checkConnection() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -30,37 +29,6 @@ class RecipeMateAppUtil {
   static String getCurrentDate(String dateFormat) {
     final DateTime now = DateTime.now();
     return DateFormat(dateFormat).format(now);
-  }
-
-  //change date format
-  String reformatDateString(
-      String dateString, String inputFormat, String outputFormat) {
-    try{
-      final DateFormat inputFormatter = DateFormat(inputFormat);
-      final DateFormat outputFormatter = DateFormat(outputFormat);
-
-      DateTime date = inputFormatter.parse(dateString);
-      return outputFormatter.format(date);
-    } catch (e) {
-      return '';
-    }
-  }
-
-  bool getCompareDate(String startDate, String endDate, String dateFormat) {
-    try {
-      DateFormat sdf = DateFormat(dateFormat);
-      DateTime startDateTime = sdf.parse(startDate);
-      DateTime endDateTime = sdf.parse(endDate);
-
-      if (startDateTime.isBefore(endDateTime) ||
-          startDateTime.isAtSameMomentAs(endDateTime)) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
   }
 
   static Orientation initOrientation(BuildContext context) {

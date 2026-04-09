@@ -21,6 +21,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuErrorReport => 'Error Report';
 
   @override
+  String get security => 'Security';
+
+  @override
   String get language => 'Language';
 
   @override
@@ -31,6 +34,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Select Language';
+
+  @override
+  String get selectTheme => 'Select Theme';
 
   @override
   String get changeFoodTypes => 'Change food types & dietary preferences';
@@ -164,4 +170,96 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get stgreetPrefFood4 =>
       'What are your favorite food types or dietary preferences?';
+
+  @override
+  String get stBiometric => 'BIOMETRIC AUTHENTICATION';
+
+  @override
+  String get stBiometricFace => 'Enable Face ID';
+
+  @override
+  String get stBiometricFingerPrint => 'Enable Fingerprint ID';
+
+  @override
+  String get stPasswordManagement => 'PASSWORD MANAGEMENT';
+
+  @override
+  String get stChangePassword => 'Change Password';
+
+  @override
+  String get stChangePhoto => 'Change Profile Photo';
+
+  @override
+  String get stRemovPhoto => 'Remove Photo';
+
+  @override
+  String get stChoosePhoto => 'Choose From Gallery';
+
+  @override
+  String get stTakePhoto => 'Take Photo';
+
+  @override
+  String get stChangeData => 'Change Data';
+
+  @override
+  String get stQuitApp => 'Exit Application';
+
+  @override
+  String get stDoubleTapToExit => 'Press again to exit';
+
+  @override
+  String get stSuccess => 'Success';
+
+  @override
+  String get stFailed => 'Failed';
+
+  @override
+  String get stInfo => 'Info';
+
+  @override
+  String get stError => 'Error';
+
+  @override
+  String get stFingerprintSuccess =>
+      'Fingerprint has been successfully activated';
+
+  @override
+  String get stFingerprintFailed => 'Authentication failed';
+
+  @override
+  String get stFingerprintError => 'There is an error: ';
+
+  @override
+  String get stFingerprintInfo => 'Fingerprint is disabled';
+
+  @override
+  String get stDontHaveBiometric => 'Biometric is not available on this device';
+
+  @override
+  String get stFailedOnBoarding => 'Failed to finish onboarding';
+
+  @override
+  String get stEnableFingerprint => 'Scan to activate Biometric feature';
+
+  @override
+  String get stNoConnectionInternetTitle => 'No Internet Connection';
+
+  @override
+  String get stNoConnectionInternetMessage =>
+      'Please check your internet settings and try again';
+
+  @override
+  String get stRetryBtn => 'Retry';
+
+  @override
+  String get stReasonFailedPhoto => 'Failed to pick image:';
+
+  @override
+  String get stNewPaswword => 'New Password';
+
+  @override
+  String get stOldPassword => 'Old Password';
+
+  @override
+  String get confirmBtn => 'Confirm';
 }

@@ -47,7 +47,7 @@ class SplashViewModel extends GetxController {
           ConstantVar.noConnectionGif,
           context,
           null,
-              (dynamic) {},
+            (dynamic) {},
         );
       });
     }

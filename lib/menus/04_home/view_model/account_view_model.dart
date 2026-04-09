@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:recipemate/utils/constant_var.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 
 class AccountViewModel extends GetxController {
+  final DataSessionUtilController session;
   final userName = 'Axel Darmawan'.obs;
   final userId = 'axel.darmawan@example.com'.obs;
   final appVersion = '-'.obs;
@@ -14,6 +16,11 @@ class AccountViewModel extends GetxController {
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
   RxString currentLanguage = "".obs;
   RxString currentTheme = "".obs;
+  final ImagePicker _picker = ImagePicker();
+
+  AccountViewModel({
+    required this.session
+  });
 
   @override
   void onInit(){
@@ -28,6 +35,27 @@ class AccountViewModel extends GetxController {
   Future<void> initAppVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
     appVersion.value = "v${packageInfo.version}";
+  }
+
+  Future<void> pickImage(ImageSource source) async {
+    final l10n = AppLocalizations.of(Get.context!)!;
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 80,
+      );
+      if (pickedFile != null) {
+        await session.setProfileImage(pickedFile.path);
+      }
+    } catch (e) {
+      Get.snackbar(l10n.stError, l10n.stReasonFailedPhoto + e.toString());
+    }
+  }
+
+  Future<void> removeImage() async {
+    await session.clearProfileImage();
   }
 
   void initializeLanguage() {
@@ -97,30 +125,34 @@ class AccountViewModel extends GetxController {
   }
 
   void openChangePrefFoodDialog(BuildContext context) {
-    ViewDialogUtil().showYesNoActionDialog(
-      AppLocalizations.of(context)!.stConfirmChange,
-      AppLocalizations.of(context)!.yesBtn,
-      AppLocalizations.of(context)!.stCancelTitle,
-      ConstantVar.confirmGif,
-      null,
-      context,
-      (dynamic model) async {
+    ViewDialogUtil().showConfirmDialog(
+      title: "${AppLocalizations.of(context)!.stChangeData}?",
+      icon: Icons.edit_attributes,
+      context: context,
+      message: AppLocalizations.of(context)!.stConfirmChange,
+      positiveTitle: AppLocalizations.of(context)!.yesBtn,
+      negativeTitle: AppLocalizations.of(context)!.stCancelTitle,
+      onPositiveClick: () {
         Get.offAllNamed('/preference_food_satu');
       },
     );
   }
 
   void openLogoutDialog(BuildContext context) {
-    ViewDialogUtil().showYesNoActionDialog(
-      AppLocalizations.of(context)!.stConfirmLogout,
-      AppLocalizations.of(context)!.confirmLogout,
-      AppLocalizations.of(context)!.stCancelTitle,
-      ConstantVar.confirmGif,
-      null,
-      context,
-      (dynamic model) async {
+    ViewDialogUtil().showConfirmDialog(
+      title: "${AppLocalizations.of(context)!.logout}?",
+      icon: Icons.logout,
+      context: context,
+      message: AppLocalizations.of(context)!.stConfirmLogout,
+      positiveTitle: AppLocalizations.of(context)!.confirmLogout,
+      negativeTitle: AppLocalizations.of(context)!.stCancelTitle,
+      onPositiveClick: () {
         Get.offAllNamed('/login');
       },
     );
+  }
+
+  void navigateToSecurityPage(BuildContext context) {
+    Get.toNamed('/security');
   }
 }
