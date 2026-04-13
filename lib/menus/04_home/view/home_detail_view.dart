@@ -52,12 +52,16 @@ class HomeDetailView extends StatelessWidget {
                     children: [
                       SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                       _buildTitleSection(context, recipe),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      _buildTagsSection(context, recipe),
                       SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                       _buildNutritionalCard(context, recipe),
                       SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                       _buildSummaryCard(context, recipe.summary ?? ''),
                       SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                       _buildIngredientsSection(context, recipe.extendedIngredients ?? []),
+                      _buildInstructionsSection(context, recipe.analyzedInstructions ?? []),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                     ],
                   ),
                 ),
@@ -143,8 +147,8 @@ class HomeDetailView extends StatelessWidget {
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.015),
             customText(
-              text: "${recipe.readyInMinutes} mins", 
-              fontSize: DimensText.captionText(context), 
+              text: "${recipe.readyInMinutes} mins",
+              fontSize: DimensText.captionText(context),
               color: Theme.of(context).colorScheme.onSurface
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.04),
@@ -162,6 +166,36 @@ class HomeDetailView extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildTagsSection(BuildContext context, DetailRecipeResponse recipe) {
+    final List<String> tags = [];
+    if (recipe.vegetarian == true) tags.add("Vegetarian");
+    if (recipe.vegan == true) tags.add("Vegan");
+    if (recipe.glutenFree == true) tags.add("Gluten Free");
+    if (recipe.dairyFree == true) tags.add("Dairy Free");
+    if (recipe.veryHealthy == true) tags.add("Healthy");
+    if (recipe.cheap == true) tags.add("Cheap");
+    
+    if (tags.isEmpty) return const SizedBox.shrink();
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      children: tags.map((tag) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: customText(
+          text: tag,
+          fontSize: DimensText.microText(context),
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          fontWeight: FontWeight.bold,
+        ),
+      )).toList(),
     );
   }
 
@@ -368,7 +402,7 @@ class HomeDetailView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         customText(
-            text: AppLocalizations.of(context)!.stCoreIngredients,
+          text: AppLocalizations.of(context)!.stCoreIngredients,
           color: Theme.of(context).colorScheme.onSurface,
           fontSize: DimensText.bodyText(context), 
           fontWeight: FontWeight.bold
@@ -391,10 +425,16 @@ class HomeDetailView extends StatelessWidget {
                     height: size,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       border: Border.all(color: Theme.of(context).cardColor, width: 2),
-                      image: DecorationImage(
-                        image: NetworkImage(fullImageUrl),
-                        fit: BoxFit.cover,
+                    ),
+                    child: ClipOval(
+                      child: Image.network(
+                        fullImageUrl,
+                        fit: BoxFit.contain,
+                        errorBuilder: (
+                          context, error, stackTrace) => Icon(Icons.restaurant_menu, color: Theme.of(context).colorScheme.primary
+                        ),
                       ),
                     ),
                   ),
@@ -410,11 +450,70 @@ class HomeDetailView extends StatelessWidget {
                       intMaxLine: null
                     ),
                   ),
+                  customText(
+                    text: "${item.amount?.toStringAsFixed(1)} ${item.unit}",
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: DimensText.microText(context),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ],
               );
             },
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildInstructionsSection(BuildContext context, List<AnalyzedInstructions> instructions) {
+    if (instructions.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        customText(
+          text: "Instructions",
+          color: Theme.of(context).colorScheme.onSurface,
+          fontSize: DimensText.bodyText(context),
+          fontWeight: FontWeight.bold,
+        ),
+        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+        ...instructions.map((instruction) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: instruction.steps?.map((step) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: customText(
+                        text: "${step.number}",
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: DimensText.microText(context),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: RecipeMateAppUtil.screenWidth * 0.04),
+                    Expanded(
+                      child: customText(
+                        text: step.step ?? "",
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: DimensText.bodySmallText(context),
+                        intMaxLine: null,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList() ?? [],
+          );
+        }),
       ],
     );
   }
