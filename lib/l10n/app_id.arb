@@ -10,7 +10,7 @@
   "selectLanguage": "Pilih Bahasa",
   "selectTheme": "Pilih Tema",
   "changeFoodTypes": "Ubah jenis makanan & preferensi diet",
-  "stConfirmLogout": "Apakah Anda yakin ingin keluar?",
+  "stConfirmLogout": "Apakah Anda yakin ingin keluar? Semua data sesi akan dihapus, termasuk foto profil, autentikasi sidik jari, dan informasi tersimpan lainnya.",
   "stConfirmChange": "Apakah Anda yakin ingin mengubah?",
   "stTimeOutConnection": "Waktu koneksi habis, silakan coba lagi nanti.",
   "stNoConnectionMessage": "Gagal terhubung ke server,\nsilahkan periksa koneksi internet Anda kembali",

@@ -10,7 +10,7 @@
   "selectLanguage": "Select Language",
   "selectTheme": "Select Theme",
   "changeFoodTypes": "Change food types & dietary preferences",
-  "stConfirmLogout": "Are you sure you want to log out?",
+  "stConfirmLogout": "Are you sure you want to log out? All session data will be cleared, including your profile photo, fingerprint authentication, and other saved information.",
   "stConfirmChange": "Are you sure you want to change?",
   "stTimeOutConnection": "Connection timeout, please try again later",
   "stNoConnectionMessage": "Failed to connect to server,\nplease check your internet connection again",

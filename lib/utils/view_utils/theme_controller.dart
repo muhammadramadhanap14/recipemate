@@ -9,6 +9,22 @@ class ThemeController extends GetxController {
     Get.changeThemeMode(mode);
   }
 
+  void initTheme(String? themeStr) {
+    ThemeMode mode;
+    switch (themeStr) {
+      case 'light':
+        mode = ThemeMode.light;
+        break;
+      case 'dark':
+        mode = ThemeMode.dark;
+        break;
+      default:
+        mode = ThemeMode.system;
+    }
+    themeMode.value = mode;
+    Get.changeThemeMode(mode);
+  }
+
   bool isDarkMode() {
     if (themeMode.value == ThemeMode.system) {
       return Get.isPlatformDarkMode;

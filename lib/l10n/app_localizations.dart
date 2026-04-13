@@ -167,7 +167,7 @@ abstract class AppLocalizations {
   /// No description provided for @stConfirmLogout.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to log out?'**
+  /// **'Are you sure you want to log out? All session data will be cleared, including your profile photo, fingerprint authentication, and other saved information.'**
   String get stConfirmLogout;
 
   /// No description provided for @stConfirmChange.

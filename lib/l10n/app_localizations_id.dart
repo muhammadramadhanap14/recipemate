@@ -42,7 +42,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get changeFoodTypes => 'Ubah jenis makanan & preferensi diet';
 
   @override
-  String get stConfirmLogout => 'Apakah Anda yakin ingin keluar?';
+  String get stConfirmLogout =>
+      'Apakah Anda yakin ingin keluar? Semua data sesi akan dihapus, termasuk foto profil, autentikasi sidik jari, dan informasi tersimpan lainnya.';
 
   @override
   String get stConfirmChange => 'Apakah Anda yakin ingin mengubah?';

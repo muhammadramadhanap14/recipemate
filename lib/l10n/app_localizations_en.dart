@@ -42,7 +42,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changeFoodTypes => 'Change food types & dietary preferences';
 
   @override
-  String get stConfirmLogout => 'Are you sure you want to log out?';
+  String get stConfirmLogout =>
+      'Are you sure you want to log out? All session data will be cleared, including your profile photo, fingerprint authentication, and other saved information.';
 
   @override
   String get stConfirmChange => 'Are you sure you want to change?';

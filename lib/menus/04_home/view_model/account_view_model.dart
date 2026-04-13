@@ -89,33 +89,38 @@ class AccountViewModel extends GetxController {
   }
 
   void initializeTheme() {
-    switch (themeMode.value) {
-      case ThemeMode.system:
-        currentTheme.value = "Default System";
-        break;
-      case ThemeMode.light:
-        currentTheme.value = "Light";
-        break;
-      case ThemeMode.dark:
-        currentTheme.value = "Dark";
-        break;
+    final savedTheme = session.stTheme.value;
+    if (savedTheme == 'light') {
+      themeMode.value = ThemeMode.light;
+      currentTheme.value = "Light";
+    } else if (savedTheme == 'dark') {
+      themeMode.value = ThemeMode.dark;
+      currentTheme.value = "Dark";
+    } else {
+      themeMode.value = ThemeMode.system;
+      currentTheme.value = "Default System";
     }
   }
 
-  void changeTheme(ThemeMode mode) {
+  void changeTheme(ThemeMode mode) async {
     themeMode.value = mode;
     Get.changeThemeMode(mode);
+    String themeStr = 'system';
     switch (mode) {
       case ThemeMode.system:
         currentTheme.value = "Default System";
+        themeStr = 'system';
         break;
       case ThemeMode.light:
         currentTheme.value = "Light";
+        themeStr = 'light';
         break;
       case ThemeMode.dark:
         currentTheme.value = "Dark";
+        themeStr = 'dark';
         break;
     }
+    await session.setLastTheme(themeStr);
   }
 
   void openThemeDialog(BuildContext context) async {
@@ -128,13 +133,15 @@ class AccountViewModel extends GetxController {
   void openLanguageDialog() {
     ViewDialogUtil.dialogSelectLanguage(
       context: Get.context!,
-      onSelected: (Locale? locale, String label) {
+      onSelected: (Locale? locale, String label) async {
         if (locale == null) {
           Get.updateLocale(Get.deviceLocale ?? const Locale('en'));
           currentLanguage.value = "Default System";
+          await session.setLastLanguage("");
         } else {
           Get.updateLocale(locale);
           currentLanguage.value = label;
+          await session.setLastLanguage(locale.languageCode);
         }
       },
     );
@@ -162,7 +169,8 @@ class AccountViewModel extends GetxController {
       message: AppLocalizations.of(context)!.stConfirmLogout,
       positiveTitle: AppLocalizations.of(context)!.confirmLogout,
       negativeTitle: AppLocalizations.of(context)!.stCancelTitle,
-      onPositiveClick: () {
+      onPositiveClick: () async {
+        await session.logout();
         Get.offAllNamed('/login');
       },
     );

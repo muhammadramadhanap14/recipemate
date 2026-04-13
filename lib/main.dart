@@ -26,20 +26,34 @@ final talker = TalkerFlutter.init(); // Initialize Talker instance here
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Locale? appLocale;
 
-void main() {
-  runZonedGuarded(() {
+void main() async {
+  runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    //Inisialisasi awal storage untuk ambil Tema & Bahasa
+    final sessionUtil = DataSessionUtil();
+    final initialTheme = await sessionUtil.getLastTheme();
+    final initialLang = await sessionUtil.getLastLanguage();
 
     //register dependency injection
     Get.put<ApiRepository>(ApiRepository(), permanent: true);
     Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
-    Get.put<ThemeController>(ThemeController(), permanent: true);
+    
+    // Inisialisasi ThemeController dengan tema tersimpan
+    final themeController = Get.put<ThemeController>(ThemeController(), permanent: true);
+    themeController.initTheme(initialTheme);
+    
     Get.put<DataSessionUtil>(DataSessionUtil(), permanent: true);
 
     Get.put<DataSessionUtilController>(
       DataSessionUtilController(dataSessionUtil: Get.find()),
       permanent: true,
     );
+
+    //Set Locale awal jika ada
+    if (initialLang != null && initialLang.isNotEmpty) {
+      appLocale = Locale(initialLang);
+    }
 
     // Set Flutter's error handler
     FlutterError.onError = (FlutterErrorDetails details) {
@@ -69,7 +83,6 @@ void main() {
 class RecipemateApp extends StatelessWidget {
   const RecipemateApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
@@ -79,6 +92,7 @@ class RecipemateApp extends StatelessWidget {
         //uncomment untuk aktifkan flutter talker
         // navigatorObservers: [TalkerRouteObserver(talker)], // Correct way to pass talker instance
         // navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -89,6 +103,7 @@ class RecipemateApp extends StatelessWidget {
           Locale('en'),
           Locale('id'),
         ],
+        locale: appLocale,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: themeController.themeMode.value,

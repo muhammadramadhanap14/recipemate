@@ -9,6 +9,8 @@ class DataSessionUtil {
   static const String _emailKey = 'user_email';
   static const String _passwordKey = 'user_password';
   static const String _lastFingerprintReminderKey = 'last_fingerprint_reminder';
+  static const String _lastLanguageKey = 'last_language';
+  static const String _lastThemeKey = 'last_theme';
 
   Future<void> setFingerprint(bool value) async {
     final prefs = await SharedPreferences.getInstance();
@@ -28,6 +30,26 @@ class DataSessionUtil {
   Future<int?> getLastFingerprintReminder() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_lastFingerprintReminderKey);
+  }
+
+  Future<void> setLastLanguage(String languageCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastLanguageKey, languageCode);
+  }
+
+  Future<String?> getLastLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_lastLanguageKey);
+  }
+
+  Future<void> setLastTheme(String themeMode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastThemeKey, themeMode);
+  }
+
+  Future<String?> getLastTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_lastThemeKey);
   }
 
   Future<void> setToken(String token) async {
@@ -83,5 +105,17 @@ class DataSessionUtil {
   Future<void> clearProfileImagePath() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_profileImagePathKey);
+  }
+
+  Future<void> clearSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Clear user specific data but keep theme and language
+    await prefs.remove(_tokenKey);
+    await prefs.remove(_fullNameKey);
+    await prefs.remove(_emailKey);
+    await prefs.remove(_passwordKey);
+    await prefs.remove(_profileImagePathKey);
+    await prefs.remove(_fingerprintKey);
+    await prefs.remove(_lastFingerprintReminderKey);
   }
 }

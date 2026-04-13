@@ -9,6 +9,8 @@ class DataSessionUtilController extends GetxController {
   final RxString stToken = "".obs;
   final RxString stFullName = "".obs;
   final RxString stEmail = "".obs;
+  final RxString stTheme = "".obs;
+  final RxString stLanguage = "".obs;
 
   DataSessionUtilController({
     required this.dataSessionUtil
@@ -22,6 +24,8 @@ class DataSessionUtilController extends GetxController {
     loadToken();
     loadFullName();
     loadEmail();
+    loadTheme();
+    loadLanguage();
   }
 
   Future<void> loadEmail() async {
@@ -67,6 +71,8 @@ class DataSessionUtilController extends GetxController {
     final path = await dataSessionUtil.getProfileImagePath();
     if (path != null && path.isNotEmpty) {
       profileImage.value = File(path);
+    } else {
+      profileImage.value = null;
     }
   }
 
@@ -83,8 +89,45 @@ class DataSessionUtilController extends GetxController {
   Future<void> setSavedPassword(String password) async {
     await dataSessionUtil.setPassword(password);
   }
-  
+
   Future<String?> getSavedPassword() async {
     return await dataSessionUtil.getPassword();
+  }
+
+  Future<void> loadTheme() async {
+    final theme = await dataSessionUtil.getLastTheme();
+    stTheme.value = theme ?? "";
+  }
+
+  Future<void> setLastTheme(String theme) async {
+    stTheme.value = theme;
+    await dataSessionUtil.setLastTheme(theme);
+  }
+
+  Future<String?> getLastTheme() async {
+    return await dataSessionUtil.getLastTheme();
+  }
+
+  Future<void> loadLanguage() async {
+    final language = await dataSessionUtil.getLastLanguage();
+    stLanguage.value = language ?? "";
+  }
+
+  Future<void> setLastLanguage(String language) async {
+    stLanguage.value = language;
+    await dataSessionUtil.setLastLanguage(language);
+  }
+
+  Future<String?> getLastLanguage() async {
+    return await dataSessionUtil.getLastLanguage();
+  }
+
+  Future<void> logout() async {
+    await dataSessionUtil.clearSession();
+    isFingerprintEnabled.value = false;
+    profileImage.value = null;
+    stToken.value = "";
+    stFullName.value = "";
+    stEmail.value = "";
   }
 }
