@@ -13,7 +13,6 @@ class AccountViewModel extends GetxController {
   final fullName = ''.obs;
   final emailId = ''.obs;
   final appVersion = '-'.obs;
-  final RxBool isDarkMode = false.obs;
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
   RxString currentLanguage = "".obs;
   RxString currentTheme = "".obs;
