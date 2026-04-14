@@ -5,11 +5,7 @@ import 'package:get/get.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
-import 'package:recipemate/menus/05_preference_food/view/preference_food_dua_view.dart';
-import 'package:recipemate/menus/05_preference_food/view/preference_food_satu_view.dart';
-import 'package:recipemate/menus/05_preference_food/view/preference_food_tiga_view.dart';
-import 'package:recipemate/menus/06_recipemate_ai/view/recipemate_ai_view.dart';
-import 'package:recipemate/menus/07_security/view/security_view.dart';
+import 'package:recipemate/menus/06_security/view/security_view.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
@@ -20,6 +16,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'menus/01_splash/view/splash_view.dart';
 import 'menus/02_login/view/login_view.dart';
 import 'menus/04_home/view/home_nav_view.dart';
+import 'menus/05_recipemate_ai/view/recipemate_ai_view.dart';
 import 'utils/view_utils/app_theme.dart';
 
 final talker = TalkerFlutter.init(); // Initialize Talker instance here
@@ -116,9 +113,6 @@ class RecipemateApp extends StatelessWidget {
           GetPage(name: '/register', page: () => const RegisterView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
           GetPage(name: '/home', page: () => const HomeNavView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
           GetPage(name: '/home_detail', page: () => const HomeDetailView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/preference_food_satu', page: () => PreferenceFoodSatuView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/preference_food_dua', page: () => PreferenceFoodDuaView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/preference_food_tiga', page: () => PreferenceFoodTigaView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
           GetPage(name: '/recipemate_ai', page: () => const RecipemateAiView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
           GetPage(name: '/security', page: () => const SecurityView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
         ],

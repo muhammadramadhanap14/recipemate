@@ -87,41 +87,18 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   fonts:
-    - family: cronus_regular
-      fonts:
-        - asset: assets/fonts/cronus_regular.otf
 
     - family: times_new_roman_med_italic
       fonts:
         - asset: assets/fonts/times_new_roman_med_italic.otf
 
-    - family: inter_bold
-      fonts:
-        - asset: assets/fonts/inter_bold.otf
-
-    - family: inter_light_beta
-      fonts:
-        - asset: assets/fonts/inter_light_beta.otf
-
-    - family: inter_medium
-      fonts:
-        - asset: assets/fonts/inter_medium.otf
-
     - family: inter_regular
       fonts:
         - asset: assets/fonts/inter_regular.otf
 
-    - family: inter_thin_beta
-      fonts:
-        - asset: assets/fonts/inter_thin_beta.otf
-
     - family: Poppins-Regular
       fonts:
         - asset: assets/fonts/Poppins-Regular.otf
-
-    - family: inria-serif_regular
-      fonts:
-        - asset: assets/fonts/inria-serif_regular.otf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
