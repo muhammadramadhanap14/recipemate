@@ -104,10 +104,6 @@ class DataSessionUtilController extends GetxController {
     await dataSessionUtil.setLastTheme(theme);
   }
 
-  Future<String?> getLastTheme() async {
-    return await dataSessionUtil.getLastTheme();
-  }
-
   Future<void> loadLanguage() async {
     final language = await dataSessionUtil.getLastLanguage();
     stLanguage.value = language ?? "";
@@ -116,10 +112,6 @@ class DataSessionUtilController extends GetxController {
   Future<void> setLastLanguage(String language) async {
     stLanguage.value = language;
     await dataSessionUtil.setLastLanguage(language);
-  }
-
-  Future<String?> getLastLanguage() async {
-    return await dataSessionUtil.getLastLanguage();
   }
 
   Future<void> logout() async {
