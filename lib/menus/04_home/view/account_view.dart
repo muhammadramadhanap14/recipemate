@@ -48,7 +48,7 @@ class AccountView extends StatelessWidget {
               children: [
                 SizedBox(height: RecipeMateAppUtil.screenHeight * 0.025),
                 _buildProfileHeader(context, viewModel),
-                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                 _buildMenuItem(
                   context: context,
                   icon: Icons.security,
@@ -107,18 +107,6 @@ class AccountView extends StatelessWidget {
                   onTap: () => viewModel.openThemeDialog(context),
                 ),
                 SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                // _buildMenuItem(
-                //   context: context,
-                //   icon: Icons.change_circle,
-                //   title: AppLocalizations.of(context)!.changeFoodTypes,
-                //   trailing: Icon(
-                //     Icons.keyboard_arrow_right,
-                //     color: Theme.of(context).colorScheme.onSurfaceVariant,
-                //     size: RecipeMateAppUtil.screenWidth * 0.05,
-                //   ),
-                //   onTap: () => viewModel.openChangePrefFoodDialog(context),
-                // ),
-                // SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
                 _buildMenuItem(
                   context: context,
                   icon: Icons.logout_rounded,
@@ -132,7 +120,15 @@ class AccountView extends StatelessWidget {
                   ),
                   onTap: () => viewModel.openLogoutDialog(context),
                 ),
-                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.05),
+                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.06),
+                Obx(() => Center(
+                  child: customText(
+                    text: viewModel.appVersion.value,
+                    fontSize: DimensText.captionText(context),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                    fontWeight: FontWeight.w500,
+                  ),
+                )),
               ],
             ),
           ),
@@ -200,7 +196,7 @@ class AccountView extends StatelessWidget {
           intMaxLine: null,
           textAlign: TextAlign.center
         )),
-        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.002),
+        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.005),
         Obx(() => customText(
           text: viewModel.emailId.value,
           fontWeight: FontWeight.w400,

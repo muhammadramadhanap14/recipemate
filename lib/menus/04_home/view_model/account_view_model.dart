@@ -29,9 +29,7 @@ class AccountViewModel extends GetxController {
     initializeTheme();
     getUserFullName();
     getUserEmail();
-    Future.microtask(() async {
-      await initAppVersion();
-    });
+    initAppVersion();
   }
 
   Future<void> getUserFullName() async {
