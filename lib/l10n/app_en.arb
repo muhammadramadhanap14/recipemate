@@ -95,5 +95,6 @@
   "stEnableFingerprintNowTitle": "Enable Fingerprint?",
   "stEnableFingerprintNowMessage": "Unlock faster and more securely with your fingerprint. Would you like to enable it now?",
   "stRemindMeLaterBtn": "Remind me later",
-  "stRemindMeLaterMessage": "We will remind you after 48 hours."
+  "stRemindMeLaterMessage": "We will remind you after 48 hours.",
+  "stInstructions" : "Instructions"
 }

@@ -87,7 +87,7 @@ class HomeView extends StatelessWidget {
               children: [
                 customText(
                   text: GreetingUtil.getGreeting(context),
-                  fontSize: DimensText.microText(context),
+                  fontSize: DimensText.bodySmallText(context),
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary
                 ),
@@ -101,18 +101,18 @@ class HomeView extends StatelessWidget {
               ],
             ),
           ),
-          // Container(
-          //   padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.025),
-          //   decoration: BoxDecoration(
-          //     color: Theme.of(context).cardColor,
-          //     shape: BoxShape.circle,
-          //   ),
-          //   child: Icon(
-          //     Icons.notifications,
-          //     color: Theme.of(context).colorScheme.primary,
-          //     size: RecipeMateAppUtil.screenWidth * 0.07,
-          //   ),
-          // ),
+          Container(
+            padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.025),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.notifications,
+              color: Theme.of(context).colorScheme.primary,
+              size: RecipeMateAppUtil.screenWidth * 0.07,
+            ),
+          ),
         ],
       ),
     );
@@ -137,6 +137,7 @@ class HomeView extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: viewModel.searchController,
+              focusNode: viewModel.searchFocusNode,
               // // Uncomment kalau mau pakai autocomplete cuma boros token api nya, cepat kena daily limit
               // onChanged: (value) {
               //   viewModel.getAutoComplete(value);
@@ -199,7 +200,6 @@ class HomeView extends StatelessWidget {
                     TextPosition(offset: title.length),
                   );
                   viewModel.searchRecipes(title);
-                  viewModel.autoCompleteResults.clear();
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -238,24 +238,6 @@ class HomeView extends StatelessWidget {
     });
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          customText(
-            text: title,
-            fontSize: DimensText.subHeaderText(context),
-            fontWeight: FontWeight.bold,
-            fontFamily: 'times_new_roman_bold',
-            color: Theme.of(context).colorScheme.onSurface,
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _buildRecommendedList(BuildContext context, HomeViewModel viewModel) {
     return Obx(() {
       if (viewModel.isSearching.value) {
@@ -275,8 +257,6 @@ class HomeView extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionHeader(context, AppLocalizations.of(context)!.stRecommended),
-          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
             child: GridView.builder(
@@ -353,7 +333,7 @@ class HomeView extends StatelessWidget {
                   children: [
                     customText(
                       text: recipe.title ?? "",
-                      fontSize: DimensText.captionText(context),
+                      fontSize: DimensText.bodySmallText(context),
                       intMaxLine: null,
                       color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,

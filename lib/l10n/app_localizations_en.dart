@@ -307,4 +307,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stRemindMeLaterMessage => 'We will remind you after 48 hours.';
+
+  @override
+  String get stInstructions => 'Instructions';
 }

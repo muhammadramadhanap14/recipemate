@@ -18,6 +18,7 @@ class HomeViewModel extends GetxController {
   final RxList<dynamic> autoCompleteResults = <dynamic>[].obs;
   final RxBool isAutoCompleteLoading = false.obs;
   final TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode();
 
   HomeViewModel({
     required this.apiRepository,
@@ -28,6 +29,11 @@ class HomeViewModel extends GetxController {
   void onInit() {
     super.onInit();
     getUserName();
+    searchFocusNode.addListener(() {
+      if (!searchFocusNode.hasFocus) {
+        autoCompleteResults.clear();
+      }
+    });
     Future.delayed(const Duration(seconds: 1), () {
       checkAndShowFingerprintReminder();
     });
@@ -39,7 +45,7 @@ class HomeViewModel extends GetxController {
     autoCompleteResults.clear();
     isSearching.value = false;
     isAutoCompleteLoading.value = false;
-    FocusManager.instance.primaryFocus?.unfocus();
+    searchFocusNode.unfocus();
   }
 
   Future<void> getUserName() async {
@@ -68,8 +74,11 @@ class HomeViewModel extends GetxController {
   Future<void> searchRecipes(String query) async {
     if (query.trim().isEmpty) {
       searchResults.clear();
+      autoCompleteResults.clear();
       return;
     }
+    autoCompleteResults.clear();
+    searchFocusNode.unfocus();
     isSearching.value = true;
     try {
       final response = await apiRepository.getRecipesComplexSearch(query: query);
@@ -126,6 +135,7 @@ class HomeViewModel extends GetxController {
   @override
   void onClose() {
     searchController.dispose();
+    searchFocusNode.dispose();
     searchResults.clear();
     autoCompleteResults.clear();
     isSearching.value = false;

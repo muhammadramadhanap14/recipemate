@@ -309,4 +309,7 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get stRemindMeLaterMessage =>
       'Kami akan mengingatkan Anda setelah 48 jam.';
+
+  @override
+  String get stInstructions => 'Petunjuk';
 }

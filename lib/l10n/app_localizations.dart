@@ -679,6 +679,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We will remind you after 48 hours.'**
   String get stRemindMeLaterMessage;
+
+  /// No description provided for @stInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions'**
+  String get stInstructions;
 }
 
 class _AppLocalizationsDelegate

@@ -16,7 +16,15 @@ class HomeDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int recipeId = Get.arguments as int;
+    final dynamic arguments = Get.arguments;
+    final int? recipeId = arguments is int ? arguments : null;
+    if (recipeId == null) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: const Center(child: NoDataUtil()),
+      );
+    }
+
     final HomeDetailViewModel viewModel = Get.put(
       HomeDetailViewModel(
         apiRepository: Get.find<ApiRepository>(),
@@ -60,6 +68,7 @@ class HomeDetailView extends StatelessWidget {
                       _buildSummaryCard(context, recipe.summary ?? ''),
                       SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                       _buildIngredientsSection(context, recipe.extendedIngredients ?? []),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                       _buildInstructionsSection(context, recipe.analyzedInstructions ?? []),
                       SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                     ],
@@ -148,7 +157,7 @@ class HomeDetailView extends StatelessWidget {
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.015),
             customText(
               text: "${recipe.readyInMinutes} mins",
-              fontSize: DimensText.captionText(context),
+              fontSize: DimensText.bodySmallText(context),
               color: Theme.of(context).colorScheme.onSurface
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.04),
@@ -160,7 +169,7 @@ class HomeDetailView extends StatelessWidget {
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.015),
             customText(
               text: "Score: ${recipe.spoonacularScore?.toStringAsFixed(1) ?? "0"}",
-              fontSize: DimensText.captionText(context),
+              fontSize: DimensText.bodySmallText(context),
               color: Theme.of(context).colorScheme.onSurface
             ),
           ],
@@ -186,13 +195,17 @@ class HomeDetailView extends StatelessWidget {
       children: tags.map((tag) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+            width: 2,
+          ),
         ),
         child: customText(
           text: tag,
-          fontSize: DimensText.microText(context),
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          fontSize: DimensText.bodySmallText(context),
+          color: Theme.of(context).colorScheme.onSurface,
           fontWeight: FontWeight.bold,
         ),
       )).toList(),
@@ -235,7 +248,7 @@ class HomeDetailView extends StatelessWidget {
             children: [
               customText(
                 text: AppLocalizations.of(context)!.stNutritionalPrediction,
-                fontSize: DimensText.bodyText(context),
+                fontSize: DimensText.headerMenusText(context),
                 color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
               ),
@@ -274,7 +287,7 @@ class HomeDetailView extends StatelessWidget {
                             customText(
                               text: "KCAL",
                               fontSize:
-                              DimensText.microText(context),
+                              DimensText.captionText(context),
                               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                           ],
@@ -329,7 +342,7 @@ class HomeDetailView extends StatelessWidget {
       children: [
         customText(
           text: label, 
-          fontSize: DimensText.microText(context), 
+          fontSize: DimensText.captionText(context),
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
           fontWeight: FontWeight.bold
         ),
@@ -358,7 +371,7 @@ class HomeDetailView extends StatelessWidget {
             children: [
               customText(
                 text: AppLocalizations.of(context)!.stRecipeSummary,
-                fontSize: DimensText.bodyText(context),
+                fontSize: DimensText.headerMenusText(context),
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
@@ -377,7 +390,7 @@ class HomeDetailView extends StatelessWidget {
                 "body": Style(
                   margin: Margins.zero,
                   padding: HtmlPaddings.zero,
-                  fontSize: FontSize(DimensText.bodySmallText(context)),
+                  fontSize: FontSize(DimensText.bodyText(context)),
                   color: Theme.of(context).colorScheme.onSurface,
                   lineHeight: LineHeight(1.5),
                 ),
@@ -404,7 +417,7 @@ class HomeDetailView extends StatelessWidget {
         customText(
           text: AppLocalizations.of(context)!.stCoreIngredients,
           color: Theme.of(context).colorScheme.onSurface,
-          fontSize: DimensText.bodyText(context), 
+          fontSize: DimensText.headerMenusText(context),
           fontWeight: FontWeight.bold
         ),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
@@ -416,8 +429,11 @@ class HomeDetailView extends StatelessWidget {
             separatorBuilder: (_, _) => SizedBox(width: RecipeMateAppUtil.screenWidth * 0.04),
             itemBuilder: (context, index) {
               final item = ingredients[index];
-              final double size = RecipeMateAppUtil.screenWidth * 0.18;
+              final double size = RecipeMateAppUtil.screenWidth * 0.22;
               final String fullImageUrl = "https://spoonacular.com/cdn/ingredients_100x100/${item.image}";
+              final String formattedAmount = item.amount != null
+                ? (item.amount! % 1 == 0 ? item.amount!.toInt().toString() : item.amount!.toStringAsFixed(1))
+                : "";
               return Column(
                 children: [
                   Container(
@@ -439,21 +455,20 @@ class HomeDetailView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
-                  SizedBox(
-                    width: size,
+                  Expanded(
                     child: customText(
                       text: item.name ?? "",
                       color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: DimensText.microText(context),
+                      fontSize: DimensText.bodySmallText(context),
                       fontWeight: FontWeight.bold,
                       textAlign: TextAlign.center,
                       intMaxLine: null
                     ),
                   ),
                   customText(
-                    text: "${item.amount?.toStringAsFixed(1)} ${item.unit}",
+                    text: "$formattedAmount ${item.unit}",
                     color: Theme.of(context).colorScheme.primary,
-                    fontSize: DimensText.microText(context),
+                    fontSize: DimensText.bodySmallText(context),
                     fontWeight: FontWeight.w500,
                   ),
                 ],
@@ -471,47 +486,66 @@ class HomeDetailView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         customText(
-          text: "Instructions",
+          text: AppLocalizations.of(context)!.stInstructions,
           color: Theme.of(context).colorScheme.onSurface,
-          fontSize: DimensText.bodyText(context),
+          fontSize: DimensText.headerMenusText(context),
           fontWeight: FontWeight.bold,
         ),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
         ...instructions.map((instruction) {
+          final steps = instruction.steps ?? [];
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: instruction.steps?.map((step) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
+            children: List.generate(steps.length, (index) {
+              final step = steps[index];
+              final isLastStep = index == steps.length - 1;
+
+              return IntrinsicHeight(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      child: customText(
-                        text: "${step.number}",
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontSize: DimensText.microText(context),
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Column(
+                      children: [
+                        Container(
+                          width: RecipeMateAppUtil.screenWidth * 0.08,
+                          height: RecipeMateAppUtil.screenWidth * 0.08,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
+                            shape: BoxShape.circle,
+                          ),
+                          child: customText(
+                            text: "${step.number}",
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontSize: DimensText.bodySmallText(context),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (!isLastStep)
+                          Expanded(
+                            child: Container(
+                              width: 2,
+                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                            ),
+                          ),
+                      ],
                     ),
                     SizedBox(width: RecipeMateAppUtil.screenWidth * 0.04),
                     Expanded(
-                      child: customText(
-                        text: step.step ?? "",
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: DimensText.bodySmallText(context),
-                        intMaxLine: null,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: isLastStep ? 0 : 20.0),
+                        child: customText(
+                          text: step.step ?? "",
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: DimensText.bodyText(context),
+                          intMaxLine: null,
+                        ),
                       ),
                     ),
                   ],
                 ),
               );
-            }).toList() ?? [],
+            }),
           );
         }),
       ],
