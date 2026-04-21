@@ -15,8 +15,7 @@ class NotificationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DataSessionUtilController session =
-    Get.find<DataSessionUtilController>();
+    final DataSessionUtilController session = Get.find<DataSessionUtilController>();
 
     return ConnectionWrapper(
       child: Scaffold(

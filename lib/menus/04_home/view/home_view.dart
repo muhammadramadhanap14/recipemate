@@ -10,7 +10,6 @@ import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../../../utils/view_utils/connection_wrapper.dart';
 import '../view_model/home_view_model.dart';
-import 'notification_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -104,7 +103,7 @@ class HomeView extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Get.to(() => const NotificationView());
+              Get.toNamed('/notification');
             },
             child: Container(
               padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.025),
