@@ -10,6 +10,7 @@ import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../../../utils/view_utils/connection_wrapper.dart';
 import '../view_model/home_view_model.dart';
+import 'notification_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -101,16 +102,21 @@ class HomeView extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.025),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.notifications,
-              color: Theme.of(context).colorScheme.primary,
-              size: RecipeMateAppUtil.screenWidth * 0.07,
+          GestureDetector(
+            onTap: () {
+              Get.to(() => const NotificationView());
+            },
+            child: Container(
+              padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.025),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.notifications,
+                color: Theme.of(context).colorScheme.primary,
+                size: RecipeMateAppUtil.screenWidth * 0.07,
+              ),
             ),
           ),
         ],

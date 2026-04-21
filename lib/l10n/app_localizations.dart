@@ -685,6 +685,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Instructions'**
   String get stInstructions;
+
+  /// No description provided for @stNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get stNotification;
+
+  /// No description provided for @stDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get stDeleted;
+
+  /// No description provided for @stNotificationRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification removed'**
+  String get stNotificationRemoved;
+
+  /// No description provided for @stDeleteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All?'**
+  String get stDeleteAll;
+
+  /// No description provided for @stDeleteAllMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure want to delete all notifications?'**
+  String get stDeleteAllMessage;
 }
 
 class _AppLocalizationsDelegate

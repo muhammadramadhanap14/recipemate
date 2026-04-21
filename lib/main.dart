@@ -10,6 +10,7 @@ import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/data_session_util_controller.dart';
+import 'package:recipemate/utils/notification_util.dart';
 import 'package:recipemate/utils/view_utils/error_view.dart';
 import 'package:recipemate/utils/view_utils/theme_controller.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -26,6 +27,11 @@ Locale? appLocale;
 void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    // Inisialisasi Notifikasi
+    await NotificationUtil.init();
+    await NotificationUtil.checkPendingNotification();
+    await NotificationUtil.forceInsertIfMissed();
 
     //Inisialisasi awal storage untuk ambil Tema & Bahasa
     final sessionUtil = DataSessionUtil();

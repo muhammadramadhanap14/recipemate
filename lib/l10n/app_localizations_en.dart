@@ -310,4 +310,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stInstructions => 'Instructions';
+
+  @override
+  String get stNotification => 'Notifications';
+
+  @override
+  String get stDeleted => 'Deleted';
+
+  @override
+  String get stNotificationRemoved => 'Notification removed';
+
+  @override
+  String get stDeleteAll => 'Delete All?';
+
+  @override
+  String get stDeleteAllMessage =>
+      'Are you sure want to delete all notifications?';
 }
