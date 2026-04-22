@@ -123,7 +123,6 @@ class RecipemateApp extends StatelessWidget {
           GetPage(name: '/register', page: () => const RegisterView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
           GetPage(name: '/home', page: () => const HomeNavView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
           GetPage(name: '/home_detail', page: () => const HomeDetailView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/recipemate_ai', page: () => const RecipemateAiView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
           GetPage(name: '/security', page: () => const SecurityView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
           GetPage(name: '/notification', page: () => const NotificationView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600))
         ],
