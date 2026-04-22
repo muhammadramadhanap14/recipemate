@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'data_session_util.dart';
+import 'notification_util.dart';
 
 class DataSessionUtilController extends GetxController {
   final DataSessionUtil dataSessionUtil;
@@ -11,6 +12,7 @@ class DataSessionUtilController extends GetxController {
   final RxString stEmail = "".obs;
   final RxString stTheme = "".obs;
   final RxString stLanguage = "".obs;
+  RxList<Map<String, dynamic>> notificationHistory = <Map<String, dynamic>>[].obs;
 
   DataSessionUtilController({
     required this.dataSessionUtil
@@ -26,6 +28,7 @@ class DataSessionUtilController extends GetxController {
     loadEmail();
     loadTheme();
     loadLanguage();
+    loadNotifications();
   }
 
   Future<void> loadEmail() async {
@@ -112,6 +115,49 @@ class DataSessionUtilController extends GetxController {
   Future<void> setLastLanguage(String language) async {
     stLanguage.value = language;
     await dataSessionUtil.setLastLanguage(language);
+  }
+
+  Future<void> onUserLoggedIn() async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    await dataSessionUtil.setLastLoginTimestamp(now);
+    await NotificationUtil.cancelAll();
+    await NotificationUtil.scheduleDailyReminder();
+  }
+
+  Future<void> loadNotifications() async {
+    final data = await dataSessionUtil.getNotificationHistory();
+    notificationHistory.assignAll(data);
+  }
+
+  Future<void> removeNotification(Map<String, dynamic> item) async {
+    notificationHistory.remove(item);
+    await _persist();
+  }
+
+  Future<void> restoreNotification(int index, Map<String, dynamic> item) async {
+    if (index > notificationHistory.length) {
+      notificationHistory.add(item);
+    } else {
+      notificationHistory.insert(index, item);
+    }
+    await _persist();
+  }
+
+  Future<void> clearNotifications() async {
+    notificationHistory.clear();
+    await dataSessionUtil.saveNotificationHistory([]);
+  }
+
+  Future<void> addNotification(Map<String, dynamic> item) async {
+    notificationHistory.insert(0, item);
+    if (notificationHistory.length > 50) {
+      notificationHistory = notificationHistory.sublist(0, 50).obs;
+    }
+    await _persist();
+  }
+
+  Future<void> _persist() async {
+    await dataSessionUtil.saveNotificationHistory(notificationHistory);
   }
 
   Future<void> logout() async {

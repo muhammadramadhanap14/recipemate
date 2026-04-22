@@ -101,16 +101,21 @@ class HomeView extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.025),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.notifications,
-              color: Theme.of(context).colorScheme.primary,
-              size: RecipeMateAppUtil.screenWidth * 0.07,
+          GestureDetector(
+            onTap: () {
+              Get.toNamed('/notification');
+            },
+            child: Container(
+              padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.025),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.notifications,
+                color: Theme.of(context).colorScheme.primary,
+                size: RecipeMateAppUtil.screenWidth * 0.07,
+              ),
             ),
           ),
         ],

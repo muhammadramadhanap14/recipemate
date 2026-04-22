@@ -96,5 +96,10 @@
   "stEnableFingerprintNowMessage": "Buka kunci lebih cepat dan aman dengan sidik jari Anda. Apakah Anda ingin mengaktifkannya sekarang?",
   "stRemindMeLaterBtn": "Ingatkan saya nanti",
   "stRemindMeLaterMessage": "Kami akan mengingatkan Anda setelah 48 jam.",
-  "stInstructions" : "Petunjuk"
+  "stInstructions" : "Petunjuk",
+  "stNotification" : "Notifikasi",
+  "stDeleted" : "Dihapus",
+  "stNotificationRemoved" : "Notifikasi dihapus",
+  "stDeleteAll" : "Hapus Semua?",
+  "stDeleteAllMessage" : "Apakah Anda yakin ingin menghapus semua notifikasi?"
 }

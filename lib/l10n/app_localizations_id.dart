@@ -312,4 +312,20 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get stInstructions => 'Petunjuk';
+
+  @override
+  String get stNotification => 'Notifikasi';
+
+  @override
+  String get stDeleted => 'Dihapus';
+
+  @override
+  String get stNotificationRemoved => 'Notifikasi dihapus';
+
+  @override
+  String get stDeleteAll => 'Hapus Semua?';
+
+  @override
+  String get stDeleteAllMessage =>
+      'Apakah Anda yakin ingin menghapus semua notifikasi?';
 }

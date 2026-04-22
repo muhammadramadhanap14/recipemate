@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class DataSessionUtil {
   // Key
@@ -11,6 +12,8 @@ class DataSessionUtil {
   static const String _lastFingerprintReminderKey = 'last_fingerprint_reminder';
   static const String _lastLanguageKey = 'last_language';
   static const String _lastThemeKey = 'last_theme';
+  static const String _lastLoginTimestampKey = 'last_login_timestamp';
+  static const String _notificationHistoryKey = 'notification_history';
 
   Future<void> setFingerprint(bool value) async {
     final prefs = await SharedPreferences.getInstance();
@@ -107,6 +110,41 @@ class DataSessionUtil {
     await prefs.remove(_profileImagePathKey);
   }
 
+  Future<void> setLastLoginTimestamp(int timestamp) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_lastLoginTimestampKey, timestamp);
+  }
+
+  Future<int?> getLastLoginTimestamp() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_lastLoginTimestampKey);
+  }
+
+  Future<void> addNotificationToHistory(String title, String body) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> history = prefs.getStringList(_notificationHistoryKey) ?? [];
+    final notification = {
+      'title': title,
+      'body': body,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+    };
+    history.insert(0, jsonEncode(notification));
+    if (history.length > 50) history = history.sublist(0, 50);
+    await prefs.setStringList(_notificationHistoryKey, history);
+  }
+
+  Future<List<Map<String, dynamic>>> getNotificationHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> history = prefs.getStringList(_notificationHistoryKey) ?? [];
+    return history.map((e) => jsonDecode(e) as Map<String, dynamic>).toList();
+  }
+
+  Future<void> saveNotificationHistory(List<Map<String, dynamic>> list) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> encodedList = list.map((e) => jsonEncode(e)).toList();
+    await prefs.setStringList(_notificationHistoryKey, encodedList);
+  }
+
   Future<void> clearSession() async {
     final prefs = await SharedPreferences.getInstance();
     // Clear user specific data but keep theme and language
@@ -117,5 +155,9 @@ class DataSessionUtil {
     await prefs.remove(_profileImagePathKey);
     await prefs.remove(_fingerprintKey);
     await prefs.remove(_lastFingerprintReminderKey);
+    await prefs.remove(_lastLanguageKey);
+    await prefs.remove(_lastThemeKey);
+    await prefs.remove(_lastLoginTimestampKey);
+    await prefs.remove(_notificationHistoryKey);
   }
 }

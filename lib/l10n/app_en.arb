@@ -96,5 +96,10 @@
   "stEnableFingerprintNowMessage": "Unlock faster and more securely with your fingerprint. Would you like to enable it now?",
   "stRemindMeLaterBtn": "Remind me later",
   "stRemindMeLaterMessage": "We will remind you after 48 hours.",
-  "stInstructions" : "Instructions"
+  "stInstructions" : "Instructions",
+  "stNotification" : "Notifications",
+  "stDeleted" : "Deleted",
+  "stNotificationRemoved" : "Notification removed",
+  "stDeleteAll" : "Delete All?",
+  "stDeleteAllMessage" : "Are you sure want to delete all notifications?"
 }

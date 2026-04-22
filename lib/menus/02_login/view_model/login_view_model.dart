@@ -123,6 +123,7 @@ class LoginViewModel extends GetxController {
         await sessionController.setFullName(response.data?.user?.name ?? '');
         await sessionController.setEmail(response.data?.user?.email ?? '');
         await sessionController.setSavedPassword(password.value);
+        await sessionController.onUserLoggedIn();
         AppSnackbar.show(
           title: l10n.stSuccess,
           message: message,

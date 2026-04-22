@@ -5,12 +5,14 @@ import 'package:get/get.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
+import 'package:recipemate/menus/04_home/view/notification_view.dart';
 import 'package:recipemate/menus/06_security/view/security_view.dart';
 import 'package:recipemate/menus/07_chat/view/chat_view.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/data_session_util_controller.dart';
+import 'package:recipemate/utils/notification_util.dart';
 import 'package:recipemate/utils/view_utils/error_view.dart';
 import 'package:recipemate/utils/view_utils/theme_controller.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -25,9 +27,13 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Locale? appLocale;
 
 void main() async {
-  runZonedGuarded(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // Inisialisasi Notifikasi
+    await NotificationUtil.init();
+    await NotificationUtil.checkPendingNotification();
+    await NotificationUtil.forceInsertIfMissed();
 
       //Inisialisasi awal storage untuk ambil Tema & Bahasa
       final sessionUtil = DataSessionUtil();
@@ -111,56 +117,15 @@ class RecipemateApp extends StatelessWidget {
         initialRoute: '/',
         getPages: [
           //GOTO FORM
-          GetPage(
-            name: '/',
-            page: () => const SplashView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
-          ),
-          GetPage(
-            name: '/error',
-            page: () => ErrorView(errorMessage: Get.arguments as String),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
-          ),
-          GetPage(
-            name: '/login',
-            page: () => const LoginView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
-          ),
-          GetPage(
-            name: '/register',
-            page: () => const RegisterView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
-          ),
-          GetPage(
-            name: '/home',
-            page: () => const HomeNavView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
-          ),
-          GetPage(
-            name: '/home_detail',
-            page: () => const HomeDetailView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
-          ),
-          // GetPage(name: '/recipemate_ai', page: () => const RecipemateAiView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(
-            name: '/chat',
-            page: () => ChatView(),
-            transition: Transition.fade,
-            transitionDuration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          ),
-          GetPage(
-            name: '/security',
-            page: () => const SecurityView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
-          ),
+          GetPage(name: '/', page: () => const SplashView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+          GetPage(name: '/error', page: () => ErrorView(errorMessage: Get.arguments as String), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+          GetPage(name: '/login', page: () => const LoginView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+          GetPage(name: '/register', page: () => const RegisterView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+          GetPage(name: '/home', page: () => const HomeNavView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+          GetPage(name: '/home_detail', page: () => const HomeDetailView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+          GetPage(name: '/recipemate_ai', page: () => const RecipemateAiView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+          GetPage(name: '/security', page: () => const SecurityView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+          GetPage(name: '/notification', page: () => const NotificationView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600))
         ],
       );
     });
