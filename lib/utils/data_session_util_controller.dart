@@ -167,5 +167,8 @@ class DataSessionUtilController extends GetxController {
     stToken.value = "";
     stFullName.value = "";
     stEmail.value = "";
+    stTheme.value = "";
+    stLanguage.value = "";
+    notificationHistory.clear();
   }
 }
