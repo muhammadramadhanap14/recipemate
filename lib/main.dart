@@ -8,6 +8,9 @@ import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
 import 'package:recipemate/menus/04_home/view/notification_view.dart';
 import 'package:recipemate/menus/06_security/view/security_view.dart';
 import 'package:recipemate/menus/07_chat/view/chat_view.dart';
+import 'package:recipemate/menus/07_chat/view/view_model/chat_view_model.dart';
+import 'package:recipemate/menus/08_chat_session/view/chat_history_page.dart';
+import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
@@ -27,13 +30,14 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Locale? appLocale;
 
 void main() async {
-  runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-    // Inisialisasi Notifikasi
-    await NotificationUtil.init();
-    await NotificationUtil.checkPendingNotification();
-    await NotificationUtil.forceInsertIfMissed();
+      // Inisialisasi Notifikasi
+      await NotificationUtil.init();
+      await NotificationUtil.checkPendingNotification();
+      await NotificationUtil.forceInsertIfMissed();
 
       //Inisialisasi awal storage untuk ambil Tema & Bahasa
       final sessionUtil = DataSessionUtil();
@@ -58,10 +62,11 @@ void main() async {
         permanent: true,
       );
 
+      // Initialize ChatViewModel here to allow const ChatView
       //Set Locale awal jika ada
-      if (initialLang != null && initialLang.isNotEmpty) {
-        appLocale = Locale(initialLang);
-      }
+      // if (initialLang != null && initialLang.isNotEmpty) {
+      //   appLocale = Locale(initialLang);
+      // }
 
       // Set Flutter's error handler
       FlutterError.onError = (FlutterErrorDetails details) {
@@ -110,21 +115,75 @@ class RecipemateApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: const [Locale('en'), Locale('id')],
-        locale: appLocale,
+        locale: const Locale('id'),
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: themeController.themeMode.value,
         initialRoute: '/',
         getPages: [
           //GOTO FORM
-          GetPage(name: '/', page: () => const SplashView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/error', page: () => ErrorView(errorMessage: Get.arguments as String), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/login', page: () => const LoginView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/register', page: () => const RegisterView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/home', page: () => const HomeNavView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/home_detail', page: () => const HomeDetailView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/security', page: () => const SecurityView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/notification', page: () => const NotificationView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600))
+          GetPage(
+            name: '/',
+            page: () => const SplashView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/error',
+            page: () => ErrorView(errorMessage: Get.arguments as String),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/login',
+            page: () => const LoginView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/register',
+            page: () => const RegisterView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/home',
+            page: () => const HomeNavView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/home_detail',
+            page: () => const HomeDetailView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+  name: '/chat',
+  page: () => ChatView(session: Get.arguments),
+  binding: BindingsBuilder(() {
+    final session = Get.arguments as ChatSession;
+    Get.put(ChatViewModel(session: session));
+  }),
+),
+          GetPage(
+            name: '/chat_session',
+            page: () => ChatHistoryPage(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/security',
+            page: () => const SecurityView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/notification',
+            page: () => const NotificationView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
         ],
       );
     });

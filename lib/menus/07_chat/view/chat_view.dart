@@ -2,12 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/menus/07_chat/view/view_model/chat_view_model.dart';
+import 'package:recipemate/models/model/chat_session.dart';
 
-class ChatView extends StatelessWidget {
-  final controller = Get.put(ChatViewModel());
-  final inputController = TextEditingController();
+class ChatView extends StatefulWidget {
+  const ChatView({required this.session, super.key});
 
-  ChatView({super.key});
+  final ChatSession session;
+
+  @override
+  State<ChatView> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView> {
+  late final ChatViewModel controller;
+
+@override
+void initState() {
+  super.initState();
+
+  controller = Get.put(
+    ChatViewModel(session: widget.session), // ✅ FIX
+    tag: widget.session.id,
+  );
+}
+  late final inputController = TextEditingController();
+
+  @override
+  void dispose() {
+    inputController.dispose();
+    super.dispose();
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -311,53 +336,98 @@ class ChatView extends StatelessWidget {
                     const SizedBox(height: 12),
                   ],
                   Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: controller.prevStep,
-                          icon: const Icon(Icons.arrow_back_ios, size: 16),
-                          label: const Text("Previous"),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: isDark
-                                ? Colors.white70
-                                : Colors.black87,
-                            side: BorderSide(
-                              color: isDark ? Colors.white24 : Colors.black12,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: controller.nextStep,
-                          icon: const Icon(Icons.arrow_forward_ios, size: 16),
-                          label: const Text("Next"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.primary,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: 10,
-                            ),
-                            elevation: 2,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+  children: [
+    /// PREVIOUS
+    Expanded(
+      child: OutlinedButton.icon(
+        onPressed: controller.prevStep,
+        icon: const Icon(Icons.arrow_back_ios, size: 16),
+        label: const Text("Previous"),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: isDark ? Colors.white70 : Colors.black87,
+          side: BorderSide(
+            color: isDark ? Colors.white24 : Colors.black12,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
+        ),
+      ),
+    ),
+
+    const SizedBox(width: 8),
+
+    /// 🔥 END COOKING (TENGAH)
+    Expanded(
+      child: GestureDetector(
+        onTap: () {
+          Get.dialog(
+            AlertDialog(
+              title: const Text("Akhiri memasak?"),
+              content: const Text("Progress kamu akan hilang"),
+              actions: [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: const Text("Batal"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                    controller.endCooking();
+                  },
+                  child: const Text("Ya"),
+                ),
+              ],
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.redAccent,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: const Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Icon(Icons.stop, size: 16, color: Colors.white),
+    SizedBox(width: 6),
+    Text("End"),
+  ],
+)
+        ),
+      ),
+    ),
+
+    const SizedBox(width: 8),
+
+    /// NEXT
+    Expanded(
+      child: ElevatedButton.icon(
+        onPressed: controller.nextStep,
+        icon: const Icon(Icons.arrow_forward_ios, size: 16),
+        label: const Text("Next"),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
+          elevation: 2,
+        ),
+      ),
+    ),
+  ],
+),
                 ],
               ),
             );
@@ -426,4 +496,6 @@ class ChatView extends StatelessWidget {
       ),
     );
   }
+
+  
 }

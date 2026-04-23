@@ -57,7 +57,7 @@ class HomeNavView extends StatelessWidget {
                 child: FloatingActionButton(
                   heroTag: null,
                   onPressed: () {
-                    Get.toNamed('/chat');
+                    Get.toNamed('/chat_session');
                   },
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: CircleBorder(
