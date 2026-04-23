@@ -16,7 +16,7 @@ class HomeNavView extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
     });
-    
+
     final double fabSize = RecipeMateAppUtil.screenWidth * 0.192;
     final double barHeight = RecipeMateAppUtil.screenHeight * 0.098;
     final double iconSizeCenter = RecipeMateAppUtil.screenWidth * 0.085;
@@ -31,73 +31,79 @@ class HomeNavView extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         resizeToAvoidBottomInset: true,
-        body: SafeArea(
-          child: Obx(() => viewModel.currentPage),
-        ),
+        body: SafeArea(child: Obx(() => viewModel.currentPage)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: isKeyboardVisible ? null : Container(
-          height: fabSize,
-          width: fabSize,
-          margin: EdgeInsets.only(top: RecipeMateAppUtil.screenHeight * 0.029),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
-                blurRadius: RecipeMateAppUtil.screenWidth * 0.04,
-                spreadRadius: 2,
-                offset: Offset(0, RecipeMateAppUtil.screenHeight * 0.006),
+        floatingActionButton: isKeyboardVisible
+            ? null
+            : Container(
+                height: fabSize,
+                width: fabSize,
+                margin: EdgeInsets.only(
+                  top: RecipeMateAppUtil.screenHeight * 0.029,
+                ),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.7),
+                      blurRadius: RecipeMateAppUtil.screenWidth * 0.04,
+                      spreadRadius: 2,
+                      offset: Offset(0, RecipeMateAppUtil.screenHeight * 0.006),
+                    ),
+                  ],
+                ),
+                child: FloatingActionButton(
+                  heroTag: null,
+                  onPressed: () {
+                    Get.toNamed('/chat');
+                  },
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  shape: CircleBorder(
+                    side: BorderSide(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      width: RecipeMateAppUtil.screenWidth * 0.01,
+                    ),
+                  ),
+                  elevation: 0,
+                  child: Icon(
+                    Icons.auto_awesome,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    size: iconSizeCenter,
+                  ),
+                ),
               ),
-            ],
-          ),
-          child: FloatingActionButton(
-            heroTag: null,
-            onPressed: () {
-              Get.toNamed('/recipemate_ai');
-            },
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            shape: CircleBorder(
-              side: BorderSide(
+        bottomNavigationBar: isKeyboardVisible
+            ? const SizedBox.shrink()
+            : BottomAppBar(
+                height: barHeight,
                 color: Theme.of(context).scaffoldBackgroundColor,
-                width: RecipeMateAppUtil.screenWidth * 0.01,
+                elevation: 20,
+                padding: EdgeInsets.symmetric(
+                  horizontal: RecipeMateAppUtil.screenWidth * 0.04,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem(
+                      context: context,
+                      viewModel: viewModel,
+                      index: 0,
+                      icon: Icons.home_rounded,
+                      label: AppLocalizations.of(context)!.home,
+                    ),
+                    SizedBox(width: RecipeMateAppUtil.screenWidth * 0.12),
+                    _buildNavItem(
+                      context: context,
+                      viewModel: viewModel,
+                      index: 1,
+                      icon: Icons.person_rounded,
+                      label: AppLocalizations.of(context)!.account,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            elevation: 0,
-            child: Icon(
-              Icons.auto_awesome,
-              color: Theme.of(context).colorScheme.onPrimary,
-              size: iconSizeCenter,
-            ),
-          ),
-        ),
-        bottomNavigationBar: isKeyboardVisible ? const SizedBox.shrink() : BottomAppBar(
-          height: barHeight,
-          color: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 20,
-          padding: EdgeInsets.symmetric(
-            horizontal: RecipeMateAppUtil.screenWidth * 0.04,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(
-                context: context,
-                viewModel: viewModel,
-                index: 0,
-                icon: Icons.home_rounded,
-                label: AppLocalizations.of(context)!.home,
-              ),
-              SizedBox(width: RecipeMateAppUtil.screenWidth * 0.12),
-              _buildNavItem(
-                context: context,
-                viewModel: viewModel,
-                index: 1,
-                icon: Icons.person_rounded,
-                label: AppLocalizations.of(context)!.account,
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -113,10 +119,10 @@ class HomeNavView extends StatelessWidget {
 
     return Obx(() {
       final isSelected = viewModel.selectedIndex.value == index;
-      final color = isSelected 
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.onSecondary;
-      
+      final color = isSelected
+          ? Theme.of(context).colorScheme.primary
+          : Theme.of(context).colorScheme.onSecondary;
+
       return GestureDetector(
         onTap: () => viewModel.changePage(index),
         behavior: HitTestBehavior.opaque,
@@ -124,11 +130,7 @@ class HomeNavView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: color,
-              size: iconSize,
-            ),
+            Icon(icon, color: color, size: iconSize),
             SizedBox(height: RecipeMateAppUtil.screenHeight * 0.005),
             Text(
               label,
