@@ -69,19 +69,19 @@ class SecurityView extends StatelessWidget {
                   )),
                 ),
                 SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
-
-                _buildSectionTitle(AppLocalizations.of(context)!.stPasswordManagement, context),
-                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.history,
-                  title: AppLocalizations.of(context)!.stChangePassword,
-                  trailing: Icon(Icons.chevron_right, color: theme.colorScheme.onSurfaceVariant),
-                  onTap: () {
-                    viewModel.openChangePasswordDialog(context);
-                  },
-                ),
-                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
+                //
+                // _buildSectionTitle(AppLocalizations.of(context)!.stPasswordManagement, context),
+                // SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
+                // _buildMenuItem(
+                //   context: context,
+                //   icon: Icons.history,
+                //   title: AppLocalizations.of(context)!.stChangePassword,
+                //   trailing: Icon(Icons.chevron_right, color: theme.colorScheme.onSurfaceVariant),
+                //   onTap: () {
+                //     viewModel.openChangePasswordDialog(context);
+                //   },
+                // ),
+                // SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
               ],
             ),
           ),
