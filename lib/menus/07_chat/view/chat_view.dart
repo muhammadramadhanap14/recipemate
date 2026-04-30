@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/menus/07_chat/view/view_model/chat_view_model.dart';
+import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 
 class ChatView extends StatefulWidget {
@@ -16,15 +17,16 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   late final ChatViewModel controller;
 
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  controller = Get.put(
-    ChatViewModel(session: widget.session), // ✅ FIX
-    tag: widget.session.id,
-  );
-}
+    controller = Get.put(
+      ChatViewModel(session: widget.session), // ✅ FIX
+      tag: widget.session.id,
+    );
+  }
+
   late final inputController = TextEditingController();
 
   @override
@@ -32,19 +34,107 @@ void initState() {
     inputController.dispose();
     super.dispose();
   }
-  
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final historyController = Get.find<ChatHistoryController>();
+
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
+      drawer: Drawer(
+        width: MediaQuery.of(context).size.width * 0.75,
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
+                child: Text(
+                  'Chat History',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Obx(() {
+                  if (historyController.sessions.isEmpty) {
+                    return Center(
+                      child: Text(
+                        "Belum ada chat",
+                        style: TextStyle(
+                          color: isDark ? Colors.white54 : Colors.black54,
+                        ),
+                      ),
+                    );
+                  }
 
+                  return ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    itemCount: historyController.sessions.length,
+                    itemBuilder: (context, index) {
+                      final session = historyController.sessions[index];
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          tileColor: isDark
+                              ? const Color(0xFF1F1F28)
+                              : const Color(0xFFF6F6FA),
+                          title: Text(
+                            session.title,
+                            style: TextStyle(
+                              color: isDark ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Text(
+                            session.createdAt.toString(),
+                            style: TextStyle(
+                              color: isDark ? Colors.white54 : Colors.black54,
+                              fontSize: 12,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            Future.delayed(
+                              const Duration(milliseconds: 120),
+                              () {
+                                Get.offNamed('/chat', arguments: session);
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
         elevation: 0,
-        centerTitle: true,
+        centerTitle: false,
+        iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu, color: isDark ? Colors.white : Colors.black),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
         title: Text(
           "RecipeMate AI",
           style: TextStyle(
@@ -52,7 +142,6 @@ void initState() {
             fontWeight: FontWeight.w600,
           ),
         ),
-        iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black),
       ),
 
       body: Column(
@@ -68,9 +157,6 @@ void initState() {
                 itemCount: controller.messages.length,
                 itemBuilder: (context, index) {
                   final msg = controller.messages.reversed.toList()[index];
-                  if (msg.options != null && msg.options!.isNotEmpty) {
-                    print('Options: ${msg.options}');
-                  }
                   final isDark =
                       Theme.of(context).brightness == Brightness.dark;
 
@@ -209,25 +295,70 @@ void initState() {
             }
 
             return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1F1F28)
+                      : const Color(0xFFF8F8FC),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withOpacity(0.15),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDark
+                          ? Colors.black.withOpacity(0.15)
+                          : Colors.black.withOpacity(0.06),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
-                onPressed: controller.startCooking,
-                child: Text(
-                  "Start Cooking",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontWeight: FontWeight.w600,
-                  ),
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Ready to start cooking?",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Tekan tombol di bawah untuk mulai panduan memasak.",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.local_fire_department, size: 18),
+                        label: const Text("Start Cooking"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        onPressed: controller.startCooking,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -336,98 +467,99 @@ void initState() {
                     const SizedBox(height: 12),
                   ],
                   Row(
-  children: [
-    /// PREVIOUS
-    Expanded(
-      child: OutlinedButton.icon(
-        onPressed: controller.prevStep,
-        icon: const Icon(Icons.arrow_back_ios, size: 16),
-        label: const Text("Previous"),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: isDark ? Colors.white70 : Colors.black87,
-          side: BorderSide(
-            color: isDark ? Colors.white24 : Colors.black12,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 10,
-          ),
-        ),
-      ),
-    ),
+                    children: [
+                      /// PREVIOUS
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: controller.prevStep,
+                          icon: const Icon(Icons.arrow_back_ios, size: 16),
+                          label: const Text("Previous"),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: isDark
+                                ? Colors.white70
+                                : Colors.black87,
+                            side: BorderSide(
+                              color: isDark ? Colors.white24 : Colors.black12,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
+                          ),
+                        ),
+                      ),
 
-    const SizedBox(width: 8),
+                      const SizedBox(width: 8),
 
-    /// 🔥 END COOKING (TENGAH)
-    Expanded(
-      child: GestureDetector(
-        onTap: () {
-          Get.dialog(
-            AlertDialog(
-              title: const Text("Akhiri memasak?"),
-              content: const Text("Progress kamu akan hilang"),
-              actions: [
-                TextButton(
-                  onPressed: () => Get.back(),
-                  child: const Text("Batal"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Get.back();
-                    controller.endCooking();
-                  },
-                  child: const Text("Ya"),
-                ),
-              ],
-            ),
-          );
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.redAccent,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: const Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Icon(Icons.stop, size: 16, color: Colors.white),
-    SizedBox(width: 6),
-    Text("End"),
-  ],
-)
-        ),
-      ),
-    ),
+                      /// 🔥 END COOKING (TENGAH)
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Get.dialog(
+                              AlertDialog(
+                                title: const Text("Akhiri memasak?"),
+                                content: const Text(
+                                  "Progress kamu akan hilang",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Get.back(),
+                                    child: const Text("Batal"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.back();
+                                      controller.endCooking();
+                                    },
+                                    child: const Text("Ya"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.stop, size: 16),
+                          label: const Text("End"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            elevation: 4,
+                          ),
+                        ),
+                      ),
 
-    const SizedBox(width: 8),
+                      const SizedBox(width: 8),
 
-    /// NEXT
-    Expanded(
-      child: ElevatedButton.icon(
-        onPressed: controller.nextStep,
-        icon: const Icon(Icons.arrow_forward_ios, size: 16),
-        label: const Text("Next"),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 10,
-          ),
-          elevation: 2,
-        ),
-      ),
-    ),
-  ],
-),
+                      /// NEXT
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: controller.nextStep,
+                          icon: const Icon(Icons.arrow_forward_ios, size: 16),
+                          label: const Text("Next"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
+                            elevation: 2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             );
@@ -496,6 +628,4 @@ void initState() {
       ),
     );
   }
-
-  
 }

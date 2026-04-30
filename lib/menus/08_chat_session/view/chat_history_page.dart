@@ -3,25 +3,31 @@ import 'package:get/get.dart';
 import 'package:recipemate/menus/07_chat/view/chat_view.dart';
 import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
 
-class ChatHistoryPage extends StatelessWidget {
-  final controller = Get.put(ChatHistoryController());
+class ChatHistoryPage extends StatefulWidget {
+  const ChatHistoryPage({super.key});
 
-  ChatHistoryPage({super.key});
+  @override
+  State<ChatHistoryPage> createState() => _ChatHistoryPageState();
+}
+
+class _ChatHistoryPageState extends State<ChatHistoryPage> {
+  late final ChatHistoryController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<ChatHistoryController>();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Chat History"),
-      ),
+      appBar: AppBar(title: const Text("Chat History")),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final session = controller.createNewSession();
 
-          Get.toNamed(
-  '/chat',
-  arguments: session,
-);
+          Get.toNamed('/chat', arguments: session);
         },
         child: const Icon(Icons.add),
       ),

@@ -11,6 +11,7 @@ import 'package:recipemate/menus/07_chat/view/chat_view.dart';
 import 'package:recipemate/menus/07_chat/view/view_model/chat_view_model.dart';
 import 'package:recipemate/menus/08_chat_session/view/chat_history_page.dart';
 import 'package:recipemate/models/model/chat_session.dart';
+import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
@@ -22,7 +23,6 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'menus/01_splash/view/splash_view.dart';
 import 'menus/02_login/view/login_view.dart';
 import 'menus/04_home/view/home_nav_view.dart';
-import 'menus/05_recipemate_ai/view/recipemate_ai_view.dart';
 import 'utils/view_utils/app_theme.dart';
 
 final talker = TalkerFlutter.init(); // Initialize Talker instance here
@@ -61,6 +61,9 @@ void main() async {
         DataSessionUtilController(dataSessionUtil: Get.find()),
         permanent: true,
       );
+
+      // Initialize ChatHistoryController
+      Get.put<ChatHistoryController>(ChatHistoryController(), permanent: true);
 
       // Initialize ChatViewModel here to allow const ChatView
       //Set Locale awal jika ada
@@ -159,16 +162,16 @@ class RecipemateApp extends StatelessWidget {
             transitionDuration: const Duration(milliseconds: 600),
           ),
           GetPage(
-  name: '/chat',
-  page: () => ChatView(session: Get.arguments),
-  binding: BindingsBuilder(() {
-    final session = Get.arguments as ChatSession;
-    Get.put(ChatViewModel(session: session));
-  }),
-),
+            name: '/chat',
+            page: () => ChatView(session: Get.arguments),
+            binding: BindingsBuilder(() {
+              final session = Get.arguments as ChatSession;
+              Get.put(ChatViewModel(session: session));
+            }),
+          ),
           GetPage(
             name: '/chat_session',
-            page: () => ChatHistoryPage(),
+            page: () => const ChatHistoryPage(),
             transition: Transition.rightToLeftWithFade,
             transitionDuration: const Duration(milliseconds: 600),
           ),

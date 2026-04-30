@@ -57,10 +57,14 @@ class ChatViewModel extends GetxController {
         Uri.parse("$baseUrl/chat"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          "messages": messages.map((e) => {
-                "role": e.isUser ? "user" : "assistant",
-                "content": e.text,
-              }).toList(),
+          "messages": messages
+              .map(
+                (e) => {
+                  "role": e.isUser ? "user" : "assistant",
+                  "content": e.text,
+                },
+              )
+              .toList(),
         }),
       );
 
@@ -69,24 +73,20 @@ class ChatViewModel extends GetxController {
       if (data["ready"] == true) {
         isReady.value = true;
 
-        messages.add(ChatMessage(
-          text: data["message"],
-          isUser: false,
-        ));
+        messages.add(ChatMessage(text: data["message"], isUser: false));
       } else {
-        messages.add(ChatMessage(
-          text: data["reply"],
-          isUser: false,
-          options: data["options"] != null
-              ? List<String>.from(data["options"])
-              : null,
-        ));
+        messages.add(
+          ChatMessage(
+            text: data["reply"],
+            isUser: false,
+            options: data["options"] != null
+                ? List<String>.from(data["options"])
+                : null,
+          ),
+        );
       }
     } catch (e) {
-      messages.add(ChatMessage(
-        text: "Error: $e",
-        isUser: false,
-      ));
+      messages.add(ChatMessage(text: "Error: $e", isUser: false));
     }
 
     isLoading.value = false;
@@ -103,9 +103,7 @@ class ChatViewModel extends GetxController {
       final response = await http.post(
         Uri.parse("$baseUrl/generate-recipe"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "context": messages.map((e) => e.text).join(" "),
-        }),
+        body: jsonEncode({"context": messages.map((e) => e.text).join(" ")}),
       );
 
       final data = jsonDecode(response.body);
@@ -120,20 +118,16 @@ class ChatViewModel extends GetxController {
         updateTimerForStep(steps[0]);
       }
 
-      messages.add(ChatMessage(
-        text: "Kita mulai masak ${recipeName.value} 👨‍🍳",
-        isUser: false,
-      ));
+      messages.add(
+        ChatMessage(
+          text: "Kita mulai masak ${recipeName.value} 👨‍🍳",
+          isUser: false,
+        ),
+      );
 
-      messages.add(ChatMessage(
-        text: steps[0],
-        isUser: false,
-      ));
+      messages.add(ChatMessage(text: steps[0], isUser: false));
     } catch (e) {
-      messages.add(ChatMessage(
-        text: "Gagal generate resep 😢",
-        isUser: false,
-      ));
+      messages.add(ChatMessage(text: "Gagal generate resep 😢", isUser: false));
     }
 
     _saveToHistory();
@@ -148,14 +142,17 @@ class ChatViewModel extends GetxController {
     remainingSeconds.value = 0;
 
     isCooking.value = false;
+    isReady.value = false;
     steps.clear();
     currentStep.value = 0;
     recipeName.value = "";
 
-    messages.add(ChatMessage(
-      text: "Masak selesai! 🎉 Mau coba resep lain?",
-      isUser: false,
-    ));
+    messages.add(
+      ChatMessage(
+        text: "Masak selesai! 🎉 Apakah anda ingin mencoba resep lain?",
+        isUser: false,
+      ),
+    );
 
     _saveToHistory();
   }
@@ -169,10 +166,7 @@ class ChatViewModel extends GetxController {
 
       final stepText = steps[currentStep.value];
 
-      messages.add(ChatMessage(
-        text: stepText,
-        isUser: false,
-      ));
+      messages.add(ChatMessage(text: stepText, isUser: false));
 
       updateTimerForStep(stepText);
       _saveToHistory();
@@ -188,10 +182,12 @@ class ChatViewModel extends GetxController {
 
       final stepText = steps[currentStep.value];
 
-      messages.add(ChatMessage(
-        text: "Kembali ke langkah sebelumnya:\n$stepText",
-        isUser: false,
-      ));
+      messages.add(
+        ChatMessage(
+          text: "Kembali ke langkah sebelumnya:\n$stepText",
+          isUser: false,
+        ),
+      );
 
       updateTimerForStep(stepText);
       _saveToHistory();
@@ -238,10 +234,7 @@ class ChatViewModel extends GetxController {
           t.cancel();
           isTimerRunning.value = false;
 
-          messages.add(ChatMessage(
-            text: "⏰ Waktu selesai!",
-            isUser: false,
-          ));
+          messages.add(ChatMessage(text: "⏰ Waktu selesai!", isUser: false));
 
           _saveToHistory();
         }
