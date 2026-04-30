@@ -95,7 +95,7 @@ class ApiRepository {
 
   Future<dynamic> getRecipesComplexSearch({
     required String query,
-    int number = 20,
+    int number = 150,
   }) async {
     try {
       final response = await _dio.get(
