@@ -106,9 +106,9 @@ class _ChatViewState extends State<ChatView> {
       title: customText(
         text: "RecipeMate",
         fontSize: DimensText.headerMenusText(context),
-        fontWeight: FontWeight.w900,
-        color: colorScheme.onSurface,
-        fontFamily: 'Serif',
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).colorScheme.onSurface,
+        fontFamily: 'times_new_roman_bold',
       ),
     );
   }
@@ -127,8 +127,9 @@ class _ChatViewState extends State<ChatView> {
               child: customText(
                 text: AppLocalizations.of(context)!.stHistoryChat,
                 fontSize: DimensText.headerMenusText(context),
-                color: colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+                fontFamily: 'times_new_roman_bold',
               ),
             ),
             Expanded(
@@ -144,11 +145,13 @@ class _ChatViewState extends State<ChatView> {
                     return ListTile(
                       title: customText(
                         text: session.title,
+                        fontSize: DimensText.bodyText(context),
                         color: colorScheme.onSurface,
+                        intMaxLine: null
                       ),
                       subtitle: customText(
                         text: DateFormat('dd MMM yyyy').format(session.createdAt),
-                        fontSize: 12,
+                        fontSize: DimensText.captionText(context),
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                       onTap: () {
@@ -210,9 +213,8 @@ class _ChatViewState extends State<ChatView> {
                   data: msg.text,
                   styleSheet: MarkdownStyleSheet(
                     p: TextStyle(
-                      fontSize: 15,
+                      fontSize: DimensText.bodyText(context),
                       color: colorScheme.onSurface,
-                      height: 1.5,
                       fontFamily: 'Poppins-Regular',
                     ),
                     strong: TextStyle(
@@ -264,7 +266,7 @@ class _ChatViewState extends State<ChatView> {
             ),
             child: customText(
               text: msg.text,
-              fontSize: 15,
+              fontSize: DimensText.bodyText(context),
               color: colorScheme.onSurface,
               intMaxLine: null,
             ),
@@ -272,7 +274,7 @@ class _ChatViewState extends State<ChatView> {
           const SizedBox(height: 4),
           customText(
             text: "SENT ${DateFormat('hh:mm a').format(msg.timestamp)}",
-            fontSize: 10,
+            fontSize: DimensText.captionText(context),
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface.withValues(alpha: 0.4),
           ),
@@ -306,7 +308,7 @@ class _ChatViewState extends State<ChatView> {
               const SizedBox(width: 8),
               customText(
                 text: controller.recipeName.value.toUpperCase(),
-                fontSize: 12,
+                fontSize: DimensText.captionText(context),
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
@@ -321,7 +323,7 @@ class _ChatViewState extends State<ChatView> {
             final secs = seconds % 60;
             return customText(
               text: "${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}",
-              fontSize: 48,
+              fontSize: DimensText.superHeaderText(context),
               fontWeight: FontWeight.w900,
               color: colorScheme.onSurface,
               fontFamily: 'Serif',
@@ -373,7 +375,7 @@ class _ChatViewState extends State<ChatView> {
             label: customText(
               text: opt,
               color: colorScheme.onPrimary,
-              fontSize: 13,
+              fontSize: DimensText.bodySmallText(context),
             ),
             onPressed: () => controller.sendMessage(opt),
             backgroundColor: colorScheme.primary,
@@ -429,12 +431,14 @@ class _ChatViewState extends State<ChatView> {
             onPressed: controller.prevStep,
             icon: Icon(Icons.chevron_left, color: colorScheme.primary),
             text: "PREVIOUS",
+            fontSize: DimensText.bodySmallText(context),
             fontWeight: FontWeight.bold,
             fontColor: colorScheme.primary,
           ),
           customElevatedButton(
             onPressed: controller.nextStep,
             text: "NEXT STEP",
+            fontSize: DimensText.bodySmallText(context),
             icon: Icon(Icons.chevron_right, color: colorScheme.onPrimary),
             backgroundColor: colorScheme.primary,
             fontColor: colorScheme.onPrimary,

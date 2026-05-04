@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/menus/07_chat/view/chat_view.dart';
 import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
+import 'package:recipemate/utils/view_utils/no_data_util.dart';
+
+import '../../../l10n/app_localizations.dart';
+import '../../../utils/dimens_text.dart';
+import '../../../utils/view_utils/primary_global_view.dart';
 
 class ChatHistoryPage extends StatefulWidget {
   const ChatHistoryPage({super.key});
@@ -22,7 +27,22 @@ class _ChatHistoryPageState extends State<ChatHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Chat History")),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.keyboard_arrow_left, color: Theme.of(context).colorScheme.onSurface),
+          onPressed: () => Get.back(),
+        ),
+        centerTitle: true,
+        title: customText(
+          text: AppLocalizations.of(context)!.stHistoryChat,
+          fontSize: DimensText.headerMenusText(context),
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.onSurface,
+          fontFamily: 'times_new_roman_bold',
+        ),
+        automaticallyImplyLeading: false,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final session = controller.createNewSession();
@@ -33,7 +53,7 @@ class _ChatHistoryPageState extends State<ChatHistoryPage> {
       ),
       body: Obx(() {
         if (controller.sessions.isEmpty) {
-          return const Center(child: Text("Belum ada chat"));
+          return const Center(child: NoDataUtil());
         }
 
         return ListView.builder(
@@ -42,10 +62,17 @@ class _ChatHistoryPageState extends State<ChatHistoryPage> {
             final session = controller.sessions[index];
 
             return ListTile(
-              title: Text(session.title),
-              subtitle: Text(
-                session.createdAt.toString(),
-                style: TextStyle(fontSize: 12),
+              title: customText(
+                text: session.title,
+                fontSize: DimensText.bodyText(context),
+                color: Theme.of(context).colorScheme.onSurface,
+                intMaxLine: null
+              ),
+              subtitle: customText(
+                text: session.createdAt.toString(),
+                fontSize: DimensText.bodySmallText(context),
+                color: Theme.of(context).colorScheme.onSurface,
+                intMaxLine: null
               ),
               onTap: () {
                 Get.to(() => ChatView(session: session));
