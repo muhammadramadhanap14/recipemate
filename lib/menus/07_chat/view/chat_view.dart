@@ -306,11 +306,15 @@ class _ChatViewState extends State<ChatView> {
             children: [
               Icon(Icons.timer, color: colorScheme.primary, size: 18),
               const SizedBox(width: 8),
-              customText(
-                text: controller.recipeName.value.toUpperCase(),
-                fontSize: DimensText.captionText(context),
-                fontWeight: FontWeight.bold,
-                color: colorScheme.onSurface.withValues(alpha: 0.6),
+              Expanded(
+                child: customText(
+                  text: controller.recipeName.value.toUpperCase(),
+                  fontSize: DimensText.captionText(context),
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface.withValues(alpha: 0.6),
+                  intMaxLine: null,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),
@@ -339,6 +343,7 @@ class _ChatViewState extends State<ChatView> {
                   backgroundColor: colorScheme.primary,
                   fontColor: colorScheme.onPrimary,
                   text: controller.isTimerRunning.value ? "PAUSE" : "RESUME",
+                  fontSize: DimensText.bodySmallText(context),
                   fontWeight: FontWeight.bold,
                   douHeight: 45,
                   douWidth: double.infinity,
@@ -351,6 +356,7 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () => controller.updateTimerForStep(step),
                   borderColor: colorScheme.primary,
                   fontColor: colorScheme.primary,
+                  fontSize: DimensText.bodySmallText(context),
                   text: "STOP",
                   fontWeight: FontWeight.bold,
                   borderRadius: 30,
@@ -464,10 +470,6 @@ class _ChatViewState extends State<ChatView> {
               color: colorScheme.onSurface.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: IconButton(
-              icon: Icon(Icons.add, color: colorScheme.onSurface),
-              onPressed: () {},
-            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -481,6 +483,7 @@ class _ChatViewState extends State<ChatView> {
                 controller: inputController,
                 style: TextStyle(
                   color: colorScheme.onSurface,
+                  fontSize: DimensText.bodyText(context),
                   fontFamily: 'Poppins-Regular'
                 ),
                 decoration: InputDecoration(
