@@ -60,8 +60,6 @@ class _ChatViewState extends State<ChatView> {
                   itemCount: controller.messages.length,
                   itemBuilder: (context, index) {
                     final msg = controller.messages[controller.messages.length - 1 - index];
-                    // FIX: Removed Obx from here to avoid "improper use" error for non-reactive messages.
-                    // Sub-components will use Obx for their specific reactive parts.
                     return msg.isUser
                         ? _buildUserMessage(context, msg)
                         : _buildAiMessage(context, msg);
@@ -76,12 +74,6 @@ class _ChatViewState extends State<ChatView> {
                 return const SizedBox();
               }
               return _buildStartCookingCard(context);
-            }),
-
-            /// BOTTOM NAVIGATION (DURING COOKING)
-            Obx(() {
-              if (!controller.isCooking.value) return const SizedBox();
-              return _buildCookingNavigation(context);
             }),
 
             /// INPUT FIELD
@@ -385,7 +377,10 @@ class _ChatViewState extends State<ChatView> {
             ),
             onPressed: () => controller.sendMessage(opt),
             backgroundColor: colorScheme.primary,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(color: colorScheme.primary),
+            ),
           );
         }).toList(),
       ),
@@ -426,36 +421,6 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget _buildCookingNavigation(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          customTextButton(
-            onPressed: controller.prevStep,
-            icon: Icon(Icons.chevron_left, color: colorScheme.primary),
-            text: "PREVIOUS",
-            fontSize: DimensText.bodySmallText(context),
-            fontWeight: FontWeight.bold,
-            fontColor: colorScheme.primary,
-          ),
-          customElevatedButton(
-            onPressed: controller.nextStep,
-            text: "NEXT STEP",
-            fontSize: DimensText.bodySmallText(context),
-            icon: Icon(Icons.chevron_right, color: colorScheme.onPrimary),
-            backgroundColor: colorScheme.primary,
-            fontColor: colorScheme.onPrimary,
-            fontWeight: FontWeight.bold,
-            borderRadius: 30,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildInputField(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
@@ -487,7 +452,7 @@ class _ChatViewState extends State<ChatView> {
                   fontFamily: 'Poppins-Regular'
                 ),
                 decoration: InputDecoration(
-                  hintText: "Ask about the next step...",
+                  hintText: "Type a message...",
                   hintStyle: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.5)),
                   border: InputBorder.none,
                 ),

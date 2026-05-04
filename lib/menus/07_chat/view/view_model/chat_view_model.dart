@@ -49,6 +49,39 @@ class ChatViewModel extends GetxController {
   Future<void> sendMessage(String text) async {
     if (text.isEmpty) return;
 
+    // Handle Cooking Navigation via Quick Replies
+    if (isCooking.value) {
+      if (text == "Sudah") {
+        messages.add(ChatMessage(text: text, isUser: true));
+        nextStep();
+        return;
+      } else if (text == "Belum") {
+        messages.add(ChatMessage(text: text, isUser: true));
+        
+        // Ambil teks langkah yang sekarang
+        final stepText = steps[currentStep.value];
+        
+        // Reset timer untuk langkah ini agar muncul lagi di UI
+        updateTimerForStep(stepText);
+        
+        // Kirim pesan langkahnya lagi agar UI menampilkan Timer Card
+        messages.add(ChatMessage(
+          text: stepText,
+          isUser: false
+        ));
+        
+        // Kirim konfirmasi lagi
+        messages.add(ChatMessage(
+          text: "Step ini sudah?",
+          isUser: false,
+          options: ["Sudah", "Belum"],
+        ));
+        
+        _saveToHistory();
+        return;
+      }
+    }
+
     messages.add(ChatMessage(text: text, isUser: true));
     isLoading.value = true;
 
@@ -125,7 +158,16 @@ class ChatViewModel extends GetxController {
         ),
       );
 
+      // Send first step
       messages.add(ChatMessage(text: steps[0], isUser: false));
+      
+      // Send confirmation with quick replies
+      messages.add(ChatMessage(
+        text: "Step ini sudah?",
+        isUser: false,
+        options: ["Sudah", "Belum"],
+      ));
+      
     } catch (e) {
       messages.add(ChatMessage(text: "Gagal generate resep 😢", isUser: false));
     }
@@ -168,29 +210,17 @@ class ChatViewModel extends GetxController {
 
       messages.add(ChatMessage(text: stepText, isUser: false));
 
-      updateTimerForStep(stepText);
-      _saveToHistory();
-    }
-  }
-
-  /// =========================
-  /// PREVIOUS STEP
-  /// =========================
-  void prevStep() {
-    if (currentStep.value > 0) {
-      currentStep.value--;
-
-      final stepText = steps[currentStep.value];
-
-      messages.add(
-        ChatMessage(
-          text: "Kembali ke langkah sebelumnya:\n$stepText",
-          isUser: false,
-        ),
-      );
+      // Add confirmation with quick replies (Hanya Sudah & Belum)
+      messages.add(ChatMessage(
+        text: "Step ini sudah?",
+        isUser: false,
+        options: ["Sudah", "Belum"],
+      ));
 
       updateTimerForStep(stepText);
       _saveToHistory();
+    } else {
+      endCooking();
     }
   }
 

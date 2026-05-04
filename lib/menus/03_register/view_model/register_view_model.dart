@@ -46,7 +46,7 @@ class RegisterViewModel extends GetxController {
 
   void _validate() {
     final isEmailValid = email.value.contains("@");
-    isValidButton.value = fullname.value.isNotEmpty && isEmailValid && password.value.length >= 4;
+    isValidButton.value = fullname.value.isNotEmpty && isEmailValid && password.value.length >= 6;
   }
 
   Future<void> onRegisterPressed() async {
