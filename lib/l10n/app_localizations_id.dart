@@ -328,4 +328,7 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get stDeleteAllMessage =>
       'Apakah Anda yakin ingin menghapus semua notifikasi?';
+
+  @override
+  String get stHistoryChat => 'Riwayat Chat';
 }

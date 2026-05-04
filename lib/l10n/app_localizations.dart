@@ -715,6 +715,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure want to delete all notifications?'**
   String get stDeleteAllMessage;
+
+  /// No description provided for @stHistoryChat.
+  ///
+  /// In en, this message translates to:
+  /// **'History Chat'**
+  String get stHistoryChat;
 }
 
 class _AppLocalizationsDelegate

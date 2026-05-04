@@ -326,4 +326,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get stDeleteAllMessage =>
       'Are you sure want to delete all notifications?';
+
+  @override
+  String get stHistoryChat => 'History Chat';
 }

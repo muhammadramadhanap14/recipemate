@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/07_chat/view/view_model/chat_view_model.dart';
 import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
 import 'package:recipemate/models/model/chat_session.dart';
+import 'package:recipemate/models/model/chat_message.dart';
+import 'package:recipemate/utils/dimens_text.dart';
+import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
+import 'package:recipemate/utils/view_utils/no_data_util.dart';
+import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView({required this.session, super.key});
@@ -20,9 +27,8 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     super.initState();
-
     controller = Get.put(
-      ChatViewModel(session: widget.session), // ✅ FIX
+      ChatViewModel(session: widget.session),
       tag: widget.session.id,
     );
   }
@@ -37,591 +43,465 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     final historyController = Get.find<ChatHistoryController>();
 
-    return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
-      drawer: Drawer(
-        width: MediaQuery.of(context).size.width * 0.75,
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
-                child: Text(
-                  'Chat History',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+    return ConnectionWrapper(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        drawer: _buildDrawer(context, historyController),
+        appBar: _buildAppBar(context),
+        body: Column(
+          children: [
+            Expanded(
+              child: Obx(
+                () => ListView.builder(
+                  reverse: true,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  itemCount: controller.messages.length,
+                  itemBuilder: (context, index) {
+                    final msg = controller.messages[controller.messages.length - 1 - index];
+                    // FIX: Removed Obx from here to avoid "improper use" error for non-reactive messages.
+                    // Sub-components will use Obx for their specific reactive parts.
+                    return msg.isUser
+                        ? _buildUserMessage(context, msg)
+                        : _buildAiMessage(context, msg);
+                  },
                 ),
               ),
-              Expanded(
-                child: Obx(() {
-                  if (historyController.sessions.isEmpty) {
-                    return Center(
-                      child: Text(
-                        "Belum ada chat",
-                        style: TextStyle(
-                          color: isDark ? Colors.white54 : Colors.black54,
-                        ),
+            ),
+
+            /// START COOKING BUTTON (IF READY)
+            Obx(() {
+              if (!controller.isReady.value || controller.isCooking.value) {
+                return const SizedBox();
+              }
+              return _buildStartCookingCard(context);
+            }),
+
+            /// BOTTOM NAVIGATION (DURING COOKING)
+            Obx(() {
+              if (!controller.isCooking.value) return const SizedBox();
+              return _buildCookingNavigation(context);
+            }),
+
+            /// INPUT FIELD
+            _buildInputField(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return AppBar(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      centerTitle: true,
+      leading: Builder(
+        builder: (context) => IconButton(
+          icon: Icon(Icons.menu, color: colorScheme.onSurface),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
+      ),
+      title: customText(
+        text: "RecipeMate",
+        fontSize: DimensText.headerMenusText(context),
+        fontWeight: FontWeight.w900,
+        color: colorScheme.onSurface,
+        fontFamily: 'Serif',
+      ),
+    );
+  }
+
+  Widget _buildDrawer(BuildContext context, ChatHistoryController historyController) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Drawer(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      width: MediaQuery.of(context).size.width * 0.75,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
+              child: customText(
+                text: AppLocalizations.of(context)!.stHistoryChat,
+                fontSize: DimensText.headerMenusText(context),
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Expanded(
+              child: Obx(() {
+                if (historyController.sessions.isEmpty) {
+                  return const Center(child: NoDataUtil());
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  itemCount: historyController.sessions.length,
+                  itemBuilder: (context, index) {
+                    final session = historyController.sessions[index];
+                    return ListTile(
+                      title: customText(
+                        text: session.title,
+                        color: colorScheme.onSurface,
                       ),
+                      subtitle: customText(
+                        text: DateFormat('dd MMM yyyy').format(session.createdAt),
+                        fontSize: 12,
+                        color: colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Get.offNamed('/chat', arguments: session, preventDuplicates: false);
+                      },
                     );
-                  }
+                  },
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-                  return ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    itemCount: historyController.sessions.length,
-                    itemBuilder: (context, index) {
-                      final session = historyController.sessions[index];
-
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          tileColor: isDark
-                              ? const Color(0xFF1F1F28)
-                              : const Color(0xFFF6F6FA),
-                          title: Text(
-                            session.title,
-                            style: TextStyle(
-                              color: isDark ? Colors.white : Colors.black,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          subtitle: Text(
-                            session.createdAt.toString(),
-                            style: TextStyle(
-                              color: isDark ? Colors.white54 : Colors.black54,
-                              fontSize: 12,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            Future.delayed(
-                              const Duration(milliseconds: 120),
-                              () {
-                                Get.offNamed('/chat', arguments: session);
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                }),
+  Widget _buildAiMessage(BuildContext context, ChatMessage msg) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.auto_awesome, color: colorScheme.onPrimary, size: 14),
+              ),
+              const SizedBox(width: 8),
+              customText(
+                text: "RECIPEMATE AI",
+                fontSize: DimensText.captionText(context),
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ],
           ),
-        ),
-      ),
-      appBar: AppBar(
-        backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
-        elevation: 0,
-        centerTitle: false,
-        iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black),
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(Icons.menu, color: isDark ? Colors.white : Colors.black),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-        title: Text(
-          "RecipeMate AI",
-          style: TextStyle(
-            color: isDark ? Colors.white : Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-
-      body: Column(
-        children: [
-          /// =====================
-          /// CHAT LIST
-          /// =====================
-          Expanded(
-            child: Obx(
-              () => ListView.builder(
-                reverse: true,
-                padding: const EdgeInsets.all(12),
-                itemCount: controller.messages.length,
-                itemBuilder: (context, index) {
-                  final msg = controller.messages.reversed.toList()[index];
-                  final isDark =
-                      Theme.of(context).brightness == Brightness.dark;
-
-                  return Align(
-                    alignment: msg.isUser
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        /// AVATAR AI
-                        if (!msg.isUser) ...[
-                          Container(
-                            margin: const EdgeInsets.only(right: 8, top: 8),
-                            child: CircleAvatar(
-                              radius: 14,
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.primary.withValues(alpha: 0.12),
-                              child: Icon(
-                                Icons.smart_toy,
-                                size: 16,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-
-                        /// CHAT BUBBLE
-                        Container(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.75,
-                          ),
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 14,
-                          ),
-                          decoration: BoxDecoration(
-                            color: msg.isUser
-                                ? Theme.of(context).colorScheme.primary
-                                : isDark
-                                ? const Color(0xFF2A2A2E)
-                                : const Color(0xFFF1F1F5),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: isDark
-                                    ? Colors.black.withValues(alpha: 0.2)
-                                    : Colors.black.withValues(alpha: 0.03),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-
-                          /// 🔥 ISI BUBBLE (TEXT + QUICK REPLY)
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /// TEXT (MARKDOWN)
-                              MarkdownBody(
-                                data: msg.text,
-                                styleSheet: MarkdownStyleSheet(
-                                  p: TextStyle(
-                                    fontSize: 14,
-                                    height: 1.5,
-                                    color: msg.isUser
-                                        ? Colors.white
-                                        : Colors.black87,
-                                  ),
-                                  strong: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              /// 🔥 QUICK REPLY
-                              if (!msg.isUser &&
-                                  msg.options != null &&
-                                  msg.options!.isNotEmpty) ...[
-                                const SizedBox(height: 10),
-
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 6,
-                                  children: msg.options!.map((opt) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        if (controller.isLoading.value) return;
-                                        controller.sendMessage(opt);
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 14,
-                                          vertical: 8,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: isDark
-                                              ? const Color(0xFF3A3A5A)
-                                              : const Color(0xFF6C63FF),
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          opt,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor.withValues(alpha: 0.3),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
               ),
             ),
-          ),
-
-          /// =====================
-          /// START COOKING BUTTON
-          /// =====================
-          Obx(() {
-            if (!controller.isReady.value || controller.isCooking.value) {
-              return const SizedBox();
-            }
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xFF1F1F28)
-                      : const Color(0xFFF8F8FC),
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withOpacity(0.15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MarkdownBody(
+                  data: msg.text,
+                  styleSheet: MarkdownStyleSheet(
+                    p: TextStyle(
+                      fontSize: 15,
+                      color: colorScheme.onSurface,
+                      height: 1.5,
+                      fontFamily: 'Poppins-Regular',
+                    ),
+                    strong: TextStyle(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDark
-                          ? Colors.black.withOpacity(0.15)
-                          : Colors.black.withOpacity(0.06),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Ready to start cooking?",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Tekan tombol di bawah untuk mulai panduan memasak.",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: isDark ? Colors.white70 : Colors.black54,
-                        height: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.local_fire_department, size: 18),
-                        label: const Text("Start Cooking"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        onPressed: controller.startCooking,
-                      ),
-                    ),
-                  ],
-                ),
+                
+                // Reactive Timer Card
+                Obx(() {
+                  bool isCurrentStep = controller.isCooking.value && 
+                      controller.steps.isNotEmpty &&
+                      controller.currentStep.value < controller.steps.length &&
+                      controller.steps[controller.currentStep.value] == msg.text;
+                  
+                  if (isCurrentStep && controller.extractTimeInSeconds(msg.text) > 0) {
+                    return _buildTimerCard(context, msg.text);
+                  }
+                  return const SizedBox.shrink();
+                }),
+                
+                if (msg.options != null && msg.options!.isNotEmpty) 
+                  _buildQuickReplies(context, msg.options!),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserMessage(BuildContext context, ChatMessage msg) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withValues(alpha: 0.3),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
               ),
-            );
-          }),
+            ),
+            child: customText(
+              text: msg.text,
+              fontSize: 15,
+              color: colorScheme.onSurface,
+              intMaxLine: null,
+            ),
+          ),
+          const SizedBox(height: 4),
+          customText(
+            text: "SENT ${DateFormat('hh:mm a').format(msg.timestamp)}",
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface.withValues(alpha: 0.4),
+          ),
+        ],
+      ),
+    );
+  }
 
-          /// =====================
-          /// COOKING CONTROLS + TIMER
-          /// =====================
+  Widget _buildTimerCard(BuildContext context, String step) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.onSurface.withValues(alpha: 0.05),
+            blurRadius: 10,
+          )
+        ]
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.timer, color: colorScheme.primary, size: 18),
+              const SizedBox(width: 8),
+              customText(
+                text: controller.recipeName.value.toUpperCase(),
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          // Reaktif terhadap ticking timer
           Obx(() {
-            if (!controller.isCooking.value) {
-              return const SizedBox();
-            }
-
-            final step = controller.steps[controller.currentStep.value];
             final seconds = controller.remainingSeconds.value;
             final minutes = seconds ~/ 60;
             final secs = seconds % 60;
-            final totalSeconds = controller.extractTimeInSeconds(step);
-            final hasTimer = totalSeconds > 0;
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (hasTimer) ...[
-                    Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          controller.toggleTimerFromStep(step);
-                        },
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SizedBox(
-                              width: 88,
-                              height: 88,
-                              child: CircularProgressIndicator(
-                                value: totalSeconds > 0
-                                    ? seconds / totalSeconds
-                                    : 0,
-                                strokeWidth: 6,
-                                backgroundColor: isDark
-                                    ? Colors.white12
-                                    : Colors.black12,
-                                valueColor: AlwaysStoppedAnimation(
-                                  controller.isTimerRunning.value
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).colorScheme.primary
-                                            .withValues(alpha: 0.7),
-                                ),
-                              ),
-                            ),
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              width: 72,
-                              height: 72,
-                              decoration: BoxDecoration(
-                                color: controller.isTimerRunning.value
-                                    ? Theme.of(context).colorScheme.primary
-                                    : (isDark
-                                          ? const Color(0xFF2A2A2E)
-                                          : const Color(0xFFE0E0E0)),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.08),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    controller.isTimerRunning.value
-                                        ? Icons.pause
-                                        : Icons.play_arrow,
-                                    color: controller.isTimerRunning.value
-                                        ? Colors.white
-                                        : isDark
-                                        ? Colors.white60
-                                        : Colors.black54,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    "${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}",
-                                    style: TextStyle(
-                                      color: controller.isTimerRunning.value
-                                          ? Colors.white
-                                          : isDark
-                                          ? Colors.white70
-                                          : Colors.black87,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-                  Row(
-                    children: [
-                      /// PREVIOUS
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: controller.prevStep,
-                          icon: const Icon(Icons.arrow_back_ios, size: 16),
-                          label: const Text("Previous"),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: isDark
-                                ? Colors.white70
-                                : Colors.black87,
-                            side: BorderSide(
-                              color: isDark ? Colors.white24 : Colors.black12,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(width: 8),
-
-                      /// 🔥 END COOKING (TENGAH)
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Get.dialog(
-                              AlertDialog(
-                                title: const Text("Akhiri memasak?"),
-                                content: const Text(
-                                  "Progress kamu akan hilang",
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Get.back(),
-                                    child: const Text("Batal"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Get.back();
-                                      controller.endCooking();
-                                    },
-                                    child: const Text("Ya"),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.stop, size: 16),
-                          label: const Text("End"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.redAccent,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            elevation: 4,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(width: 8),
-
-                      /// NEXT
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: controller.nextStep,
-                          icon: const Icon(Icons.arrow_forward_ios, size: 16),
-                          label: const Text("Next"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.primary,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
-                            elevation: 2,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            return customText(
+              text: "${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}",
+              fontSize: 48,
+              fontWeight: FontWeight.w900,
+              color: colorScheme.onSurface,
+              fontFamily: 'Serif',
             );
           }),
+          
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Obx(() => customRawMaterialButton(
+                  onPressed: () => controller.toggleTimerFromStep(step),
+                  backgroundColor: colorScheme.primary,
+                  fontColor: colorScheme.onPrimary,
+                  text: controller.isTimerRunning.value ? "PAUSE" : "RESUME",
+                  fontWeight: FontWeight.bold,
+                  douHeight: 45,
+                  douWidth: double.infinity,
+                  borderRadius: 30,
+                )),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: customOutlinedButton(
+                  onPressed: () => controller.updateTimerForStep(step),
+                  borderColor: colorScheme.primary,
+                  fontColor: colorScheme.primary,
+                  text: "STOP",
+                  fontWeight: FontWeight.bold,
+                  borderRadius: 30,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-          /// =====================
-          /// INPUT
-          /// =====================
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: isDark
-                      ? Colors.black.withValues(alpha: 0.3)
-                      : Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                ),
-              ],
+  Widget _buildQuickReplies(BuildContext context, List<String> options) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: options.map((opt) {
+          return ActionChip(
+            label: customText(
+              text: opt,
+              color: colorScheme.onPrimary,
+              fontSize: 13,
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xFF2A2A2E)
-                          : const Color(0xFFF3F3F7),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: TextField(
-                      controller: inputController,
-                      style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: "Ask ai chat anything",
-                        hintStyle: TextStyle(
-                          color: isDark ? Colors.white54 : Colors.black54,
-                        ),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
+            onPressed: () => controller.sendMessage(opt),
+            backgroundColor: colorScheme.primary,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildStartCookingCard(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          customText(
+            text: "Ready to start cooking?",
+            fontWeight: FontWeight.bold,
+            fontSize: DimensText.bodyText(context),
+            color: colorScheme.onSurface,
+          ),
+          const SizedBox(height: 16),
+          customRawMaterialButton(
+            onPressed: controller.startCooking,
+            backgroundColor: colorScheme.primary,
+            fontColor: colorScheme.onPrimary,
+            text: "START COOKING",
+            fontSize: DimensText.bodySmallText(context),
+            fontWeight: FontWeight.bold,
+            douHeight: 40,
+            douWidth: double.infinity,
+            borderRadius: 30,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCookingNavigation(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          customTextButton(
+            onPressed: controller.prevStep,
+            icon: Icon(Icons.chevron_left, color: colorScheme.primary),
+            text: "PREVIOUS",
+            fontWeight: FontWeight.bold,
+            fontColor: colorScheme.primary,
+          ),
+          customElevatedButton(
+            onPressed: controller.nextStep,
+            text: "NEXT STEP",
+            icon: Icon(Icons.chevron_right, color: colorScheme.onPrimary),
+            backgroundColor: colorScheme.primary,
+            fontColor: colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+            borderRadius: 30,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInputField(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+      ),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: colorScheme.onSurface.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.add, color: colorScheme.onSurface),
+              onPressed: () {},
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: colorScheme.onSurface.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: TextField(
+                controller: inputController,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontFamily: 'Poppins-Regular'
                 ),
-                const SizedBox(width: 8),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.send, color: Colors.white),
-                    onPressed: () {
-                      controller.sendMessage(inputController.text);
-                      inputController.clear();
-                    },
-                  ),
+                decoration: InputDecoration(
+                  hintText: "Ask about the next step...",
+                  hintStyle: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.5)),
+                  border: InputBorder.none,
                 ),
-              ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          GestureDetector(
+            onTap: () {
+              if (inputController.text.isNotEmpty) {
+                controller.sendMessage(inputController.text);
+                inputController.clear();
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.send, color: colorScheme.onPrimary, size: 20),
             ),
           ),
         ],

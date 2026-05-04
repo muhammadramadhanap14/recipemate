@@ -101,5 +101,6 @@
   "stDeleted" : "Deleted",
   "stNotificationRemoved" : "Notification removed",
   "stDeleteAll" : "Delete All?",
-  "stDeleteAllMessage" : "Are you sure want to delete all notifications?"
+  "stDeleteAllMessage" : "Are you sure want to delete all notifications?",
+  "stHistoryChat" : "History Chat"
 }

@@ -101,5 +101,6 @@
   "stDeleted" : "Dihapus",
   "stNotificationRemoved" : "Notifikasi dihapus",
   "stDeleteAll" : "Hapus Semua?",
-  "stDeleteAllMessage" : "Apakah Anda yakin ingin menghapus semua notifikasi?"
+  "stDeleteAllMessage" : "Apakah Anda yakin ingin menghapus semua notifikasi?",
+  "stHistoryChat" : "Riwayat Chat"
 }
