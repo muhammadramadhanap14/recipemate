@@ -1,7 +1,11 @@
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:recipemate/utils/constant_var.dart';
+import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 
 import '../../../l10n/app_localizations.dart';
@@ -17,6 +21,8 @@ class AccountViewModel extends GetxController {
   RxString currentLanguage = "".obs;
   RxString currentTheme = "".obs;
   final ImagePicker _picker = ImagePicker();
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  bool _isDialogShowing = false;
 
   AccountViewModel({
     required this.session
@@ -25,11 +31,52 @@ class AccountViewModel extends GetxController {
   @override
   void onInit(){
     super.onInit();
+    _startConnectivityListener();
+    checkInitialConnection();
     initializeLanguage();
     initializeTheme();
     getUserFullName();
     getUserEmail();
     initAppVersion();
+  }
+
+  @override
+  void onClose() {
+    _connectivitySubscription?.cancel();
+    super.onClose();
+  }
+
+  void _startConnectivityListener() {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      checkInitialConnection();
+    });
+  }
+
+  Future<void> checkInitialConnection() async {
+    final hasConnection = await RecipeMateAppUtil.checkConnection();
+    if (!hasConnection) {
+      _showNoInternetDialog();
+    }
+  }
+
+  void _showNoInternetDialog() {
+    if (_isDialogShowing) return;
+
+    final context = Get.context;
+    if (context != null) {
+      _isDialogShowing = true;
+      ViewDialogUtil().showOneButtonActionDialog(
+        AppLocalizations.of(context)!.stNoConnectionMessage,
+        AppLocalizations.of(context)!.backBtnTitle,
+        ConstantVar.noConnectionGif,
+        context,
+        null,
+        (dynamic val) {
+          _isDialogShowing = false;
+          checkInitialConnection();
+        },
+      );
+    }
   }
 
   Future<void> getUserFullName() async {

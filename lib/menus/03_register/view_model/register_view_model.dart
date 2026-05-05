@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/utils/constant_var.dart';
@@ -6,6 +9,7 @@ import '../../../models/model_response/register_response.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/app_snackbar.dart';
+import '../../../utils/view_utils/view_dialog_util.dart';
 
 class RegisterViewModel extends GetxController {
   final ApiRepository apiRepository;
@@ -24,6 +28,55 @@ class RegisterViewModel extends GetxController {
   final isLoading = false.obs;
   final isValidButton = false.obs;
   final isObscureText = true.obs;
+
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  bool _isDialogShowing = false;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _startConnectivityListener();
+    checkInitialConnection();
+  }
+
+  @override
+  void onClose() {
+    _connectivitySubscription?.cancel();
+    super.onClose();
+  }
+
+  void _startConnectivityListener() {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      checkInitialConnection();
+    });
+  }
+
+  Future<void> checkInitialConnection() async {
+    final hasConnection = await RecipeMateAppUtil.checkConnection();
+    if (!hasConnection) {
+      _showNoInternetDialog();
+    }
+  }
+
+  void _showNoInternetDialog() {
+    if (_isDialogShowing) return;
+
+    final context = Get.context;
+    if (context != null) {
+      _isDialogShowing = true;
+      ViewDialogUtil().showOneButtonActionDialog(
+        AppLocalizations.of(context)!.stNoConnectionMessage,
+        AppLocalizations.of(context)!.backBtnTitle,
+        ConstantVar.noConnectionGif,
+        context,
+        null,
+            (dynamic val) {
+          _isDialogShowing = false;
+          checkInitialConnection();
+        },
+      );
+    }
+  }
 
   void setFullname(String value) {
     fullname.value = value.trim();
