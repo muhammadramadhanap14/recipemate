@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
+import 'package:recipemate/menus/04_home/view/home_list_view.dart';
 import 'package:recipemate/menus/04_home/view/notification_view.dart';
 import 'package:recipemate/menus/06_security/view/security_view.dart';
 import 'package:recipemate/menus/07_chat/view/chat_view.dart';
@@ -158,6 +159,12 @@ class RecipemateApp extends StatelessWidget {
           GetPage(
             name: '/home_detail',
             page: () => const HomeDetailView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/home_list',
+            page: () => const HomeListView(),
             transition: Transition.rightToLeftWithFade,
             transitionDuration: const Duration(milliseconds: 600),
           ),

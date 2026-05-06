@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +18,9 @@ class HomeViewModel extends GetxController {
   final DataSessionUtilController session;
   final RxString userName = ''.obs;
   final RxList<Results> searchResults = <Results>[].obs;
+  final RxList<dynamic> recommendedRecipes = <dynamic>[].obs;
   final RxBool isSearching = false.obs;
+  final RxBool isLoadingRecommended = false.obs;
   final RxBool isFingerprintEnabled = false.obs;
   final RxList<dynamic> autoCompleteResults = <dynamic>[].obs;
   final RxBool isAutoCompleteLoading = false.obs;
@@ -25,10 +29,7 @@ class HomeViewModel extends GetxController {
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool _isDialogShowing = false;
 
-  HomeViewModel({
-    required this.apiRepository,
-    required this.session,
-  });
+  HomeViewModel({required this.apiRepository, required this.session});
 
   @override
   void onInit() {
@@ -36,6 +37,7 @@ class HomeViewModel extends GetxController {
     getUserName();
     _startConnectivityListener();
     checkInitialConnection();
+    getRecommendedRecipes();
     searchFocusNode.addListener(() {
       if (!searchFocusNode.hasFocus) {
         autoCompleteResults.clear();
@@ -47,7 +49,9 @@ class HomeViewModel extends GetxController {
   }
 
   void _startConnectivityListener() {
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> results,
+    ) {
       checkInitialConnection();
     });
   }
@@ -71,7 +75,7 @@ class HomeViewModel extends GetxController {
         ConstantVar.noConnectionGif,
         context,
         null,
-            (dynamic val) {
+        (dynamic val) {
           _isDialogShowing = false;
           checkInitialConnection();
         },
@@ -121,25 +125,39 @@ class HomeViewModel extends GetxController {
     searchFocusNode.unfocus();
     isSearching.value = true;
     try {
-      final response = await apiRepository.getRecipesComplexSearch(query: query);
+      final response = await apiRepository.getRecipesComplexSearch(
+        query: query,
+      );
       if (response != null) {
         final searchResponse = SearchRecipesResponse.fromJson(response);
         searchResults.assignAll(searchResponse.results ?? []);
       }
     } catch (e) {
-      AppSnackbar.show(
-        title: "Error",
-        message: "Failed to fetch recipes: $e",
-      );
+      AppSnackbar.show(title: "Error", message: "Failed to fetch recipes: $e");
     } finally {
       isSearching.value = false;
+    }
+  }
+
+  Future<void> getRecommendedRecipes() async {
+    isLoadingRecommended.value = true;
+    try {
+      final response = await apiRepository.getRandomRecipes(number: 2);
+      if (response != null && response['recipes'] != null) {
+        recommendedRecipes.assignAll(response['recipes'] ?? []);
+      }
+    } catch (e) {
+      debugPrint("Error fetching recommended recipes: $e");
+    } finally {
+      isLoadingRecommended.value = false;
     }
   }
 
   Future<void> checkAndShowFingerprintReminder() async {
     await session.loadFingerprint();
     if (session.isFingerprintEnabled.value) return;
-    final lastReminder = await session.dataSessionUtil.getLastFingerprintReminder();
+    final lastReminder = await session.dataSessionUtil
+        .getLastFingerprintReminder();
     final now = DateTime.now().millisecondsSinceEpoch;
     if (lastReminder == null) {
       openEnabledFingerprintDialog(Get.context!);
@@ -161,15 +179,19 @@ class HomeViewModel extends GetxController {
       positiveTitle: l10n.yesBtn,
       negativeTitle: l10n.stRemindMeLaterBtn,
       onPositiveClick: () {
-        session.dataSessionUtil.setLastFingerprintReminder(DateTime.now().millisecondsSinceEpoch);
+        session.dataSessionUtil.setLastFingerprintReminder(
+          DateTime.now().millisecondsSinceEpoch,
+        );
         Get.toNamed('/security');
       },
       onNegativeClick: () {
-        session.dataSessionUtil.setLastFingerprintReminder(DateTime.now().millisecondsSinceEpoch);
+        session.dataSessionUtil.setLastFingerprintReminder(
+          DateTime.now().millisecondsSinceEpoch,
+        );
         Navigator.of(context).pop();
         AppSnackbar.show(
           title: l10n.stInfo,
-          message: l10n.stRemindMeLaterMessage
+          message: l10n.stRemindMeLaterMessage,
         );
       },
     );
@@ -180,6 +202,7 @@ class HomeViewModel extends GetxController {
     searchController.dispose();
     searchFocusNode.dispose();
     searchResults.clear();
+    recommendedRecipes.clear();
     autoCompleteResults.clear();
     isSearching.value = false;
     _connectivitySubscription?.cancel();

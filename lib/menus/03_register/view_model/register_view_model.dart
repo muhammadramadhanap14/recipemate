@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +16,7 @@ class RegisterViewModel extends GetxController {
   final ApiRepository apiRepository;
   final BuildContext context;
 
-  RegisterViewModel({
-    required this.apiRepository,
-    required this.context,
-  });
+  RegisterViewModel({required this.apiRepository, required this.context});
 
   final fullname = ''.obs;
   final email = ''.obs;
@@ -46,7 +44,9 @@ class RegisterViewModel extends GetxController {
   }
 
   void _startConnectivityListener() {
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> results,
+    ) {
       checkInitialConnection();
     });
   }
@@ -70,7 +70,7 @@ class RegisterViewModel extends GetxController {
         ConstantVar.noConnectionGif,
         context,
         null,
-            (dynamic val) {
+        (dynamic val) {
           _isDialogShowing = false;
           checkInitialConnection();
         },
@@ -99,7 +99,8 @@ class RegisterViewModel extends GetxController {
 
   void _validate() {
     final isEmailValid = email.value.contains("@");
-    isValidButton.value = fullname.value.isNotEmpty && isEmailValid && password.value.length >= 6;
+    isValidButton.value =
+        fullname.value.isNotEmpty && isEmailValid && password.value.length >= 6;
   }
 
   Future<void> onRegisterPressed() async {
@@ -135,25 +136,16 @@ class RegisterViewModel extends GetxController {
       final isSuccess = response.status == ConstantVar.stSuccess;
       final message = response.message;
       if (isSuccess) {
-        AppSnackbar.show(
-          title: l10n.stSuccess,
-          message: message,
-        );
+        AppSnackbar.show(title: l10n.stSuccess, message: message);
         Get.offNamed('/login');
       } else {
         _fail(message);
-        AppSnackbar.show(
-          title: l10n.stFailed,
-          message: message,
-        );
+        AppSnackbar.show(title: l10n.stFailed, message: message);
       }
     } catch (e) {
       final message = e.toString();
       _fail(message);
-      AppSnackbar.show(
-        title: l10n.stError,
-        message: message,
-      );
+      AppSnackbar.show(title: l10n.stError, message: message);
     } finally {
       isLoading.value = false;
     }

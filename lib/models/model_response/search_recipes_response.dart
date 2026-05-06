@@ -5,7 +5,10 @@ class SearchRecipesResponse {
   int? totalResults;
 
   SearchRecipesResponse({
-    this.results, this.offset, this.number, this.totalResults
+    this.results,
+    this.offset,
+    this.number,
+    this.totalResults,
   });
 
   SearchRecipesResponse.fromJson(Map<String, dynamic> json) {
@@ -37,14 +40,25 @@ class Results {
   String? title;
   String? image;
   String? imageType;
+  int? readyInMinutes;
+  int? aggregateLikes;
 
-  Results({this.id, this.title, this.image, this.imageType});
+  Results({
+    this.id,
+    this.title,
+    this.image,
+    this.imageType,
+    this.readyInMinutes,
+    this.aggregateLikes,
+  });
 
   Results.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     image = json['image'];
     imageType = json['imageType'];
+    readyInMinutes = json['readyInMinutes'];
+    aggregateLikes = json['aggregateLikes'];
   }
 
   Map<String, dynamic> toJson() {
@@ -53,6 +67,8 @@ class Results {
     data['title'] = title;
     data['image'] = image;
     data['imageType'] = imageType;
+    data['readyInMinutes'] = readyInMinutes;
+    data['aggregateLikes'] = aggregateLikes;
     return data;
   }
 }
