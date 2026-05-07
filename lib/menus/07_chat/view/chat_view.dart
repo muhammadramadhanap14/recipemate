@@ -94,11 +94,21 @@ class _ChatViewState extends State<ChatView> {
     return AppBar(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       centerTitle: true,
-      leading: Builder(
-        builder: (context) => IconButton(
-          icon: Icon(Icons.menu, color: colorScheme.onSurface),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
+      leadingWidth: 120,
+      leading: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+            onPressed: () => Get.offNamed('/home'),
+          ),
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu, color: colorScheme.onSurface),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
+        ],
       ),
       title: customText(
         text: "RecipeMate",
@@ -124,81 +134,6 @@ class _ChatViewState extends State<ChatView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// NEW CHAT SECTION - BRANDED CARD
-            Container(
-              margin: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: colorScheme.primary,
-                borderRadius: BorderRadius.circular(borderRadius),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.primary.withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              height: 140,
-              child: Stack(
-                children: [
-                  /// LOGO + TITLE
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 40,
-                          child: Image.asset(
-                            'assets/images/ic_logo_recipemate.png',
-                            color: colorScheme.onPrimary,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        customText(
-                          text: 'New Chat',
-                          fontSize: DimensText.bodyText(context),
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onPrimary,
-                          intMaxLine: null,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  /// ADD BUTTON (BOTTOM RIGHT)
-                  Positioned(
-                    bottom: 12,
-                    right: 12,
-                    child: GestureDetector(
-                      onTap: () {
-                        final session = historyController.createNewSession();
-                        Navigator.of(context).pop();
-                        Get.offNamed(
-                          '/chat',
-                          arguments: session,
-                          preventDuplicates: false,
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: colorScheme.onPrimary.withValues(alpha: 0.25),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          Icons.add,
-                          color: colorScheme.onPrimary,
-                          size: 28,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
             /// HISTORY TITLE
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
@@ -272,6 +207,45 @@ class _ChatViewState extends State<ChatView> {
                   },
                 );
               }),
+            ),
+
+            /// NEW CHAT BUTTON AT BOTTOM RIGHT
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () {
+                    final session = historyController.createNewSession();
+                    Navigator.of(context).pop();
+                    Get.offNamed(
+                      '/chat',
+                      arguments: session,
+                      preventDuplicates: false,
+                    );
+                  },
+                  child: Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: colorScheme.primary.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.add,
+                      color: colorScheme.onPrimary,
+                      size: 28,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
