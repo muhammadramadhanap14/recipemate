@@ -3,6 +3,9 @@ import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:uuid/uuid.dart';
 
+const String _initialAiGreeting =
+    "Halo! Saya RecipeMate AI. Selamat datang di asisten memasakmu. Mau cari resep, minta ide menu, atau langsung tanya tips dapur?";
+
 class ChatHistoryController extends GetxController {
   var sessions = <ChatSession>[].obs;
 
@@ -13,7 +16,7 @@ class ChatHistoryController extends GetxController {
     final session = ChatSession(
       id: uuid.v4(),
       title: "New Chat",
-      messages: [],
+      messages: [ChatMessage(text: _initialAiGreeting, isUser: false)],
       createdAt: DateTime.now(),
     );
 

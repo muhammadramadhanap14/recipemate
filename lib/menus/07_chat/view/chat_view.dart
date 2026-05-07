@@ -8,6 +8,7 @@ import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_co
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/utils/dimens_text.dart';
+import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import 'package:recipemate/utils/view_utils/no_data_util.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
@@ -56,10 +57,14 @@ class _ChatViewState extends State<ChatView> {
               child: Obx(
                 () => ListView.builder(
                   reverse: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 20,
+                  ),
                   itemCount: controller.messages.length,
                   itemBuilder: (context, index) {
-                    final msg = controller.messages[controller.messages.length - 1 - index];
+                    final msg = controller
+                        .messages[controller.messages.length - 1 - index];
                     return msg.isUser
                         ? _buildUserMessage(context, msg)
                         : _buildAiMessage(context, msg);
@@ -105,8 +110,13 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget _buildDrawer(BuildContext context, ChatHistoryController historyController) {
+  Widget _buildDrawer(
+    BuildContext context,
+    ChatHistoryController historyController,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
+    final double borderRadius = RecipeMateAppUtil.screenWidth * 0.04;
+
     return Drawer(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       width: MediaQuery.of(context).size.width * 0.75,
@@ -114,6 +124,82 @@ class _ChatViewState extends State<ChatView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /// NEW CHAT SECTION - BRANDED CARD
+            Container(
+              margin: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: colorScheme.primary,
+                borderRadius: BorderRadius.circular(borderRadius),
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.primary.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              height: 140,
+              child: Stack(
+                children: [
+                  /// LOGO + TITLE
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 40,
+                          child: Image.asset(
+                            'assets/images/ic_logo_recipemate.png',
+                            color: colorScheme.onPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        customText(
+                          text: 'New Chat',
+                          fontSize: DimensText.bodyText(context),
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onPrimary,
+                          intMaxLine: null,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  /// ADD BUTTON (BOTTOM RIGHT)
+                  Positioned(
+                    bottom: 12,
+                    right: 12,
+                    child: GestureDetector(
+                      onTap: () {
+                        final session = historyController.createNewSession();
+                        Navigator.of(context).pop();
+                        Get.offNamed(
+                          '/chat',
+                          arguments: session,
+                          preventDuplicates: false,
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: colorScheme.onPrimary.withValues(alpha: 0.25),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          color: colorScheme.onPrimary,
+                          size: 28,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            /// HISTORY TITLE
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
               child: customText(
@@ -124,32 +210,64 @@ class _ChatViewState extends State<ChatView> {
                 fontFamily: 'times_new_roman_bold',
               ),
             ),
+
+            /// CHAT HISTORY LIST
             Expanded(
               child: Obx(() {
                 if (historyController.sessions.isEmpty) {
                   return const Center(child: NoDataUtil());
                 }
                 return ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   itemCount: historyController.sessions.length,
                   itemBuilder: (context, index) {
                     final session = historyController.sessions[index];
-                    return ListTile(
-                      title: customText(
-                        text: session.title,
-                        fontSize: DimensText.bodyText(context),
-                        color: colorScheme.onSurface,
-                        intMaxLine: null
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(borderRadius),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
-                      subtitle: customText(
-                        text: DateFormat('dd MMM yyyy').format(session.createdAt),
-                        fontSize: DimensText.captionText(context),
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        title: customText(
+                          text: session.title,
+                          fontSize: DimensText.bodyText(context),
+                          color: colorScheme.onSurface,
+                          intMaxLine: 2,
+                        ),
+                        subtitle: customText(
+                          text: DateFormat(
+                            'dd MMM yyyy',
+                          ).format(session.createdAt),
+                          fontSize: DimensText.captionText(context),
+                          color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(borderRadius),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Get.offNamed(
+                            '/chat',
+                            arguments: session,
+                            preventDuplicates: false,
+                          );
+                        },
                       ),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        Get.offNamed('/chat', arguments: session, preventDuplicates: false);
-                      },
                     );
                   },
                 );
@@ -176,7 +294,11 @@ class _ChatViewState extends State<ChatView> {
                   color: colorScheme.primary,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.auto_awesome, color: colorScheme.onPrimary, size: 14),
+                child: Icon(
+                  Icons.auto_awesome,
+                  color: colorScheme.onPrimary,
+                  size: 14,
+                ),
               ),
               const SizedBox(width: 8),
               customText(
@@ -215,21 +337,24 @@ class _ChatViewState extends State<ChatView> {
                     ),
                   ),
                 ),
-                
+
                 // Reactive Timer Card
                 Obx(() {
-                  bool isCurrentStep = controller.isCooking.value && 
+                  bool isCurrentStep =
+                      controller.isCooking.value &&
                       controller.steps.isNotEmpty &&
                       controller.currentStep.value < controller.steps.length &&
-                      controller.steps[controller.currentStep.value] == msg.text;
-                  
-                  if (isCurrentStep && controller.extractTimeInSeconds(msg.text) > 0) {
+                      controller.steps[controller.currentStep.value] ==
+                          msg.text;
+
+                  if (isCurrentStep &&
+                      controller.extractTimeInSeconds(msg.text) > 0) {
                     return _buildTimerCard(context, msg.text);
                   }
                   return const SizedBox.shrink();
                 }),
-                
-                if (msg.options != null && msg.options!.isNotEmpty) 
+
+                if (msg.options != null && msg.options!.isNotEmpty)
                   _buildQuickReplies(context, msg.options!),
               ],
             ),
@@ -288,8 +413,8 @@ class _ChatViewState extends State<ChatView> {
           BoxShadow(
             color: colorScheme.onSurface.withValues(alpha: 0.05),
             blurRadius: 10,
-          )
-        ]
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -311,36 +436,39 @@ class _ChatViewState extends State<ChatView> {
             ],
           ),
           const SizedBox(height: 12),
-          
+
           // Reaktif terhadap ticking timer
           Obx(() {
             final seconds = controller.remainingSeconds.value;
             final minutes = seconds ~/ 60;
             final secs = seconds % 60;
             return customText(
-              text: "${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}",
+              text:
+                  "${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}",
               fontSize: DimensText.superHeaderText(context),
               fontWeight: FontWeight.w900,
               color: colorScheme.onSurface,
               fontFamily: 'Serif',
             );
           }),
-          
+
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
-                child: Obx(() => customRawMaterialButton(
-                  onPressed: () => controller.toggleTimerFromStep(step),
-                  backgroundColor: colorScheme.primary,
-                  fontColor: colorScheme.onPrimary,
-                  text: controller.isTimerRunning.value ? "PAUSE" : "RESUME",
-                  fontSize: DimensText.bodySmallText(context),
-                  fontWeight: FontWeight.bold,
-                  douHeight: 45,
-                  douWidth: double.infinity,
-                  borderRadius: 30,
-                )),
+                child: Obx(
+                  () => customRawMaterialButton(
+                    onPressed: () => controller.toggleTimerFromStep(step),
+                    backgroundColor: colorScheme.primary,
+                    fontColor: colorScheme.onPrimary,
+                    text: controller.isTimerRunning.value ? "PAUSE" : "RESUME",
+                    fontSize: DimensText.bodySmallText(context),
+                    fontWeight: FontWeight.bold,
+                    douHeight: 45,
+                    douWidth: double.infinity,
+                    borderRadius: 30,
+                  ),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -449,11 +577,13 @@ class _ChatViewState extends State<ChatView> {
                 style: TextStyle(
                   color: colorScheme.onSurface,
                   fontSize: DimensText.bodyText(context),
-                  fontFamily: 'Poppins-Regular'
+                  fontFamily: 'Poppins-Regular',
                 ),
                 decoration: InputDecoration(
                   hintText: "Type a message...",
-                  hintStyle: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.5)),
+                  hintStyle: TextStyle(
+                    color: colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
                   border: InputBorder.none,
                 ),
               ),

@@ -7,6 +7,9 @@ import 'dart:convert';
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 
+const String _initialAiGreeting =
+    "Halo! Saya RecipeMate AI. Selamat datang di asisten memasakmu. Mau cari resep, minta ide menu, atau langsung tanya tips dapur?";
+
 class ChatViewModel extends GetxController {
   /// SESSION (🔥 NEW)
   final ChatSession session;
@@ -41,6 +44,12 @@ class ChatViewModel extends GetxController {
 
     /// load existing messages dari session
     messages.assignAll(session.messages);
+
+    /// Jika sesi baru belum memiliki pesan, tambahkan greeting AI langsung.
+    if (messages.isEmpty) {
+      messages.add(ChatMessage(text: _initialAiGreeting, isUser: false));
+      _saveToHistory();
+    }
   }
 
   /// =========================
@@ -57,26 +66,25 @@ class ChatViewModel extends GetxController {
         return;
       } else if (text == "Belum") {
         messages.add(ChatMessage(text: text, isUser: true));
-        
+
         // Ambil teks langkah yang sekarang
         final stepText = steps[currentStep.value];
-        
+
         // Reset timer untuk langkah ini agar muncul lagi di UI
         updateTimerForStep(stepText);
-        
+
         // Kirim pesan langkahnya lagi agar UI menampilkan Timer Card
-        messages.add(ChatMessage(
-          text: stepText,
-          isUser: false
-        ));
-        
+        messages.add(ChatMessage(text: stepText, isUser: false));
+
         // Kirim konfirmasi lagi
-        messages.add(ChatMessage(
-          text: "Step ini sudah?",
-          isUser: false,
-          options: ["Sudah", "Belum"],
-        ));
-        
+        messages.add(
+          ChatMessage(
+            text: "Step ini sudah?",
+            isUser: false,
+            options: ["Sudah", "Belum"],
+          ),
+        );
+
         _saveToHistory();
         return;
       }
@@ -160,14 +168,15 @@ class ChatViewModel extends GetxController {
 
       // Send first step
       messages.add(ChatMessage(text: steps[0], isUser: false));
-      
+
       // Send confirmation with quick replies
-      messages.add(ChatMessage(
-        text: "Step ini sudah?",
-        isUser: false,
-        options: ["Sudah", "Belum"],
-      ));
-      
+      messages.add(
+        ChatMessage(
+          text: "Step ini sudah?",
+          isUser: false,
+          options: ["Sudah", "Belum"],
+        ),
+      );
     } catch (e) {
       messages.add(ChatMessage(text: "Gagal generate resep 😢", isUser: false));
     }
@@ -211,11 +220,13 @@ class ChatViewModel extends GetxController {
       messages.add(ChatMessage(text: stepText, isUser: false));
 
       // Add confirmation with quick replies (Hanya Sudah & Belum)
-      messages.add(ChatMessage(
-        text: "Step ini sudah?",
-        isUser: false,
-        options: ["Sudah", "Belum"],
-      ));
+      messages.add(
+        ChatMessage(
+          text: "Step ini sudah?",
+          isUser: false,
+          options: ["Sudah", "Belum"],
+        ),
+      );
 
       updateTimerForStep(stepText);
       _saveToHistory();
