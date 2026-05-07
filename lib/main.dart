@@ -13,6 +13,7 @@ import 'package:recipemate/menus/07_chat/view/view_model/chat_view_model.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
 import 'package:recipemate/repository/api_repository.dart';
+import 'package:recipemate/repository/chat_api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/data_session_util_controller.dart';
@@ -46,6 +47,7 @@ void main() async {
 
       //register dependency injection
       Get.put<ApiRepository>(ApiRepository(), permanent: true);
+      Get.put<ChatApiRepository>(ChatApiRepository(), permanent: true);
       Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
 
       // Inisialisasi ThemeController dengan tema tersimpan

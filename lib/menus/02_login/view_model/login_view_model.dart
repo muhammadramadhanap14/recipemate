@@ -49,7 +49,9 @@ class LoginViewModel extends GetxController {
   }
 
   void _startConnectivityListener() {
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> results,
+    ) {
       checkInitialConnection();
     });
   }
@@ -73,7 +75,7 @@ class LoginViewModel extends GetxController {
         ConstantVar.noConnectionGif,
         context,
         null,
-            (dynamic val) {
+        (dynamic val) {
           _isDialogShowing = false;
           checkInitialConnection();
         },
@@ -83,7 +85,8 @@ class LoginViewModel extends GetxController {
 
   Future<void> _checkBiometricSupport() async {
     final bool hasFingerprint = sessionController.isFingerprintEnabled.value;
-    final bool canCheck = await auth.canCheckBiometrics || await auth.isDeviceSupported();
+    final bool canCheck =
+        await auth.canCheckBiometrics || await auth.isDeviceSupported();
     canUseBiometric.value = hasFingerprint && canCheck;
   }
 
@@ -125,7 +128,7 @@ class LoginViewModel extends GetxController {
         } else {
           AppSnackbar.show(
             title: l10n.stError,
-            message: l10n.stLoginFingerprintErrorMessage
+            message: l10n.stLoginFingerprintErrorMessage,
           );
         }
       }
@@ -166,29 +169,23 @@ class LoginViewModel extends GetxController {
       final message = response.message ?? l10n.stFailedLogin;
       if (isSuccess && response.data?.token != null) {
         await sessionController.setToken(response.data?.token ?? '');
+        await sessionController.setUserId(
+          response.data?.user?.id?.toString() ?? '',
+        );
         await sessionController.setFullName(response.data?.user?.name ?? '');
         await sessionController.setEmail(response.data?.user?.email ?? '');
         await sessionController.setSavedPassword(password.value);
         await sessionController.onUserLoggedIn();
-        AppSnackbar.show(
-          title: l10n.stSuccess,
-          message: message,
-        );
+        AppSnackbar.show(title: l10n.stSuccess, message: message);
         Get.offNamed('/home');
       } else {
         _fail(message);
-        AppSnackbar.show(
-          title: l10n.stFailedLogin,
-          message: message,
-        );
+        AppSnackbar.show(title: l10n.stFailedLogin, message: message);
       }
     } catch (e) {
       final message = e.toString();
       _fail(message);
-      AppSnackbar.show(
-        title: l10n.stError,
-        message: message,
-      );
+      AppSnackbar.show(title: l10n.stError, message: message);
     } finally {
       isLoading.value = false;
     }

@@ -8,15 +8,15 @@ class DataSessionUtilController extends GetxController {
   final RxBool isFingerprintEnabled = false.obs;
   final Rx<File?> profileImage = Rx<File?>(null);
   final RxString stToken = "".obs;
+  final RxString stUserId = "".obs;
   final RxString stFullName = "".obs;
   final RxString stEmail = "".obs;
   final RxString stTheme = "".obs;
   final RxString stLanguage = "".obs;
-  RxList<Map<String, dynamic>> notificationHistory = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> notificationHistory =
+      <Map<String, dynamic>>[].obs;
 
-  DataSessionUtilController({
-    required this.dataSessionUtil
-  });
+  DataSessionUtilController({required this.dataSessionUtil});
 
   @override
   void onInit() {
@@ -24,6 +24,7 @@ class DataSessionUtilController extends GetxController {
     loadFingerprint();
     loadProfileImage();
     loadToken();
+    loadUserId();
     loadFullName();
     loadEmail();
     loadTheme();
@@ -34,6 +35,16 @@ class DataSessionUtilController extends GetxController {
   Future<void> loadEmail() async {
     final email = await dataSessionUtil.getEmail();
     stEmail.value = email ?? "";
+  }
+
+  Future<void> loadUserId() async {
+    final userId = await dataSessionUtil.getUserId();
+    stUserId.value = userId ?? "";
+  }
+
+  Future<void> setUserId(String userId) async {
+    stUserId.value = userId;
+    await dataSessionUtil.setUserId(userId);
   }
 
   Future<void> setEmail(String email) async {

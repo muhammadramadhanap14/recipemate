@@ -6,6 +6,7 @@ class DataSessionUtil {
   static const String _fingerprintKey = 'fingerprint_enabled';
   static const String _profileImagePathKey = 'profile_image_path';
   static const String _tokenKey = 'auth_token';
+  static const String _userIdKey = 'user_id';
   static const String _fullNameKey = 'full_name';
   static const String _emailKey = 'user_email';
   static const String _passwordKey = 'user_password';
@@ -63,6 +64,16 @@ class DataSessionUtil {
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_tokenKey);
+  }
+
+  Future<void> setUserId(String userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userIdKey, userId);
+  }
+
+  Future<String?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_userIdKey);
   }
 
   Future<void> setFullName(String name) async {
