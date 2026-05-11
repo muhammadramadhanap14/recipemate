@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/dimens_text.dart';
@@ -42,21 +41,17 @@ class HomeListView extends StatelessWidget {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          leading: GestureDetector(
-            onTap: () => Get.back(),
-            child: Icon(
-              Icons.chevron_left,
-              color: Theme.of(context).colorScheme.onSurface,
-              size: RecipeMateAppUtil.screenWidth * 0.08,
-            ),
+          leading: IconButton(
+            icon: Icon(Icons.keyboard_arrow_left, color: Theme.of(context).colorScheme.onSurface),
+            onPressed: () => Get.back(),
           ),
           title: customText(
             text: title,
-            fontSize: DimensText.subHeaderLargeText(context),
+            fontSize: DimensText.headerMenusText(context),
             color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
-          centerTitle: false,
+          centerTitle: true,
         ),
         body: Obx(() {
           if (viewModel.isLoading.value) {

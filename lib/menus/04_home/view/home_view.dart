@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/utils/view_utils/no_data_util.dart';
@@ -171,6 +172,19 @@ class HomeView extends StatelessWidget {
               ),
             ),
           ),
+          Obx(() {
+            if (viewModel.searchText.value.isEmpty) {
+              return const SizedBox();
+            }
+            return GestureDetector(
+              onTap: () => viewModel.resetSearch(),
+              child: Icon(
+                Icons.close,
+                color: Theme.of(context).colorScheme.primary,
+                size: RecipeMateAppUtil.screenWidth * 0.05,
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -511,6 +525,8 @@ class HomeView extends StatelessWidget {
               itemCount: topSearchingFoods.length,
               itemBuilder: (context, index) {
                 final food = topSearchingFoods[index];
+                final bool isDark = Theme.of(context).brightness == Brightness.dark;
+                final Color baseColor = food['color'] as Color;
                 return Padding(
                   padding: EdgeInsets.only(
                     right: RecipeMateAppUtil.screenWidth * 0.04,
@@ -527,20 +543,51 @@ class HomeView extends StatelessWidget {
                           height: RecipeMateAppUtil.screenWidth * 0.18,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: food['color'] as Color,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.06),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
+                                color: isDark
+                                    ? baseColor.withValues(alpha: 0.15)
+                                    : Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
                               ),
                             ],
                           ),
-                          child: Center(
-                            child: Icon(
-                              food['icon'] as IconData,
-                              size: RecipeMateAppUtil.screenWidth * 0.09,
-                              color: Theme.of(context).colorScheme.primary,
+                          child: ClipOval(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: isDark
+                                        ? [
+                                            baseColor.withValues(alpha: 0.4),
+                                            baseColor.withValues(alpha: 0.1),
+                                          ]
+                                        : [
+                                            Colors.white.withValues(alpha: 0.7),
+                                            baseColor.withValues(alpha: 0.8),
+                                          ],
+                                  ),
+                                  border: Border.all(
+                                    color: isDark
+                                        ? baseColor.withValues(alpha: 0.25)
+                                        : Colors.white.withValues(alpha: 0.5),
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    food['icon'] as IconData,
+                                    size: RecipeMateAppUtil.screenWidth * 0.09,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +23,7 @@ class HomeViewModel extends GetxController {
   final RxBool isFingerprintEnabled = false.obs;
   final RxList<dynamic> autoCompleteResults = <dynamic>[].obs;
   final RxBool isAutoCompleteLoading = false.obs;
+  final RxString searchText = ''.obs;
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
@@ -38,6 +38,9 @@ class HomeViewModel extends GetxController {
     _startConnectivityListener();
     checkInitialConnection();
     getRecommendedRecipes();
+    searchController.addListener(() {
+      searchText.value = searchController.text;
+    });
     searchFocusNode.addListener(() {
       if (!searchFocusNode.hasFocus) {
         autoCompleteResults.clear();
@@ -85,6 +88,7 @@ class HomeViewModel extends GetxController {
 
   void resetSearch() {
     searchController.clear();
+    searchText.value = '';
     searchResults.clear();
     autoCompleteResults.clear();
     isSearching.value = false;
