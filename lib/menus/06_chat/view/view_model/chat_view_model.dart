@@ -34,7 +34,7 @@ class ChatViewModel extends GetxController {
 
   Timer? timer;
 
-  final baseUrl = "http://192.168.61.70:3000";
+  final baseUrl = "http://10.0.2.2:3000";
 
   /// =========================
   /// INIT (LOAD HISTORY)
