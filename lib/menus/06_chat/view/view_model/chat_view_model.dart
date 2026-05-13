@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
 import 'dart:convert';
 
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
+
+import '../../../07_chat_session/view/view_model/chat_history_controller.dart';
 
 const String _initialAiGreeting =
     "Halo! Saya RecipeMate AI. Selamat datang di asisten memasakmu. Mau cari resep, minta ide menu, atau langsung tanya tips dapur?";
@@ -33,7 +34,7 @@ class ChatViewModel extends GetxController {
 
   Timer? timer;
 
-  final baseUrl = "http://10.0.2.2:3000";
+  final baseUrl = "http://192.168.61.70:3000";
 
   /// =========================
   /// INIT (LOAD HISTORY)

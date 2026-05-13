@@ -3,8 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
-import 'package:recipemate/menus/07_chat/view/view_model/chat_view_model.dart';
-import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
+import 'package:recipemate/menus/06_chat/view/view_model/chat_view_model.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/utils/dimens_text.dart';
@@ -12,6 +11,8 @@ import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import 'package:recipemate/utils/view_utils/no_data_util.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
+
+import '../../07_chat_session/view/view_model/chat_history_controller.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView({required this.session, super.key});

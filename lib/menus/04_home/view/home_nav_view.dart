@@ -4,8 +4,8 @@ import 'package:recipemate/utils/dimens_text.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
+import '../../07_chat_session/view/view_model/chat_history_controller.dart';
 import '../view_model/home_nav_view_model.dart';
-import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
 
 class HomeNavView extends StatelessWidget {
   const HomeNavView({super.key});

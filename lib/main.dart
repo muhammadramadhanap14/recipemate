@@ -7,11 +7,7 @@ import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
 import 'package:recipemate/menus/04_home/view/home_list_view.dart';
 import 'package:recipemate/menus/04_home/view/notification_view.dart';
-import 'package:recipemate/menus/06_security/view/security_view.dart';
-import 'package:recipemate/menus/07_chat/view/chat_view.dart';
-import 'package:recipemate/menus/07_chat/view/view_model/chat_view_model.dart';
 import 'package:recipemate/models/model/chat_session.dart';
-import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/repository/chat_api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
@@ -24,6 +20,10 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'menus/01_splash/view/splash_view.dart';
 import 'menus/02_login/view/login_view.dart';
 import 'menus/04_home/view/home_nav_view.dart';
+import 'menus/05_security/view/security_view.dart';
+import 'menus/06_chat/view/chat_view.dart';
+import 'menus/06_chat/view/view_model/chat_view_model.dart';
+import 'menus/07_chat_session/view/view_model/chat_history_controller.dart';
 import 'utils/view_utils/app_theme.dart';
 
 final talker = TalkerFlutter.init(); // Initialize Talker instance here

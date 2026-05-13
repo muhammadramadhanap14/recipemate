@@ -721,6 +721,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'History Chat'**
   String get stHistoryChat;
+
+  /// No description provided for @stNoNotificationYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Notifications Yet'**
+  String get stNoNotificationYet;
+
+  /// No description provided for @stNoNotificationYetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll notify you when there\'s something new and exciting for you!'**
+  String get stNoNotificationYetMessage;
+
+  /// No description provided for @stCheckBackLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back later for updates'**
+  String get stCheckBackLater;
+
+  /// No description provided for @stViewPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'View Popular'**
+  String get stViewPopular;
+
+  /// No description provided for @stBrowseByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse by category'**
+  String get stBrowseByCategory;
+
+  /// No description provided for @stBrowseByCategoryMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse by category or pick a recipe below.'**
+  String get stBrowseByCategoryMsg;
+
+  /// No description provided for @stPopularRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Recipes'**
+  String get stPopularRecipes;
+
+  /// No description provided for @stRecommendedRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Recipes'**
+  String get stRecommendedRecipes;
+
+  /// No description provided for @stPopularRecipesMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore more recipes randomly selected for you.'**
+  String get stPopularRecipesMsg;
 }
 
 class _AppLocalizationsDelegate

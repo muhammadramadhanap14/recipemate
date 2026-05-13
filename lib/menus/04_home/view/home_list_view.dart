@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/dimens_text.dart';
@@ -30,10 +31,10 @@ class HomeListView extends StatelessWidget {
       await RecipeMateAppUtil.lockToPortrait();
     });
 
-    final title = mode == 'popular' ? 'Popular Recipes' : 'Recommended Recipes';
+    final title = mode == 'popular' ? AppLocalizations.of(context)!.stPopularRecipes : AppLocalizations.of(context)!.stRecommendedRecipes;
     final subtitle = mode == 'popular'
-        ? 'Browse popular categories or pick a recipe below.'
-        : 'Explore more recipes randomly selected for you.';
+        ? AppLocalizations.of(context)!.stBrowseByCategoryMsg
+        : AppLocalizations.of(context)!.stPopularRecipesMsg;
 
     return ConnectionWrapper(
       child: Scaffold(
@@ -74,9 +75,8 @@ class HomeListView extends StatelessWidget {
                   customText(
                     text: subtitle,
                     fontSize: DimensText.bodySmallText(context),
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    intMaxLine: null
                   ),
                   SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                   if (mode == 'popular')
@@ -100,14 +100,14 @@ class HomeListView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         customText(
-          text: 'Browse by category',
+          text: AppLocalizations.of(context)!.stBrowseByCategory,
           fontSize: DimensText.bodySmallText(context),
           color: Theme.of(context).colorScheme.onSurface,
           fontWeight: FontWeight.w600,
         ),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
         SizedBox(
-          height: RecipeMateAppUtil.screenHeight * 0.07,
+          height: RecipeMateAppUtil.screenHeight * 0.05,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: viewModel.popularCategories.length,

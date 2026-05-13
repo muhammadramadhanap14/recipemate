@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:recipemate/menus/07_chat/view/chat_view.dart';
-import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
+import 'package:recipemate/menus/07_chat_session/view/view_model/chat_history_controller.dart';
 import 'package:recipemate/utils/view_utils/no_data_util.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
+import '../../06_chat/view/chat_view.dart';
 
 class ChatHistoryPage extends StatefulWidget {
   const ChatHistoryPage({super.key});

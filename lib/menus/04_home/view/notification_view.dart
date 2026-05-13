@@ -6,8 +6,8 @@ import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
+import '../../../utils/view_utils/no_notification_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
-import '../../../utils/view_utils/no_data_util.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 
 class NotificationView extends StatelessWidget {
@@ -60,7 +60,7 @@ class NotificationView extends StatelessWidget {
         }),
         body: Obx(() {
           if (session.notificationHistory.isEmpty) {
-            return const Center(child: NoDataUtil());
+            return const Center(child: NoNotificationUtil());
           }
           return ListView.separated(
             padding:
