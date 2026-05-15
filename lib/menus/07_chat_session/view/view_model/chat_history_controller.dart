@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
@@ -20,15 +21,40 @@ class ChatHistoryController extends GetxController {
     super.onInit();
     _chatApi = Get.find<ChatApiRepository>();
     _sessionController = Get.find<DataSessionUtilController>();
+
+    // Initial load
     _loadSessions();
+
+    // Listen for login/logout to refresh history
+    ever(_sessionController.stToken, (String token) {
+      if (token.isNotEmpty) {
+        _loadSessions();
+      } else {
+        sessions.clear();
+      }
+    });
   }
 
   Future<void> _loadSessions() async {
     final token = _sessionController.stToken.value;
     if (token.isEmpty) return;
 
+    if (kDebugMode) {
+      print("ChatHistoryController: Loading sessions from API...");
+    }
     final loaded = await _chatApi.getChatSessions(token);
+    if (kDebugMode) {
+      print("ChatHistoryController: Received ${loaded.length} sessions");
+    }
+
     if (loaded.isNotEmpty) {
+      for (var s in loaded) {
+        if (kDebugMode) {
+          print("Session ID: ${s.id}, Messages count: ${s.messages.length}");
+        }
+      }
+      // Sort by date descending (newest first)
+      loaded.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       sessions.assignAll(loaded);
     }
   }
@@ -52,13 +78,22 @@ class ChatHistoryController extends GetxController {
     session.messages.clear();
     session.messages.addAll(messages);
 
-    /// update title dari message pertama
-    if (messages.isNotEmpty) {
-      session.title = messages.first.text;
+    /// update title dari message pertama user jika title masih "New Chat"
+    if (session.title == "New Chat") {
+      final userMsg = messages.firstWhereOrNull((m) => m.isUser);
+      if (userMsg != null) {
+        session.title = userMsg.text.length > 30
+            ? "${userMsg.text.substring(0, 30)}..."
+            : userMsg.text;
+      }
     }
 
-    sessions.refresh();
-    _saveSession(session);
+    // Gunakan microtask untuk menghindari error "markNeedsBuild during build"
+    // Ini memastikan UI diupdate setelah fase build selesai
+    Future.microtask(() {
+      sessions.refresh();
+      _saveSession(session);
+    });
   }
 
   Future<void> _saveSession(ChatSession session) async {

@@ -29,9 +29,14 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     super.initState();
+    
+    // Gunakan tag unik untuk setiap sesi agar GetX tidak menggunakan 
+    // ViewModel yang lama untuk sesi yang berbeda. 
+    // Pastikan tag menggunakan ID dari widget.session agar konsisten.
     controller = Get.put(
       ChatViewModel(session: widget.session),
       tag: widget.session.id,
+      permanent: false,
     );
   }
 

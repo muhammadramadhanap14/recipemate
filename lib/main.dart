@@ -22,7 +22,6 @@ import 'menus/02_login/view/login_view.dart';
 import 'menus/04_home/view/home_nav_view.dart';
 import 'menus/05_security/view/security_view.dart';
 import 'menus/06_chat/view/chat_view.dart';
-import 'menus/06_chat/view/view_model/chat_view_model.dart';
 import 'menus/07_chat_session/view/view_model/chat_history_controller.dart';
 import 'utils/view_utils/app_theme.dart';
 
@@ -171,11 +170,10 @@ class RecipemateApp extends StatelessWidget {
           ),
           GetPage(
             name: '/chat',
-            page: () => ChatView(session: Get.arguments),
-            binding: BindingsBuilder(() {
+            page: () {
               final session = Get.arguments as ChatSession;
-              Get.put(ChatViewModel(session: session));
-            }),
+              return ChatView(session: session);
+            },
           ),
           GetPage(
             name: '/security',
