@@ -1,5 +1,5 @@
 class ConstantUrl {
-  static const String recipemateUrl = "http://192.168.9.86:3000/api";
+  static const String recipemateUrl = "http://192.168.9.46:3000/api";
   static const String spoonacularUrl = "https://api.spoonacular.com";
   static const String spoonacularApiKey = "055d3526214d441fada9d9d8d0536534";
   static const String spoonacularApiKey2 =

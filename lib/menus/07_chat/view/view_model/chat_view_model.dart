@@ -60,32 +60,9 @@ class ChatViewModel extends GetxController {
 
     // Handle Cooking Navigation via Quick Replies
     if (isCooking.value) {
-      if (text == "Sudah") {
+      if (text == "Selanjutnya") {
         messages.add(ChatMessage(text: text, isUser: true));
         nextStep();
-        return;
-      } else if (text == "Belum") {
-        messages.add(ChatMessage(text: text, isUser: true));
-
-        // Ambil teks langkah yang sekarang
-        final stepText = steps[currentStep.value];
-
-        // Reset timer untuk langkah ini agar muncul lagi di UI
-        updateTimerForStep(stepText);
-
-        // Kirim pesan langkahnya lagi agar UI menampilkan Timer Card
-        messages.add(ChatMessage(text: stepText, isUser: false));
-
-        // Kirim konfirmasi lagi
-        messages.add(
-          ChatMessage(
-            text: "Step ini sudah?",
-            isUser: false,
-            options: ["Sudah", "Belum"],
-          ),
-        );
-
-        _saveToHistory();
         return;
       }
     }
@@ -169,12 +146,12 @@ class ChatViewModel extends GetxController {
       // Send first step
       messages.add(ChatMessage(text: steps[0], isUser: false));
 
-      // Send confirmation with quick replies
+      // Send confirmation with quick reply
       messages.add(
         ChatMessage(
-          text: "Step ini sudah?",
+          text: "Lanjut ke langkah berikutnya?",
           isUser: false,
-          options: ["Sudah", "Belum"],
+          options: ["Selanjutnya"],
         ),
       );
     } catch (e) {
@@ -219,12 +196,12 @@ class ChatViewModel extends GetxController {
 
       messages.add(ChatMessage(text: stepText, isUser: false));
 
-      // Add confirmation with quick replies (Hanya Sudah & Belum)
+      // Add confirmation with quick reply
       messages.add(
         ChatMessage(
-          text: "Step ini sudah?",
+          text: "Lanjut ke langkah berikutnya?",
           isUser: false,
-          options: ["Sudah", "Belum"],
+          options: ["Selanjutnya"],
         ),
       );
 
