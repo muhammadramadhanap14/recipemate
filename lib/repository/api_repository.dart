@@ -38,7 +38,6 @@ class ApiRepository {
       ),
     );
   }
-
   Future<dynamic> postApiLogin(String email, String password) async {
     try {
       final response = await _dio.post(
