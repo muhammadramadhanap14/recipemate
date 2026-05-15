@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:recipemate/models/model_response/search_recipes_response.dart';
 import 'package:recipemate/repository/api_repository.dart';
@@ -16,10 +14,13 @@ class HomeListViewModel extends GetxController {
   final List<String> popularCategories = [
     'Salad',
     'Pasta',
+    'Pizza',
+    'Burger',
     'Steak',
-    'Tacos',
     'Dessert',
-    'Healthy',
+    'Sushi',
+    'Tacos',
+    'Drink',
   ];
 
   HomeListViewModel({required this.apiRepository, required this.mode});

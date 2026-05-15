@@ -78,13 +78,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get stFinishBtn => 'Selesai!';
 
   @override
-  String get stRecommended => 'Rekomendasi untuk anda';
+  String get stRecommended => 'Rekomendasi Untuk Anda';
 
   @override
-  String get stTopSearching => 'Pencarian makanan teratas';
+  String get stTopSearching => 'Pencarian Makanan Teratas';
 
   @override
-  String get stSeeAll => 'Lihat semua';
+  String get stSeeAll => 'Lihat Semua';
 
   @override
   String get stSearchRecipes => 'Cari resep, bahan-bahan...';
@@ -331,4 +331,34 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get stHistoryChat => 'Riwayat Chat';
+
+  @override
+  String get stNoNotificationYet => 'Tidak Ada Notifikasi';
+
+  @override
+  String get stNoNotificationYetMessage =>
+      'Kami akan memberitahu Anda ketika ada hal baru dan seru untuk Anda!';
+
+  @override
+  String get stCheckBackLater => 'Cek kembali nanti untuk pembaruan';
+
+  @override
+  String get stViewPopular => 'Lihat Populer';
+
+  @override
+  String get stBrowseByCategory => 'Jelajahi berdasarkan kategori';
+
+  @override
+  String get stBrowseByCategoryMsg =>
+      'Jelajahi berdasarkan kategori atau pilih resep di bawah.';
+
+  @override
+  String get stPopularRecipes => 'Resep Populer';
+
+  @override
+  String get stRecommendedRecipes => 'Rekomendasi Resep';
+
+  @override
+  String get stPopularRecipesMsg =>
+      'Jelajahi resep lain yang dipilih secara acak untuk Anda.';
 }

@@ -102,5 +102,14 @@
   "stNotificationRemoved" : "Notification removed",
   "stDeleteAll" : "Delete All?",
   "stDeleteAllMessage" : "Are you sure want to delete all notifications?",
-  "stHistoryChat" : "History Chat"
+  "stHistoryChat" : "History Chat",
+  "stNoNotificationYet" : "No Notifications Yet",
+  "stNoNotificationYetMessage" : "We'll notify you when there's something new and exciting for you!",
+  "stCheckBackLater" : "Check back later for updates",
+  "stViewPopular" : "View Popular",
+  "stBrowseByCategory" : "Browse by category",
+  "stBrowseByCategoryMsg" : "Browse by category or pick a recipe below.",
+  "stPopularRecipes" : "Popular Recipes",
+  "stRecommendedRecipes" : "Recommended Recipes",
+  "stPopularRecipesMsg" : "Explore more recipes randomly selected for you."
 }

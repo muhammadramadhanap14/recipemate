@@ -23,13 +23,20 @@ class ChatMessage {
   }
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
+    // Handle 'role' from backend if 'isUser' is not present
+    bool isUser = json['isUser'] ?? (json['role'] == 'user');
+
     return ChatMessage(
-      text: json['text'] as String,
-      isUser: json['isUser'] as bool,
+      text: (json['text'] ?? json['content'] ?? '') as String,
+      isUser: isUser,
       options: json['options'] != null
           ? List<String>.from(json['options'] as List)
           : null,
-      timestamp: DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int),
+      timestamp: json['timestamp'] is int
+          ? DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int)
+          : json['timestamp'] != null
+              ? DateTime.parse(json['timestamp'] as String)
+              : DateTime.now(),
     );
   }
 

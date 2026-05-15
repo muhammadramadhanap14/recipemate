@@ -21,9 +21,9 @@
   "backBtnTitle": "Kembali",
   "stNextBtn": "Selanjutnya",
   "stFinishBtn": "Selesai!",
-  "stRecommended": "Rekomendasi untuk anda",
-  "stTopSearching": "Pencarian makanan teratas",
-  "stSeeAll": "Lihat semua",
+  "stRecommended": "Rekomendasi Untuk Anda",
+  "stTopSearching": "Pencarian Makanan Teratas",
+  "stSeeAll": "Lihat Semua",
   "stSearchRecipes": "Cari resep, bahan-bahan...",
   "stMorningGreeting": "SELAMAT PAGI",
   "stDayLightGreeting": "SELAMAT SIANG",
@@ -102,5 +102,15 @@
   "stNotificationRemoved" : "Notifikasi dihapus",
   "stDeleteAll" : "Hapus Semua?",
   "stDeleteAllMessage" : "Apakah Anda yakin ingin menghapus semua notifikasi?",
-  "stHistoryChat" : "Riwayat Chat"
+  "stHistoryChat" : "Riwayat Chat",
+  "stNoNotificationYet" : "Tidak Ada Notifikasi",
+  "stNoNotificationYetMessage" : "Kami akan memberitahu Anda ketika ada hal baru dan seru untuk Anda!",
+  "stCheckBackLater" : "Cek kembali nanti untuk pembaruan",
+  "stViewPopular" : "Lihat Populer",
+  "stBrowseByCategory" : "Jelajahi berdasarkan kategori",
+  "stBrowseByCategoryMsg" : "Jelajahi berdasarkan kategori atau pilih resep di bawah.",
+  "stPopularRecipes" : "Resep Populer",
+  "stRecommendedRecipes" : "Rekomendasi Resep",
+  "stPopularRecipesMsg" : "Jelajahi resep lain yang dipilih secara acak untuk Anda."
+
 }

@@ -373,7 +373,7 @@ class HomeView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               customText(
-                text: "Recommended for You",
+                text: AppLocalizations.of(context)!.stRecommended,
                 fontSize: DimensText.headerMenusText(context),
                 color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
@@ -384,7 +384,7 @@ class HomeView extends StatelessWidget {
                   Get.toNamed('/home_list', arguments: {'mode': 'recommended'});
                 },
                 child: customText(
-                  text: "See all",
+                  text: AppLocalizations.of(context)!.stSeeAll,
                   fontSize: DimensText.bodySmallText(context),
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,
@@ -468,7 +468,7 @@ class HomeView extends StatelessWidget {
       {
         'name': 'Salad',
         'icon': Icons.eco_rounded,
-        'color': const Color(0xFFFFF3E0),
+        'color': const Color(0xFFE8F5E9),
       },
       {
         'name': 'Pasta',
@@ -476,14 +476,39 @@ class HomeView extends StatelessWidget {
         'color': const Color(0xFFEDE7F6),
       },
       {
+        'name': 'Pizza',
+        'icon': Icons.local_pizza_rounded,
+        'color': const Color(0xFFFFF3E0),
+      },
+      {
+        'name': 'Burger',
+        'icon': Icons.lunch_dining_rounded,
+        'color': const Color(0xFFFFF8E1),
+      },
+      {
         'name': 'Steak',
         'icon': Icons.local_fire_department_rounded,
         'color': const Color(0xFFFFEBEE),
       },
       {
+        'name': 'Dessert',
+        'icon': Icons.icecream_rounded,
+        'color': const Color(0xFFFCE4EC),
+      },
+      {
+        'name': 'Sushi',
+        'icon': Icons.set_meal_rounded,
+        'color': const Color(0xFFE0F2F1),
+      },
+      {
         'name': 'Tacos',
-        'icon': Icons.lunch_dining_rounded,
-        'color': const Color(0xFFE8F5E9),
+        'icon': Icons.local_activity_rounded,
+        'color': const Color(0xFFF1F8E9),
+      },
+      {
+        'name': 'Drink',
+        'icon': Icons.local_bar_rounded,
+        'color': const Color(0xFFE1F5FE),
       },
     ];
 
@@ -498,7 +523,7 @@ class HomeView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               customText(
-                text: "Top Searching Food",
+                text: AppLocalizations.of(context)!.stTopSearching,
                 fontSize: DimensText.headerMenusText(context),
                 color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
@@ -509,7 +534,7 @@ class HomeView extends StatelessWidget {
                   Get.toNamed('/home_list', arguments: {'mode': 'popular'});
                 },
                 child: customText(
-                  text: "View Popular",
+                  text: AppLocalizations.of(context)!.stViewPopular,
                   fontSize: DimensText.bodySmallText(context),
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,
@@ -608,52 +633,6 @@ class HomeView extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _buildRecommendedList(BuildContext context, HomeViewModel viewModel) {
-    return Obx(() {
-      if (viewModel.isSearching.value) {
-        return SizedBox(
-          height: RecipeMateAppUtil.screenHeight * 0.48,
-          child: Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-        );
-      }
-      if (viewModel.searchResults.isEmpty) {
-        return SizedBox(
-          height: RecipeMateAppUtil.screenHeight * 0.48,
-          child: const Center(child: NoDataUtil()),
-        );
-      }
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-            ),
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: viewModel.searchResults.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: RecipeMateAppUtil.screenWidth * 0.04,
-                mainAxisSpacing: RecipeMateAppUtil.screenHeight * 0.02,
-                childAspectRatio: 0.72,
-              ),
-              itemBuilder: (context, index) {
-                final recipe = viewModel.searchResults[index];
-                return _buildRecommendedCard(context, recipe);
-              },
-            ),
-          ),
-        ],
-      );
-    });
   }
 
   Widget _buildRecommendedCard(BuildContext context, dynamic recipe) {

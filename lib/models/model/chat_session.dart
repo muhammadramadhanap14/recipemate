@@ -26,12 +26,18 @@ class ChatSession {
 
   factory ChatSession.fromJson(Map<String, dynamic> json) {
     return ChatSession(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      messages: (json['messages'] as List)
-          .map((item) => ChatMessage.fromJson(item as Map<String, dynamic>))
-          .toList(),
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
+      id: (json['id'] ?? json['_id']) as String,
+      title: (json['title'] ?? 'New Chat') as String,
+      messages: json['messages'] != null
+          ? (json['messages'] as List)
+              .map((item) => ChatMessage.fromJson(item as Map<String, dynamic>))
+              .toList()
+          : [],
+      createdAt: json['createdAt'] is int
+          ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int)
+          : json['createdAt'] != null
+              ? DateTime.parse(json['createdAt'] as String)
+              : DateTime.now(),
     );
   }
 

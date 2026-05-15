@@ -329,4 +329,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stHistoryChat => 'History Chat';
+
+  @override
+  String get stNoNotificationYet => 'No Notifications Yet';
+
+  @override
+  String get stNoNotificationYetMessage =>
+      'We\'ll notify you when there\'s something new and exciting for you!';
+
+  @override
+  String get stCheckBackLater => 'Check back later for updates';
+
+  @override
+  String get stViewPopular => 'View Popular';
+
+  @override
+  String get stBrowseByCategory => 'Browse by category';
+
+  @override
+  String get stBrowseByCategoryMsg =>
+      'Browse by category or pick a recipe below.';
+
+  @override
+  String get stPopularRecipes => 'Popular Recipes';
+
+  @override
+  String get stRecommendedRecipes => 'Recommended Recipes';
+
+  @override
+  String get stPopularRecipesMsg =>
+      'Explore more recipes randomly selected for you.';
 }

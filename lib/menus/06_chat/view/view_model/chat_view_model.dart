@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:recipemate/menus/08_chat_session/view/view_model/chat_history_controller.dart';
 import 'dart:convert';
 
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
+
+import '../../../../repository/chat_api_repository.dart';
+import '../../../../utils/data_session_util_controller.dart';
+import '../../../07_chat_session/view/view_model/chat_history_controller.dart';
 
 const String _initialAiGreeting =
     "Halo! Saya RecipeMate AI. Selamat datang di asisten memasakmu. Mau cari resep, minta ide menu, atau langsung tanya tips dapur?";
@@ -42,13 +46,54 @@ class ChatViewModel extends GetxController {
   void onInit() {
     super.onInit();
 
-    /// load existing messages dari session
-    messages.assignAll(session.messages);
+    dev.log("ChatViewModel: Initializing with session ID: ${session.id}");
+    dev.log("ChatViewModel: Session has ${session.messages.length} messages");
 
-    /// Jika sesi baru belum memiliki pesan, tambahkan greeting AI langsung.
-    if (messages.isEmpty) {
+    /// load existing messages dari session
+    if (session.messages.isNotEmpty) {
+      messages.assignAll(session.messages);
+      dev.log("ChatViewModel: Loaded ${messages.length} messages into observable list");
+    }
+
+    // Selalu coba muat pesan terbaru dari server untuk memastikan data sinkron
+    _fetchLatestMessages();
+  }
+
+  Future<void> _fetchLatestMessages() async {
+    // Jika ini sesi baru (ID UUID v4), tidak perlu fetch ke server dulu
+    // karena server mungkin belum menyimpannya
+    if (messages.isEmpty && session.title == "New Chat") {
       messages.add(ChatMessage(text: _initialAiGreeting, isUser: false));
-      _saveToHistory();
+      Future.microtask(() => _saveToHistory());
+      return;
+    }
+
+    isLoading.value = true;
+    try {
+      final token = Get.find<DataSessionUtilController>().stToken.value;
+      final historyController = Get.find<ChatHistoryController>();
+      final chatApi = Get.find<ChatApiRepository>();
+
+      dev.log("ChatViewModel: Fetching latest messages for ${session.id}");
+      final remoteMessages = await chatApi.getChatMessages(session.id, token);
+
+      if (remoteMessages.isNotEmpty) {
+        dev.log("ChatViewModel: Received ${remoteMessages.length} messages from server");
+        messages.assignAll(remoteMessages);
+        
+        // Sync balik ke objek session lokal
+        session.messages.clear();
+        session.messages.addAll(remoteMessages);
+        historyController.sessions.refresh();
+      } else if (messages.isEmpty) {
+        dev.log("ChatViewModel: No messages found on server, adding greeting");
+        messages.add(ChatMessage(text: _initialAiGreeting, isUser: false));
+        _saveToHistory();
+      }
+    } catch (e) {
+      dev.log("ChatViewModel: Error fetching messages: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 

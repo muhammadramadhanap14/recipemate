@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/utils/constant_url.dart';
 
@@ -19,21 +20,27 @@ class ChatApiRepository {
     _dio = Dio(options);
   }
 
-  Future<List<ChatSession>> getChatSessions(String token) async {
+  Future<List<ChatSession>> getChatSessions(
+    String token, {
+    bool includeMessages = true,
+  }) async {
     try {
       final response = await _dio.get(
         '/chat/sessions',
+        queryParameters: {'includeMessages': includeMessages},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
+
+      print("ChatApiRepository: getChatSessions raw response: ${response.data}");
 
       final data = response.data;
       final rawList = data is List
           ? data
           : data is Map<String, dynamic> && data['data'] is List
-          ? data['data']
-          : data is Map<String, dynamic> && data['sessions'] is List
-          ? data['sessions']
-          : null;
+              ? data['data']
+              : data is Map<String, dynamic> && data['sessions'] is List
+                  ? data['sessions']
+                  : null;
       if (rawList is List) {
         return rawList
             .map((item) => ChatSession.fromJson(item as Map<String, dynamic>))
@@ -41,7 +48,37 @@ class ChatApiRepository {
       }
       return [];
     } catch (e) {
-      log('Failed to fetch chat sessions: $e');
+      print('ChatApiRepository: Failed to fetch chat sessions: $e');
+      return [];
+    }
+  }
+
+  Future<List<ChatMessage>> getChatMessages(String sessionId, String token) async {
+    try {
+      final response = await _dio.get(
+        '/chat/session/$sessionId/messages',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      print("ChatApiRepository: getChatMessages for $sessionId raw response: ${response.data}");
+
+      final data = response.data;
+      final rawList = data is List
+          ? data
+          : data is Map<String, dynamic> && data['data'] is List
+              ? data['data']
+              : data is Map<String, dynamic> && data['messages'] is List
+                  ? data['messages']
+                  : null;
+
+      if (rawList is List) {
+        return rawList
+            .map((item) => ChatMessage.fromJson(item as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } catch (e) {
+      print('ChatApiRepository: Failed to fetch chat messages for $sessionId: $e');
       return [];
     }
   }
@@ -54,8 +91,12 @@ class ChatApiRepository {
       );
 
       final data = response.data;
-      if (data is Map<String, dynamic>) {
-        return ChatSession.fromJson(data);
+      final sessionData = data is Map<String, dynamic> && data['data'] != null
+          ? data['data']
+          : data;
+
+      if (sessionData is Map<String, dynamic>) {
+        return ChatSession.fromJson(sessionData);
       }
       return null;
     } catch (e) {
