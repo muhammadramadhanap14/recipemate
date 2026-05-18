@@ -61,22 +61,24 @@ class ChatHistoryController extends GetxController {
 
   /// CREATE NEW CHAT
   ChatSession createNewSession() {
-    final session = ChatSession(
+    return ChatSession(
       id: uuid.v4(),
       title: "New Chat",
       messages: [ChatMessage(text: _initialAiGreeting, isUser: false)],
       createdAt: DateTime.now(),
     );
-
-    sessions.insert(0, session);
-    _saveSession(session);
-    return session;
   }
 
   /// UPDATE SESSION
   void updateSession(ChatSession session, List<ChatMessage> messages) {
     session.messages.clear();
     session.messages.addAll(messages);
+
+    // Cek apakah ada pesan dari user
+    final bool hasUserMessage = messages.any((m) => m.isUser);
+
+    // Jika belum ada pesan user, jangan simpan dulu
+    if (!hasUserMessage) return;
 
     /// update title dari message pertama user jika title masih "New Chat"
     if (session.title == "New Chat") {
@@ -86,6 +88,11 @@ class ChatHistoryController extends GetxController {
             ? "${userMsg.text.substring(0, 30)}..."
             : userMsg.text;
       }
+    }
+
+    // Masukkan ke list lokal jika belum ada (sesi baru)
+    if (!sessions.any((s) => s.id == session.id)) {
+      sessions.insert(0, session);
     }
 
     // Gunakan microtask untuk menghindari error "markNeedsBuild during build"
