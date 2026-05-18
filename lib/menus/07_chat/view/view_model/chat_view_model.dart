@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:recipemate/menus/07_chat_session/view/view_model/chat_history_controller.dart';
-import 'dart:convert';
 
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
+import 'package:recipemate/utils/constant_url.dart';
 
 const String _initialAiGreeting =
     "Halo! Saya RecipeMate AI. Selamat datang di asisten memasakmu. Mau cari resep, minta ide menu, atau langsung tanya tips dapur?";
@@ -35,7 +38,22 @@ class ChatViewModel extends GetxController {
 
   Timer? timer;
 
-  final baseUrl = "http://10.0.2.2:3000";
+  final baseUrl = ConstantUrl.recipemateBaseUrl;
+
+  Uri _chatUri(String path) => Uri.parse('$baseUrl$path');
+
+  String _extractBackendError(String body, int statusCode) {
+    try {
+      final decoded = jsonDecode(body);
+      if (decoded is Map<String, dynamic>) {
+        if (decoded['message'] != null) return decoded['message'].toString();
+        if (decoded['error'] != null) return decoded['error'].toString();
+        if (decoded['detail'] != null) return decoded['detail'].toString();
+      }
+    } catch (_) {}
+    if (body.isNotEmpty) return body;
+    return 'Status code $statusCode';
+  }
 
   /// =========================
   /// INIT (LOAD HISTORY)
@@ -60,7 +78,37 @@ class ChatViewModel extends GetxController {
   Future<void> sendMessage(String text) async {
     if (text.isEmpty) return;
 
-    if (isCooking.value && text != "Selanjutnya") {
+    messages.add(ChatMessage(text: text, isUser: true));
+
+    // Handle Cooking Navigation via Quick Replies
+    if (isCooking.value) {
+      if (text == "Sudah") {
+        nextStep();
+        return;
+      }
+
+      if (text == "Belum") {
+        final currentStepText = steps.isNotEmpty
+            ? steps[currentStep.value]
+            : "Silakan lanjutkan saat kamu siap.";
+        messages.add(
+          ChatMessage(
+            text: currentStepText,
+            isUser: false,
+            stepIndex: currentStep.value,
+          ),
+        );
+        messages.add(
+          ChatMessage(
+            text: "Kamu bisa pilih ketika sudah siap.",
+            isUser: false,
+            options: ["Sudah", "Belum"],
+          ),
+        );
+        _saveToHistory();
+        return;
+      }
+
       messages.add(
         ChatMessage(
           text:
@@ -72,33 +120,45 @@ class ChatViewModel extends GetxController {
       return;
     }
 
-    // Handle Cooking Navigation via Quick Replies
-    if (isCooking.value) {
-      if (text == "Selanjutnya") {
-        messages.add(ChatMessage(text: text, isUser: true));
-        nextStep();
-        return;
-      }
-    }
-
-    messages.add(ChatMessage(text: text, isUser: true));
     isLoading.value = true;
 
     try {
+      final uri = _chatUri(ConstantUrl.chatEndpoint);
+      final payload = jsonEncode({
+        "messages": messages
+            .map(
+              (e) => {
+                "role": e.isUser ? "user" : "assistant",
+                "content": e.text,
+              },
+            )
+            .toList(),
+      });
+
+      debugPrint('ChatViewModel sendMessage URL: $uri');
+      debugPrint('ChatViewModel sendMessage body: $payload');
       final response = await http.post(
-        Uri.parse("$baseUrl/chat"),
+        uri,
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "messages": messages
-              .map(
-                (e) => {
-                  "role": e.isUser ? "user" : "assistant",
-                  "content": e.text,
-                },
-              )
-              .toList(),
-        }),
+        body: payload,
       );
+
+      debugPrint('ChatViewModel sendMessage status: ${response.statusCode}');
+      debugPrint('ChatViewModel sendMessage response: ${response.body}');
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        final errorMessage = _extractBackendError(
+          response.body,
+          response.statusCode,
+        );
+        messages.add(
+          ChatMessage(
+            text: "Gagal mengirim pesan: $errorMessage",
+            isUser: false,
+          ),
+        );
+        return;
+      }
 
       final data = jsonDecode(response.body);
 
@@ -132,11 +192,35 @@ class ChatViewModel extends GetxController {
   /// =========================
   Future<void> startCooking() async {
     try {
+      final uri = _chatUri(ConstantUrl.generateRecipeEndpoint);
+      final payload = jsonEncode({
+        "context": messages.map((e) => e.text).join(" "),
+      });
+
+      debugPrint('ChatViewModel startCooking URL: $uri');
+      debugPrint('ChatViewModel startCooking body: $payload');
       final response = await http.post(
-        Uri.parse("$baseUrl/generate-recipe"),
+        uri,
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"context": messages.map((e) => e.text).join(" ")}),
+        body: payload,
       );
+
+      debugPrint('ChatViewModel startCooking status: ${response.statusCode}');
+      debugPrint('ChatViewModel startCooking response: ${response.body}');
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        final errorMessage = _extractBackendError(
+          response.body,
+          response.statusCode,
+        );
+        messages.add(
+          ChatMessage(
+            text: "Gagal generate resep: $errorMessage",
+            isUser: false,
+          ),
+        );
+        return;
+      }
 
       final data = jsonDecode(response.body);
       final recipe = data["recipe"];
@@ -161,7 +245,7 @@ class ChatViewModel extends GetxController {
         ChatMessage(
           text: "Lanjut ke langkah berikutnya?",
           isUser: false,
-          options: ["Selanjutnya"],
+          options: ["Sudah", "Belum"],
         ),
       );
 
@@ -219,7 +303,7 @@ class ChatViewModel extends GetxController {
         ChatMessage(
           text: "Lanjut ke langkah berikutnya?",
           isUser: false,
-          options: ["Selanjutnya"],
+          options: ["Sudah", "Belum"],
         ),
       );
 
