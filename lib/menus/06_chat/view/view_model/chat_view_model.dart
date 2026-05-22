@@ -135,6 +135,9 @@ class ChatViewModel extends GetxController {
       }
 
       if (text == "Belum") {
+        // Repeat the current step and remove the old confirmation prompt.
+        _clearOptionsForStep(currentStep.value);
+
         final currentStepText = steps.isNotEmpty
             ? steps[currentStep.value]
             : "Silakan lanjutkan saat kamu siap.";
@@ -147,9 +150,10 @@ class ChatViewModel extends GetxController {
         );
         messages.add(
           ChatMessage(
-            text: "Kamu bisa pilih ketika sudah siap.",
+            text: "Lanjut ke langkah berikutnya?",
             isUser: false,
             options: ["Sudah", "Belum"],
+            stepIndex: currentStep.value,
           ),
         );
         _saveToHistory();
@@ -289,7 +293,7 @@ class ChatViewModel extends GetxController {
       );
 
       // Send first step
-      messages.add(ChatMessage(text: steps[0], isUser: false));
+      messages.add(ChatMessage(text: steps[0], isUser: false, stepIndex: 0));
 
       // Send confirmation with quick reply
       messages.add(
@@ -297,6 +301,7 @@ class ChatViewModel extends GetxController {
           text: "Lanjut ke langkah berikutnya?",
           isUser: false,
           options: ["Sudah", "Belum"],
+          stepIndex: 0,
         ),
       );
     } catch (e) {
@@ -335,11 +340,20 @@ class ChatViewModel extends GetxController {
   /// =========================
   void nextStep() {
     if (currentStep.value < steps.length - 1) {
+      // clear options for the current step so previous widget disappears
+      _clearOptionsForStep(currentStep.value);
+
       currentStep.value++;
 
       final stepText = steps[currentStep.value];
 
-      messages.add(ChatMessage(text: stepText, isUser: false));
+      messages.add(
+        ChatMessage(
+          text: stepText,
+          isUser: false,
+          stepIndex: currentStep.value,
+        ),
+      );
 
       // Add confirmation with quick reply
       messages.add(
@@ -347,6 +361,7 @@ class ChatViewModel extends GetxController {
           text: "Lanjut ke langkah berikutnya?",
           isUser: false,
           options: ["Sudah", "Belum"],
+          stepIndex: currentStep.value,
         ),
       );
 
@@ -355,6 +370,18 @@ class ChatViewModel extends GetxController {
     } else {
       endCooking();
     }
+  }
+
+  void _clearOptionsForStep(int stepIndex) {
+    // Remove confirmation message with options for the previous step
+    messages.removeWhere(
+      (m) =>
+          !m.isUser &&
+          m.stepIndex == stepIndex &&
+          m.options != null &&
+          m.options!.isNotEmpty &&
+          m.text.contains("Lanjut ke"),
+    );
   }
 
   /// =========================
