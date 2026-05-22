@@ -102,7 +102,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stEveningGreeting => 'SELAMAT MALAM';
 
   @override
-  String get stWelcomeBack => 'Selamat Datang Kembali';
+  String get stWelcomeBack => 'Selamat Datang';
 
   @override
   String get stWelcomeGreet => 'Asisten dapur pintar Anda menanti.';

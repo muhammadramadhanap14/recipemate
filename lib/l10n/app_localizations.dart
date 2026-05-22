@@ -281,7 +281,7 @@ abstract class AppLocalizations {
   /// No description provided for @stWelcomeBack.
   ///
   /// In en, this message translates to:
-  /// **'Welcome back'**
+  /// **'Welcome'**
   String get stWelcomeBack;
 
   /// No description provided for @stWelcomeGreet.

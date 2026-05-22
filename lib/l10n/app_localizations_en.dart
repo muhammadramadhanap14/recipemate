@@ -102,7 +102,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stEveningGreeting => 'GOOD NIGHT';
 
   @override
-  String get stWelcomeBack => 'Welcome back';
+  String get stWelcomeBack => 'Welcome';
 
   @override
   String get stWelcomeGreet => 'Your smart kitchen assistant awaits.';
