@@ -481,13 +481,16 @@ class _ChatViewState extends State<ChatView> {
         spacing: 8,
         runSpacing: 8,
         children: options.map((opt) {
+          final safeLabel = opt
+              .replaceAll(RegExp(r'(\*\*|\*|__|_)'), '')
+              .trim();
           return ActionChip(
             label: customText(
-              text: opt,
+              text: safeLabel,
               color: colorScheme.onPrimary,
               fontSize: DimensText.bodySmallText(context),
             ),
-            onPressed: () => controller.sendMessage(opt),
+            onPressed: () => controller.sendMessage(safeLabel),
             backgroundColor: colorScheme.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),

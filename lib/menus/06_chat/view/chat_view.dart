@@ -29,9 +29,9 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     super.initState();
-    
-    // Gunakan tag unik untuk setiap sesi agar GetX tidak menggunakan 
-    // ViewModel yang lama untuk sesi yang berbeda. 
+
+    // Gunakan tag unik untuk setiap sesi agar GetX tidak menggunakan
+    // ViewModel yang lama untuk sesi yang berbeda.
     // Pastikan tag menggunakan ID dari widget.session agar konsisten.
     controller = Get.put(
       ChatViewModel(session: widget.session),
@@ -477,13 +477,16 @@ class _ChatViewState extends State<ChatView> {
         spacing: 8,
         runSpacing: 8,
         children: options.map((opt) {
+          final safeLabel = opt
+              .replaceAll(RegExp(r'(\*\*|\*|__|_)'), '')
+              .trim();
           return ActionChip(
             label: customText(
-              text: opt,
+              text: safeLabel,
               color: colorScheme.onPrimary,
               fontSize: DimensText.bodySmallText(context),
             ),
-            onPressed: () => controller.sendMessage(opt),
+            onPressed: () => controller.sendMessage(safeLabel),
             backgroundColor: colorScheme.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),

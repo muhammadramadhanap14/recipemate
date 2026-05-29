@@ -55,6 +55,17 @@ class ChatViewModel extends GetxController {
     return 'Status code $statusCode';
   }
 
+  String _sanitizeQuickReply(String option) {
+    return option.replaceAll(RegExp(r'(\*\*|\*|__|_)'), '').trim();
+  }
+
+  List<String> _sanitizeQuickReplies(List<dynamic> options) {
+    return options
+        .map((item) => _sanitizeQuickReply(item.toString()))
+        .where((value) => value.isNotEmpty)
+        .toList();
+  }
+
   /// =========================
   /// INIT (LOAD HISTORY)
   /// =========================
@@ -176,7 +187,7 @@ class ChatViewModel extends GetxController {
             text: data["reply"],
             isUser: false,
             options: data["options"] != null
-                ? List<String>.from(data["options"])
+                ? _sanitizeQuickReplies(List<dynamic>.from(data["options"]))
                 : null,
           ),
         );
