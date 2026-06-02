@@ -158,4 +158,17 @@ class ChatApiRepository {
       return false;
     }
   }
+
+  Future<bool> deleteChatSession(String sessionId, String token) async {
+    try {
+      await _dio.delete(
+        '/chat/session/$sessionId',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      return true;
+    } catch (e) {
+      log('Failed to delete chat session $sessionId: $e');
+      return false;
+    }
+  }
 }

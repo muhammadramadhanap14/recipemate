@@ -110,4 +110,16 @@ class ChatHistoryController extends GetxController {
 
     await _chatApi.saveChatSession(userId, session, token);
   }
+
+  /// DELETE SESSION
+  Future<void> deleteSession(ChatSession session) async {
+    final token = _sessionController.stToken.value;
+    if (token.isEmpty) return;
+
+    final success = await _chatApi.deleteChatSession(session.id, token);
+    if (success) {
+      sessions.removeWhere((s) => s.id == session.id);
+      sessions.refresh();
+    }
+  }
 }

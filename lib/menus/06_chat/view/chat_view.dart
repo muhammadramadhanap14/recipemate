@@ -9,6 +9,7 @@ import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
+import 'package:recipemate/utils/view_utils/view_dialog_util.dart';
 import 'package:recipemate/utils/view_utils/no_data_util.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 
@@ -196,6 +197,22 @@ class _ChatViewState extends State<ChatView> {
                           ).format(session.createdAt),
                           fontSize: DimensText.captionText(context),
                           color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete, color: colorScheme.onSurface.withValues(alpha: 0.7)),
+                          onPressed: () {
+                            ViewDialogUtil().showConfirmDialog(
+                              context: context,
+                              title: AppLocalizations.of(context)!.stDeleteAll,
+                              message: 'Apakah Anda yakin ingin menghapus riwayat chat ini?',
+                              icon: Icons.delete,
+                              negativeTitle: AppLocalizations.of(context)!.stCancelTitle,
+                              positiveTitle: AppLocalizations.of(context)!.confirmBtn,
+                              onPositiveClick: () async {
+                                await historyController.deleteSession(session);
+                              },
+                            );
+                          },
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(borderRadius),
