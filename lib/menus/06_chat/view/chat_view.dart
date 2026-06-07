@@ -199,15 +199,23 @@ class _ChatViewState extends State<ChatView> {
                           color: colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                         trailing: IconButton(
-                          icon: Icon(Icons.delete, color: colorScheme.onSurface.withValues(alpha: 0.7)),
+                          icon: Icon(
+                            Icons.delete,
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
+                          ),
                           onPressed: () {
                             ViewDialogUtil().showConfirmDialog(
                               context: context,
                               title: AppLocalizations.of(context)!.stDeleteAll,
-                              message: 'Apakah Anda yakin ingin menghapus riwayat chat ini?',
+                              message:
+                                  'Apakah Anda yakin ingin menghapus riwayat chat ini?',
                               icon: Icons.delete,
-                              negativeTitle: AppLocalizations.of(context)!.stCancelTitle,
-                              positiveTitle: AppLocalizations.of(context)!.confirmBtn,
+                              negativeTitle: AppLocalizations.of(
+                                context,
+                              )!.stCancelTitle,
+                              positiveTitle: AppLocalizations.of(
+                                context,
+                              )!.confirmBtn,
                               onPositiveClick: () async {
                                 await historyController.deleteSession(session);
                               },
