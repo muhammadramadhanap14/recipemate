@@ -13,10 +13,11 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -31,9 +32,15 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -45,4 +52,6 @@ flutter {
 
 dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

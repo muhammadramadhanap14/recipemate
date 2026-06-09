@@ -1,35 +1,89 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../../models/model_response/detail_recipe_response.dart';
+import '../../../repository/api_repository.dart';
+import '../../../utils/constant_var.dart';
+import '../../../utils/recipemate_app_util.dart';
+import '../../../utils/view_utils/app_snackbar.dart';
+import '../../../utils/view_utils/view_dialog_util.dart';
 
 class HomeDetailViewModel extends GetxController {
-  final Map<String, dynamic> recipeDetail = {
-    'title': 'Spicy Avocado Toast',
-    'time': '15 mins',
-    'rating': 4.9,
-    'reviews': '1.2k reviews',
-    'calories': 385,
-    'protein': '18g',
-    'carbs': '24g',
-    'fats': '22g',
-    'match_percent': 98,
-    'match_reason': 'This recipe is a 98% match for your goal of increasing lean muscle mass. The high healthy fat content from avocados paired with sourdough\'s low GI carbs provides sustained energy for your evening workout.',
-    'image': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=800',
-    'ingredients': [
-      {
-        'name': 'Avocado', 
-        'image': 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?q=80&w=200'
-      },
-      {
-        'name': 'Sourdough', 
-        'image': 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=200'
-      },
-      {
-        'name': 'Chili Flakes', 
-        'image': 'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=200'
-      },
-      {
-        'name': 'Radish', 
-        'image': 'https://images.unsplash.com/photo-1594498653385-d5172c532c00?q=80&w=200'
-      },
-    ]
-  };
+  final ApiRepository apiRepository;
+  final int recipeId;
+  final Rx<DetailRecipeResponse?> recipeDetail = Rx<DetailRecipeResponse?>(null);
+  final RxBool isLoading = false.obs;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  bool _isDialogShowing = false;
+
+  HomeDetailViewModel({
+    required this.apiRepository,
+    required this.recipeId,
+  });
+
+  @override
+  void onInit() {
+    super.onInit();
+    getRecipeDetail();
+    _startConnectivityListener();
+    checkInitialConnection();
+  }
+
+  @override
+  void onClose() {
+    _connectivitySubscription?.cancel();
+    super.onClose();
+  }
+
+  void _startConnectivityListener() {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      checkInitialConnection();
+    });
+  }
+
+  Future<void> checkInitialConnection() async {
+    final hasConnection = await RecipeMateAppUtil.checkConnection();
+    if (!hasConnection) {
+      _showNoInternetDialog();
+    }
+  }
+
+  void _showNoInternetDialog() {
+    if (_isDialogShowing) return;
+
+    final context = Get.context;
+    if (context != null) {
+      _isDialogShowing = true;
+      ViewDialogUtil().showOneButtonActionDialog(
+        AppLocalizations.of(context)!.stNoConnectionMessage,
+        AppLocalizations.of(context)!.backBtnTitle,
+        ConstantVar.noConnectionGif,
+        context,
+        null,
+            (dynamic val) {
+          _isDialogShowing = false;
+          checkInitialConnection();
+        },
+      );
+    }
+  }
+
+  Future<void> getRecipeDetail() async {
+    isLoading.value = true;
+    try {
+      final response = await apiRepository.getRecipeInformation(recipeId);
+      if (response != null) {
+        recipeDetail.value = DetailRecipeResponse.fromJson(response);
+      }
+    } catch (e) {
+      AppSnackbar.show(
+        title: "Error",
+        message: "Failed to fetch recipe detail: $e",
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

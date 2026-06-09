@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
+import 'package:recipemate/menus/04_home/view_model/home_view_model.dart';
 
 import '../../../utils/view_utils/app_snackbar.dart';
 import '../view/account_view.dart';
@@ -19,6 +20,12 @@ class HomeNavViewModel extends GetxController {
   Widget get currentPage => _pages[selectedIndex.value];
 
   void changePage(int index) {
+    try {
+      final homeVM = Get.find<HomeViewModel>();
+      homeVM.resetSearch();
+    } catch (_) {
+      // Jika belum di-inject, abaikan
+    }
     selectedIndex.value = index;
     update();
   }

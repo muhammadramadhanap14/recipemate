@@ -42,7 +42,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changeFoodTypes => 'Change food types & dietary preferences';
 
   @override
-  String get stConfirmLogout => 'Are you sure you want to log out?';
+  String get stConfirmLogout =>
+      'Are you sure you want to log out? All session data will be cleared, including your profile photo, fingerprint authentication, and other saved information.';
 
   @override
   String get stConfirmChange => 'Are you sure you want to change?';
@@ -101,7 +102,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stEveningGreeting => 'GOOD NIGHT';
 
   @override
-  String get stWelcomeBack => 'Welcome back';
+  String get stWelcomeBack => 'Welcome';
 
   @override
   String get stWelcomeGreet => 'Your smart kitchen assistant awaits.';
@@ -262,4 +263,100 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirmBtn => 'Confirm';
+
+  @override
+  String get stFailedLogin => 'Login Failed';
+
+  @override
+  String get stFailedRegister => 'Register Failed';
+
+  @override
+  String get stInternalServerError => 'Internal Server Error';
+
+  @override
+  String get stNoDataFound => 'No Data Found';
+
+  @override
+  String get stNoDataFoundMessage => 'No data available to display';
+
+  @override
+  String get stNutritionalPrediction => 'Nutritional Prediction';
+
+  @override
+  String get stRecipeSummary => 'Recipe Summary';
+
+  @override
+  String get stCoreIngredients => 'Core Ingredients';
+
+  @override
+  String get stLoginFingerprint => 'Scan to Login';
+
+  @override
+  String get stLoginFingerprintErrorMessage =>
+      'Saved credentials not found. Please login manually once.';
+
+  @override
+  String get stEnableFingerprintNowTitle => 'Enable Fingerprint?';
+
+  @override
+  String get stEnableFingerprintNowMessage =>
+      'Unlock faster and more securely with your fingerprint. Would you like to enable it now?';
+
+  @override
+  String get stRemindMeLaterBtn => 'Remind me later';
+
+  @override
+  String get stRemindMeLaterMessage => 'We will remind you after 48 hours.';
+
+  @override
+  String get stInstructions => 'Instructions';
+
+  @override
+  String get stNotification => 'Notifications';
+
+  @override
+  String get stDeleted => 'Deleted';
+
+  @override
+  String get stNotificationRemoved => 'Notification removed';
+
+  @override
+  String get stDeleteAll => 'Delete All?';
+
+  @override
+  String get stDeleteAllMessage =>
+      'Are you sure want to delete all notifications?';
+
+  @override
+  String get stHistoryChat => 'History Chat';
+
+  @override
+  String get stNoNotificationYet => 'No Notifications Yet';
+
+  @override
+  String get stNoNotificationYetMessage =>
+      'We\'ll notify you when there\'s something new and exciting for you!';
+
+  @override
+  String get stCheckBackLater => 'Check back later for updates';
+
+  @override
+  String get stViewPopular => 'View Popular';
+
+  @override
+  String get stBrowseByCategory => 'Browse by category';
+
+  @override
+  String get stBrowseByCategoryMsg =>
+      'Browse by category or pick a recipe below.';
+
+  @override
+  String get stPopularRecipes => 'Popular Recipes';
+
+  @override
+  String get stRecommendedRecipes => 'Recommended Recipes';
+
+  @override
+  String get stPopularRecipesMsg =>
+      'Explore more recipes randomly selected for you.';
 }

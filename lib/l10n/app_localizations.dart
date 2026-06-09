@@ -167,7 +167,7 @@ abstract class AppLocalizations {
   /// No description provided for @stConfirmLogout.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to log out?'**
+  /// **'Are you sure you want to log out? All session data will be cleared, including your profile photo, fingerprint authentication, and other saved information.'**
   String get stConfirmLogout;
 
   /// No description provided for @stConfirmChange.
@@ -281,7 +281,7 @@ abstract class AppLocalizations {
   /// No description provided for @stWelcomeBack.
   ///
   /// In en, this message translates to:
-  /// **'Welcome back'**
+  /// **'Welcome'**
   String get stWelcomeBack;
 
   /// No description provided for @stWelcomeGreet.
@@ -595,6 +595,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm'**
   String get confirmBtn;
+
+  /// No description provided for @stFailedLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Failed'**
+  String get stFailedLogin;
+
+  /// No description provided for @stFailedRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Register Failed'**
+  String get stFailedRegister;
+
+  /// No description provided for @stInternalServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Internal Server Error'**
+  String get stInternalServerError;
+
+  /// No description provided for @stNoDataFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Data Found'**
+  String get stNoDataFound;
+
+  /// No description provided for @stNoDataFoundMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available to display'**
+  String get stNoDataFoundMessage;
+
+  /// No description provided for @stNutritionalPrediction.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritional Prediction'**
+  String get stNutritionalPrediction;
+
+  /// No description provided for @stRecipeSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe Summary'**
+  String get stRecipeSummary;
+
+  /// No description provided for @stCoreIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Core Ingredients'**
+  String get stCoreIngredients;
+
+  /// No description provided for @stLoginFingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to Login'**
+  String get stLoginFingerprint;
+
+  /// No description provided for @stLoginFingerprintErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved credentials not found. Please login manually once.'**
+  String get stLoginFingerprintErrorMessage;
+
+  /// No description provided for @stEnableFingerprintNowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Fingerprint?'**
+  String get stEnableFingerprintNowTitle;
+
+  /// No description provided for @stEnableFingerprintNowMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock faster and more securely with your fingerprint. Would you like to enable it now?'**
+  String get stEnableFingerprintNowMessage;
+
+  /// No description provided for @stRemindMeLaterBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me later'**
+  String get stRemindMeLaterBtn;
+
+  /// No description provided for @stRemindMeLaterMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We will remind you after 48 hours.'**
+  String get stRemindMeLaterMessage;
+
+  /// No description provided for @stInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions'**
+  String get stInstructions;
+
+  /// No description provided for @stNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get stNotification;
+
+  /// No description provided for @stDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get stDeleted;
+
+  /// No description provided for @stNotificationRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification removed'**
+  String get stNotificationRemoved;
+
+  /// No description provided for @stDeleteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All?'**
+  String get stDeleteAll;
+
+  /// No description provided for @stDeleteAllMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure want to delete all notifications?'**
+  String get stDeleteAllMessage;
+
+  /// No description provided for @stHistoryChat.
+  ///
+  /// In en, this message translates to:
+  /// **'History Chat'**
+  String get stHistoryChat;
+
+  /// No description provided for @stNoNotificationYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Notifications Yet'**
+  String get stNoNotificationYet;
+
+  /// No description provided for @stNoNotificationYetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll notify you when there\'s something new and exciting for you!'**
+  String get stNoNotificationYetMessage;
+
+  /// No description provided for @stCheckBackLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back later for updates'**
+  String get stCheckBackLater;
+
+  /// No description provided for @stViewPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'View Popular'**
+  String get stViewPopular;
+
+  /// No description provided for @stBrowseByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse by category'**
+  String get stBrowseByCategory;
+
+  /// No description provided for @stBrowseByCategoryMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse by category or pick a recipe below.'**
+  String get stBrowseByCategoryMsg;
+
+  /// No description provided for @stPopularRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Recipes'**
+  String get stPopularRecipes;
+
+  /// No description provided for @stRecommendedRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Recipes'**
+  String get stRecommendedRecipes;
+
+  /// No description provided for @stPopularRecipesMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore more recipes randomly selected for you.'**
+  String get stPopularRecipesMsg;
 }
 
 class _AppLocalizationsDelegate

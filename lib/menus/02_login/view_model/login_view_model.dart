@@ -1,26 +1,97 @@
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:recipemate/utils/view_utils/app_snackbar.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../../models/model_response/login_response.dart';
 import '../../../repository/api_repository.dart';
+import '../../../utils/constant_var.dart';
+import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/recipemate_app_util.dart';
+import '../../../utils/view_utils/view_dialog_util.dart';
 
 class LoginViewModel extends GetxController {
   final ApiRepository apiRepository;
+  final DataSessionUtilController sessionController;
   final BuildContext context;
+  final LocalAuthentication auth = LocalAuthentication();
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  bool _isDialogShowing = false;
 
   LoginViewModel({
     required this.apiRepository,
+    required this.sessionController,
     required this.context,
   });
 
-  final username = ''.obs;
+  final email = ''.obs;
   final password = ''.obs;
   final errMessage = ''.obs;
   final isLoading = false.obs;
   final isValidButton = false.obs;
   final isObscureText = true.obs;
+  final canUseBiometric = false.obs;
 
-  void setUsername(String value) {
-    username.value = value.trim();
+  @override
+  void onInit() {
+    super.onInit();
+    _startConnectivityListener();
+    checkInitialConnection();
+    _checkBiometricSupport();
+  }
+
+  @override
+  void onClose() {
+    _connectivitySubscription?.cancel();
+    super.onClose();
+  }
+
+  void _startConnectivityListener() {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> results,
+    ) {
+      checkInitialConnection();
+    });
+  }
+
+  Future<void> checkInitialConnection() async {
+    final hasConnection = await RecipeMateAppUtil.checkConnection();
+    if (!hasConnection) {
+      _showNoInternetDialog();
+    }
+  }
+
+  void _showNoInternetDialog() {
+    if (_isDialogShowing) return;
+
+    final context = Get.context;
+    if (context != null) {
+      _isDialogShowing = true;
+      ViewDialogUtil().showOneButtonActionDialog(
+        AppLocalizations.of(context)!.stNoConnectionMessage,
+        AppLocalizations.of(context)!.backBtnTitle,
+        ConstantVar.noConnectionGif,
+        context,
+        null,
+        (dynamic val) {
+          _isDialogShowing = false;
+          checkInitialConnection();
+        },
+      );
+    }
+  }
+
+  Future<void> _checkBiometricSupport() async {
+    final bool hasFingerprint = sessionController.isFingerprintEnabled.value;
+    final bool canCheck =
+        await auth.canCheckBiometrics || await auth.isDeviceSupported();
+    canUseBiometric.value = hasFingerprint && canCheck;
+  }
+
+  void setEmail(String value) {
+    email.value = value.trim();
     _validate();
   }
 
@@ -34,102 +105,89 @@ class LoginViewModel extends GetxController {
   }
 
   void _validate() {
-    /// TODO replace with real validation
-    isValidButton.value = username.value.isNotEmpty && password.value.length >= 4;
+    isValidButton.value = email.value.isNotEmpty && password.value.length >= 4;
+  }
+
+  Future<void> loginWithBiometric() async {
+    final l10n = AppLocalizations.of(Get.context!)!;
+    try {
+      final bool authenticated = await auth.authenticate(
+        localizedReason: l10n.stLoginFingerprint,
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
+      );
+      if (authenticated) {
+        final savedEmail = sessionController.stEmail.value;
+        final savedPassword = await sessionController.getSavedPassword();
+        if (savedEmail.isNotEmpty && savedPassword != null) {
+          email.value = savedEmail;
+          password.value = savedPassword;
+          await onLoginPressed();
+        } else {
+          AppSnackbar.show(
+            title: l10n.stError,
+            message: l10n.stLoginFingerprintErrorMessage,
+          );
+        }
+      }
+    } catch (e) {
+      AppSnackbar.show(title: l10n.stError, message: e.toString());
+    }
   }
 
   Future<void> onLoginPressed() async {
+    final l10n = AppLocalizations.of(Get.context!)!;
     if (isLoading.value) return;
     errMessage.value = '';
     isLoading.value = true;
     try {
-      /// TODO Check internet connection
       final hasConnection = await RecipeMateAppUtil.checkConnection();
       if (!hasConnection) {
-        _fail('No internet connection');
+        _fail(l10n.stNoConnectionMessage);
+        AppSnackbar.show(
+          title: l10n.stError,
+          message: l10n.stNoConnectionMessage,
+        );
         return;
       }
-      /// TODO Replace with real login API when backend ready
-      await _mockLoginFlow();
-      Get.offNamed('/preference_food_satu');
-
-    }
-    catch (e) {
-      _fail(e.toString());
-    }
-    finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> _mockLoginFlow() async {
-    /// TODO Remove this when backend ready
-
-    await Future.delayed(
-      const Duration(seconds: 2),
-    );
-
-    /// TODO:
-    /// Replace with real API call:
-    ///
-    /// final handset =
-    ///   await RecipeMateAppUtil.getUniqueDeviceId();
-    ///
-    /// final response =
-    ///   await apiRepository.postApiLogin(
-    ///      username.value,
-    ///      password.value,
-    ///      handset,
-    ///   );
-    ///
-    /// TODO Parse response
-    ///
-    /// TODO Validate response code
-    ///
-    /// TODO Extract user data
-    ///
-    /// TODO Save to local storage
-    ///
-    /// Example:
-    /// await LocalStorage.saveUser(user);
-
-
-    /// TODO:
-    /// Example local save using SharedPreferences / SQLite
-    ///
-    /// await LocalStorage.saveLoginSession(
-    ///   username: username.value,
-    ///   token: "dummy_token",
-    /// );
-  }
-
-  Future<void> loginTrc(BuildContext context) async {
-    try {
-      final handset = await RecipeMateAppUtil.getUniqueDeviceId();
-      final response = await apiRepository.postApiLogin(
-        username.value,
+      final result = await apiRepository.postApiLogin(
+        email.value,
         password.value,
-        handset,
-        context
       );
-      /// TODO Parse JSON
-      ///
-      /// Example:
-      ///
-      /// final loginResponse =
-      ///    LoginResponse.fromJson(response);
-      ///
-      /// if (!loginResponse.success)
-      ///    throw Exception(loginResponse.message);
-
-      /// TODO Save user to local DB
-      ///
-      /// await UserLocalRepository.saveUser(
-      ///   loginResponse.user,
-      /// );
-    }
-    catch (e) {
-      rethrow;
+      if (result == null) {
+        _fail(l10n.stInternalServerError);
+        AppSnackbar.show(
+          title: l10n.stError,
+          message: l10n.stInternalServerError,
+        );
+        return;
+      }
+      final response = LoginResponse.fromJson(result);
+      final isSuccess = response.status == ConstantVar.stSuccess;
+      final message = response.message ?? l10n.stFailedLogin;
+      if (isSuccess && response.data?.token != null) {
+        await sessionController.setToken(response.data?.token ?? '');
+        await sessionController.setUserId(
+          response.data?.user?.id?.toString() ?? '',
+        );
+        await sessionController.setFullName(response.data?.user?.name ?? '');
+        await sessionController.setEmail(response.data?.user?.email ?? '');
+        await sessionController.setSavedPassword(password.value);
+        await sessionController.onUserLoggedIn();
+        AppSnackbar.show(title: l10n.stSuccess, message: message);
+        Get.offNamed('/home');
+      } else {
+        _fail(message);
+        AppSnackbar.show(title: l10n.stFailedLogin, message: message);
+      }
+    } catch (e) {
+      final message = e.toString();
+      _fail(message);
+      AppSnackbar.show(title: l10n.stError, message: message);
+    } finally {
+      isLoading.value = false;
     }
   }
 

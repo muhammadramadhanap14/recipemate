@@ -5,71 +5,103 @@ import 'package:get/get.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
-import 'package:recipemate/menus/05_preference_food/view/preference_food_dua_view.dart';
-import 'package:recipemate/menus/05_preference_food/view/preference_food_satu_view.dart';
-import 'package:recipemate/menus/05_preference_food/view/preference_food_tiga_view.dart';
-import 'package:recipemate/menus/06_recipemate_ai/view/recipemate_ai_view.dart';
-import 'package:recipemate/menus/07_security/view/security_view.dart';
+import 'package:recipemate/menus/04_home/view/home_list_view.dart';
+import 'package:recipemate/menus/04_home/view/notification_view.dart';
+import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/repository/api_repository.dart';
+import 'package:recipemate/repository/chat_api_repository.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/data_session_util_controller.dart';
+import 'package:recipemate/utils/notification_util.dart';
 import 'package:recipemate/utils/view_utils/error_view.dart';
 import 'package:recipemate/utils/view_utils/theme_controller.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'menus/01_splash/view/splash_view.dart';
 import 'menus/02_login/view/login_view.dart';
 import 'menus/04_home/view/home_nav_view.dart';
+import 'menus/05_security/view/security_view.dart';
+import 'menus/06_chat/view/chat_view.dart';
+import 'menus/07_chat_session/view/view_model/chat_history_controller.dart';
 import 'utils/view_utils/app_theme.dart';
 
 final talker = TalkerFlutter.init(); // Initialize Talker instance here
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Locale? appLocale;
 
-void main() {
-  runZonedGuarded(() {
-    WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-    //register dependency injection
-    Get.put<ApiRepository>(ApiRepository(), permanent: true);
-    Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
-    Get.put<ThemeController>(ThemeController(), permanent: true);
-    Get.put<DataSessionUtil>(DataSessionUtil(), permanent: true);
+      // Inisialisasi Notifikasi
+      await NotificationUtil.init();
+      await NotificationUtil.checkPendingNotification();
+      await NotificationUtil.forceInsertIfMissed();
 
-    Get.put<DataSessionUtilController>(
-      DataSessionUtilController(dataSessionUtil: Get.find()),
-      permanent: true,
-    );
+      //Inisialisasi awal storage untuk ambil Tema & Bahasa
+      final sessionUtil = DataSessionUtil();
+      final initialTheme = await sessionUtil.getLastTheme();
+      final initialLang = await sessionUtil.getLastLanguage();
 
-    // Set Flutter's error handler
-    FlutterError.onError = (FlutterErrorDetails details) {
-      talker.handle(details.exception, details.stack);
-      // String firstStackLine = details.stack.toString().split('\n').first;
+      //register dependency injection
+      Get.put<ApiRepository>(ApiRepository(), permanent: true);
+      Get.put<ChatApiRepository>(ChatApiRepository(), permanent: true);
+      Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
+
+      // Inisialisasi ThemeController dengan tema tersimpan
+      final themeController = Get.put<ThemeController>(
+        ThemeController(),
+        permanent: true,
+      );
+      themeController.initTheme(initialTheme);
+
+      Get.put<DataSessionUtil>(DataSessionUtil(), permanent: true);
+
+      Get.put<DataSessionUtilController>(
+        DataSessionUtilController(dataSessionUtil: Get.find()),
+        permanent: true,
+      );
+
+      // Initialize ChatHistoryController
+      Get.put<ChatHistoryController>(ChatHistoryController(), permanent: true);
+
+      // Initialize ChatViewModel here to allow const ChatView
+      //Set Locale awal jika ada
+      // if (initialLang != null && initialLang.isNotEmpty) {
+      //   appLocale = Locale(initialLang);
+      // }
+
+      // Set Flutter's error handler
+      FlutterError.onError = (FlutterErrorDetails details) {
+        talker.handle(details.exception, details.stack);
+        // String firstStackLine = details.stack.toString().split('\n').first;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          navigatorKey.currentState?.pushReplacementNamed(
+            '/error',
+            arguments: '${details.exception}\n${details.stack.toString()}',
+          );
+        });
+      };
+
+      runApp(const RecipemateApp());
+    },
+    (error, stackTrace) {
+      talker.handle(error, stackTrace);
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         navigatorKey.currentState?.pushReplacementNamed(
           '/error',
-          arguments: '${details.exception}\n${details.stack.toString()}',
+          arguments: '$error\n$stackTrace',
         );
       });
-    };
-
-    runApp(const RecipemateApp());
-  }, (error, stackTrace) {
-    talker.handle(error, stackTrace);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      navigatorKey.currentState?.pushReplacementNamed(
-        '/error',
-        arguments: '$error\n$stackTrace',
-      );
-    });
-  });
+    },
+  );
 }
 
 class RecipemateApp extends StatelessWidget {
   const RecipemateApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
@@ -79,33 +111,82 @@ class RecipemateApp extends StatelessWidget {
         //uncomment untuk aktifkan flutter talker
         // navigatorObservers: [TalkerRouteObserver(talker)], // Correct way to pass talker instance
         // navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('en'),
-          Locale('id'),
-        ],
+        supportedLocales: const [Locale('en'), Locale('id')],
+        locale: const Locale('id'),
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: themeController.themeMode.value,
         initialRoute: '/',
         getPages: [
           //GOTO FORM
-          GetPage(name: '/', page: () => const SplashView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/error', page: () => ErrorView(errorMessage: Get.arguments as String), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/login', page: () => const LoginView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/register', page: () => const RegisterView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/home', page: () => const HomeNavView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/home_detail', page: () => const HomeDetailView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/preference_food_satu', page: () => PreferenceFoodSatuView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/preference_food_dua', page: () => PreferenceFoodDuaView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/preference_food_tiga', page: () => PreferenceFoodTigaView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/recipemate_ai', page: () => const RecipemateAiView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
-          GetPage(name: '/security', page: () => const SecurityView(), transition: Transition.rightToLeftWithFade, transitionDuration: const Duration(milliseconds: 600)),
+          GetPage(
+            name: '/',
+            page: () => const SplashView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/error',
+            page: () => ErrorView(errorMessage: Get.arguments as String),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/login',
+            page: () => const LoginView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/register',
+            page: () => const RegisterView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/home',
+            page: () => const HomeNavView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/home_detail',
+            page: () => const HomeDetailView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/home_list',
+            page: () => const HomeListView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/chat',
+            page: () {
+              final session = Get.arguments as ChatSession;
+              return ChatView(session: session);
+            },
+          ),
+          GetPage(
+            name: '/security',
+            page: () => const SecurityView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+          GetPage(
+            name: '/notification',
+            page: () => const NotificationView(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
         ],
       );
     });

@@ -18,15 +18,10 @@ class ConstantVar {
 
   //image gif
   static const String noConnectionGif = "connection_lost.gif";
-  static const String confirmGif = "question.gif";
-  static const String successGif = "success.gif";
-  static const String warningGif = "warning.gif";
-  static const String loadingGif = "ic_loading.gif";
-  static const String errorGif = "error_3.gif";
 
   //return api :
-  static int intSuccess = 200;
-  static int intFailed = 500;
+  static String stSuccess = "success";
+  static String stError = "error";
 
   //status transaksi
   static const stNewData = 'new_data';

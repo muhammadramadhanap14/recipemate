@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:recipemate/utils/constant_var.dart';
+import 'package:recipemate/utils/recipemate_app_util.dart';
+import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/data_session_util_controller.dart';
@@ -9,14 +14,15 @@ import '../../../utils/view_utils/view_dialog_util.dart';
 
 class AccountViewModel extends GetxController {
   final DataSessionUtilController session;
-  final userName = 'Axel Darmawan'.obs;
-  final userId = 'axel.darmawan@example.com'.obs;
+  final fullName = ''.obs;
+  final emailId = ''.obs;
   final appVersion = '-'.obs;
-  final RxBool isDarkMode = false.obs;
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
   RxString currentLanguage = "".obs;
   RxString currentTheme = "".obs;
   final ImagePicker _picker = ImagePicker();
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  bool _isDialogShowing = false;
 
   AccountViewModel({
     required this.session
@@ -25,11 +31,62 @@ class AccountViewModel extends GetxController {
   @override
   void onInit(){
     super.onInit();
+    _startConnectivityListener();
+    checkInitialConnection();
     initializeLanguage();
     initializeTheme();
-    Future.microtask(() async {
-      await initAppVersion();
+    getUserFullName();
+    getUserEmail();
+    initAppVersion();
+  }
+
+  @override
+  void onClose() {
+    _connectivitySubscription?.cancel();
+    super.onClose();
+  }
+
+  void _startConnectivityListener() {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      checkInitialConnection();
     });
+  }
+
+  Future<void> checkInitialConnection() async {
+    final hasConnection = await RecipeMateAppUtil.checkConnection();
+    if (!hasConnection) {
+      _showNoInternetDialog();
+    }
+  }
+
+  void _showNoInternetDialog() {
+    if (_isDialogShowing) return;
+
+    final context = Get.context;
+    if (context != null) {
+      _isDialogShowing = true;
+      ViewDialogUtil().showOneButtonActionDialog(
+        AppLocalizations.of(context)!.stNoConnectionMessage,
+        AppLocalizations.of(context)!.backBtnTitle,
+        ConstantVar.noConnectionGif,
+        context,
+        null,
+        (dynamic val) {
+          _isDialogShowing = false;
+          checkInitialConnection();
+        },
+      );
+    }
+  }
+
+  Future<void> getUserFullName() async {
+    await session.loadFullName();
+    fullName.value = session.stFullName.value;
+  }
+
+  Future<void> getUserEmail() async {
+    await session.loadEmail();
+    emailId.value = session.stEmail.value;
   }
 
   Future<void> initAppVersion() async {
@@ -50,7 +107,10 @@ class AccountViewModel extends GetxController {
         await session.setProfileImage(pickedFile.path);
       }
     } catch (e) {
-      Get.snackbar(l10n.stError, l10n.stReasonFailedPhoto + e.toString());
+      AppSnackbar.show(
+        title: l10n.stError,
+        message: l10n.stReasonFailedPhoto + e.toString()
+      );
     }
   }
 
@@ -73,33 +133,38 @@ class AccountViewModel extends GetxController {
   }
 
   void initializeTheme() {
-    switch (themeMode.value) {
-      case ThemeMode.system:
-        currentTheme.value = "Default System";
-        break;
-      case ThemeMode.light:
-        currentTheme.value = "Light";
-        break;
-      case ThemeMode.dark:
-        currentTheme.value = "Dark";
-        break;
+    final savedTheme = session.stTheme.value;
+    if (savedTheme == 'light') {
+      themeMode.value = ThemeMode.light;
+      currentTheme.value = "Light";
+    } else if (savedTheme == 'dark') {
+      themeMode.value = ThemeMode.dark;
+      currentTheme.value = "Dark";
+    } else {
+      themeMode.value = ThemeMode.system;
+      currentTheme.value = "Default System";
     }
   }
 
-  void changeTheme(ThemeMode mode) {
+  void changeTheme(ThemeMode mode) async {
     themeMode.value = mode;
     Get.changeThemeMode(mode);
+    String themeStr = 'system';
     switch (mode) {
       case ThemeMode.system:
         currentTheme.value = "Default System";
+        themeStr = 'system';
         break;
       case ThemeMode.light:
         currentTheme.value = "Light";
+        themeStr = 'light';
         break;
       case ThemeMode.dark:
         currentTheme.value = "Dark";
+        themeStr = 'dark';
         break;
     }
+    await session.setLastTheme(themeStr);
   }
 
   void openThemeDialog(BuildContext context) async {
@@ -112,13 +177,15 @@ class AccountViewModel extends GetxController {
   void openLanguageDialog() {
     ViewDialogUtil.dialogSelectLanguage(
       context: Get.context!,
-      onSelected: (Locale? locale, String label) {
+      onSelected: (Locale? locale, String label) async {
         if (locale == null) {
           Get.updateLocale(Get.deviceLocale ?? const Locale('en'));
           currentLanguage.value = "Default System";
+          await session.setLastLanguage("");
         } else {
           Get.updateLocale(locale);
           currentLanguage.value = label;
+          await session.setLastLanguage(locale.languageCode);
         }
       },
     );
@@ -146,7 +213,8 @@ class AccountViewModel extends GetxController {
       message: AppLocalizations.of(context)!.stConfirmLogout,
       positiveTitle: AppLocalizations.of(context)!.confirmLogout,
       negativeTitle: AppLocalizations.of(context)!.stCancelTitle,
-      onPositiveClick: () {
+      onPositiveClick: () async {
+        await session.logout();
         Get.offAllNamed('/login');
       },
     );

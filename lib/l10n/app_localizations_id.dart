@@ -42,7 +42,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get changeFoodTypes => 'Ubah jenis makanan & preferensi diet';
 
   @override
-  String get stConfirmLogout => 'Apakah Anda yakin ingin keluar?';
+  String get stConfirmLogout =>
+      'Apakah Anda yakin ingin keluar? Semua data sesi akan dihapus, termasuk foto profil, autentikasi sidik jari, dan informasi tersimpan lainnya.';
 
   @override
   String get stConfirmChange => 'Apakah Anda yakin ingin mengubah?';
@@ -77,13 +78,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get stFinishBtn => 'Selesai!';
 
   @override
-  String get stRecommended => 'Rekomendasi untuk anda';
+  String get stRecommended => 'Rekomendasi Untuk Anda';
 
   @override
-  String get stTopSearching => 'Pencarian makanan teratas';
+  String get stTopSearching => 'Pencarian Makanan Teratas';
 
   @override
-  String get stSeeAll => 'Lihat semua';
+  String get stSeeAll => 'Lihat Semua';
 
   @override
   String get stSearchRecipes => 'Cari resep, bahan-bahan...';
@@ -101,7 +102,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stEveningGreeting => 'SELAMAT MALAM';
 
   @override
-  String get stWelcomeBack => 'Selamat Datang Kembali';
+  String get stWelcomeBack => 'Selamat Datang';
 
   @override
   String get stWelcomeGreet => 'Asisten dapur pintar Anda menanti.';
@@ -262,4 +263,102 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get confirmBtn => 'Confirm';
+
+  @override
+  String get stFailedLogin => 'Login Gagal';
+
+  @override
+  String get stFailedRegister => 'Register Gagal';
+
+  @override
+  String get stInternalServerError => 'Kesalahan Server Internal';
+
+  @override
+  String get stNoDataFound => 'Tidak Ada Data yang Ditemukan';
+
+  @override
+  String get stNoDataFoundMessage =>
+      'Tidak ada data yang tersedia untuk ditampilkan.';
+
+  @override
+  String get stNutritionalPrediction => 'Prediksi Nutrisi';
+
+  @override
+  String get stRecipeSummary => 'Ringkasan Resep';
+
+  @override
+  String get stCoreIngredients => 'Bahan Inti';
+
+  @override
+  String get stLoginFingerprint => 'Pindai untuk Masuk';
+
+  @override
+  String get stLoginFingerprintErrorMessage =>
+      'Kredensial tersimpan tidak ditemukan. Silakan masuk secara manual.';
+
+  @override
+  String get stEnableFingerprintNowTitle => 'Aktifkan Sidik Jari?';
+
+  @override
+  String get stEnableFingerprintNowMessage =>
+      'Buka kunci lebih cepat dan aman dengan sidik jari Anda. Apakah Anda ingin mengaktifkannya sekarang?';
+
+  @override
+  String get stRemindMeLaterBtn => 'Ingatkan saya nanti';
+
+  @override
+  String get stRemindMeLaterMessage =>
+      'Kami akan mengingatkan Anda setelah 48 jam.';
+
+  @override
+  String get stInstructions => 'Petunjuk';
+
+  @override
+  String get stNotification => 'Notifikasi';
+
+  @override
+  String get stDeleted => 'Dihapus';
+
+  @override
+  String get stNotificationRemoved => 'Notifikasi dihapus';
+
+  @override
+  String get stDeleteAll => 'Hapus Semua?';
+
+  @override
+  String get stDeleteAllMessage =>
+      'Apakah Anda yakin ingin menghapus semua notifikasi?';
+
+  @override
+  String get stHistoryChat => 'Riwayat Chat';
+
+  @override
+  String get stNoNotificationYet => 'Tidak Ada Notifikasi';
+
+  @override
+  String get stNoNotificationYetMessage =>
+      'Kami akan memberitahu Anda ketika ada hal baru dan seru untuk Anda!';
+
+  @override
+  String get stCheckBackLater => 'Cek kembali nanti untuk pembaruan';
+
+  @override
+  String get stViewPopular => 'Lihat Populer';
+
+  @override
+  String get stBrowseByCategory => 'Jelajahi berdasarkan kategori';
+
+  @override
+  String get stBrowseByCategoryMsg =>
+      'Jelajahi berdasarkan kategori atau pilih resep di bawah.';
+
+  @override
+  String get stPopularRecipes => 'Resep Populer';
+
+  @override
+  String get stRecommendedRecipes => 'Rekomendasi Resep';
+
+  @override
+  String get stPopularRecipesMsg =>
+      'Jelajahi resep lain yang dipilih secara acak untuk Anda.';
 }

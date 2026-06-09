@@ -1,32 +1,90 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/utils/constant_var.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../../models/model_response/register_response.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/recipemate_app_util.dart';
+import '../../../utils/view_utils/app_snackbar.dart';
+import '../../../utils/view_utils/view_dialog_util.dart';
 
 class RegisterViewModel extends GetxController {
   final ApiRepository apiRepository;
   final BuildContext context;
 
-  RegisterViewModel({
-    required this.apiRepository,
-    required this.context,
-  });
+  RegisterViewModel({required this.apiRepository, required this.context});
 
   final fullname = ''.obs;
-  final username = ''.obs;
+  final email = ''.obs;
   final password = ''.obs;
+
   final errMessage = ''.obs;
   final isLoading = false.obs;
   final isValidButton = false.obs;
   final isObscureText = true.obs;
+
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  bool _isDialogShowing = false;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _startConnectivityListener();
+    checkInitialConnection();
+  }
+
+  @override
+  void onClose() {
+    _connectivitySubscription?.cancel();
+    super.onClose();
+  }
+
+  void _startConnectivityListener() {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> results,
+    ) {
+      checkInitialConnection();
+    });
+  }
+
+  Future<void> checkInitialConnection() async {
+    final hasConnection = await RecipeMateAppUtil.checkConnection();
+    if (!hasConnection) {
+      _showNoInternetDialog();
+    }
+  }
+
+  void _showNoInternetDialog() {
+    if (_isDialogShowing) return;
+
+    final context = Get.context;
+    if (context != null) {
+      _isDialogShowing = true;
+      ViewDialogUtil().showOneButtonActionDialog(
+        AppLocalizations.of(context)!.stNoConnectionMessage,
+        AppLocalizations.of(context)!.backBtnTitle,
+        ConstantVar.noConnectionGif,
+        context,
+        null,
+        (dynamic val) {
+          _isDialogShowing = false;
+          checkInitialConnection();
+        },
+      );
+    }
+  }
 
   void setFullname(String value) {
     fullname.value = value.trim();
     _validate();
   }
 
-  void setUsername(String value) {
-    username.value = value.trim();
+  void setEmail(String value) {
+    email.value = value.trim();
     _validate();
   }
 
@@ -40,102 +98,56 @@ class RegisterViewModel extends GetxController {
   }
 
   void _validate() {
-    /// TODO replace with real validation
-    isValidButton.value = fullname.value.isNotEmpty && username.value.isNotEmpty && password.value.length >= 4;
+    final isEmailValid = email.value.contains("@");
+    isValidButton.value =
+        fullname.value.isNotEmpty && isEmailValid && password.value.length >= 6;
   }
 
-  Future<void> onLoginPressed() async {
+  Future<void> onRegisterPressed() async {
+    final l10n = AppLocalizations.of(Get.context!)!;
     if (isLoading.value) return;
     errMessage.value = '';
     isLoading.value = true;
     try {
-      /// TODO Check internet connection
       final hasConnection = await RecipeMateAppUtil.checkConnection();
       if (!hasConnection) {
-        _fail('No internet connection');
+        _fail(l10n.stNoConnectionMessage);
+        AppSnackbar.show(
+          title: l10n.stError,
+          message: l10n.stNoConnectionMessage,
+        );
         return;
       }
-      /// TODO Replace with real login API when backend ready
-      await _mockRegisterFlow();
-      Get.offNamed('/login');
-
-    }
-    catch (e) {
-      _fail(e.toString());
-    }
-    finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> _mockRegisterFlow() async {
-    /// TODO Remove this when backend ready
-
-    await Future.delayed(
-      const Duration(seconds: 2),
-    );
-
-    /// TODO:
-    /// Replace with real API call:
-    ///
-    /// final handset =
-    ///   await RecipeMateAppUtil.getUniqueDeviceId();
-    ///
-    /// final response =
-    ///   await apiRepository.postApiLogin(
-    ///      username.value,
-    ///      password.value,
-    ///      handset,
-    ///   );
-    ///
-    /// TODO Parse response
-    ///
-    /// TODO Validate response code
-    ///
-    /// TODO Extract user data
-    ///
-    /// TODO Save to local storage
-    ///
-    /// Example:
-    /// await LocalStorage.saveUser(user);
-
-
-    /// TODO:
-    /// Example local save using SharedPreferences / SQLite
-    ///
-    /// await LocalStorage.saveLoginSession(
-    ///   username: username.value,
-    ///   token: "dummy_token",
-    /// );
-  }
-
-  Future<void> registerTrc(BuildContext context) async {
-    try {
-      final handset = await RecipeMateAppUtil.getUniqueDeviceId();
-      final response = await apiRepository.postApiLogin(
-        username.value,
+      final result = await apiRepository.postApiRegister(
+        fullname.value,
+        email.value,
         password.value,
-        handset,
-        context
       );
-      /// TODO Parse JSON
-      ///
-      /// Example:
-      ///
-      /// final loginResponse =
-      ///    LoginResponse.fromJson(response);
-      ///
-      /// if (!loginResponse.success)
-      ///    throw Exception(loginResponse.message);
-
-      /// TODO Save user to local DB
-      ///
-      /// await UserLocalRepository.saveUser(
-      ///   loginResponse.user,
-      /// );
-    }
-    catch (e) {
-      rethrow;
+      debugPrint("result: $result");
+      if (result == null) {
+        _fail(l10n.stInternalServerError);
+        AppSnackbar.show(
+          title: l10n.stError,
+          message: l10n.stInternalServerError,
+        );
+        return;
+      }
+      final response = RegisterResponse.fromJson(result);
+      final isSuccess = response.status == ConstantVar.stSuccess;
+      final message = response.message;
+      if (isSuccess) {
+        AppSnackbar.show(title: l10n.stSuccess, message: message);
+        Get.offNamed('/login');
+      } else {
+        _fail(message);
+        AppSnackbar.show(title: l10n.stFailed, message: message);
+      }
+    } catch (e) {
+      final message = e.toString();
+      _fail(message);
+      AppSnackbar.show(title: l10n.stError, message: message);
+    } finally {
+      isLoading.value = false;
     }
   }
 
