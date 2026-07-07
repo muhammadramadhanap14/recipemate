@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
+import 'package:recipemate/utils/data_session_util.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/constant_var.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
@@ -38,7 +39,13 @@ class SplashViewModel extends GetxController {
     if (valConnection) {
       isLoading.value = true;
       await Future.delayed(splashDuration);
-      Get.offAllNamed('/login');
+      final sessionUtil = Get.find<DataSessionUtil>();
+      final token = await sessionUtil.getToken();
+      if (token != null && token.isNotEmpty) {
+        Get.offAllNamed('/home');
+      } else {
+        Get.offAllNamed('/login');
+      }
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ViewDialogUtil().showOneButtonActionDialog(
@@ -54,5 +61,4 @@ class SplashViewModel extends GetxController {
       });
     }
   }
-
 }
