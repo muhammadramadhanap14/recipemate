@@ -578,7 +578,7 @@ class _ChatViewState extends State<ChatView> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
-                color: colorScheme.onSurface.withValues(alpha: 0.05),
+                color: colorScheme.onSurface.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(30),
               ),
               child: TextField(
