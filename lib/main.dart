@@ -66,11 +66,10 @@ void main() async {
       // Initialize ChatHistoryController
       Get.put<ChatHistoryController>(ChatHistoryController(), permanent: true);
 
-      // Initialize ChatViewModel here to allow const ChatView
-      //Set Locale awal jika ada
-      // if (initialLang != null && initialLang.isNotEmpty) {
-      //   appLocale = Locale(initialLang);
-      // }
+      // init Language
+      if (initialLang != null && initialLang.isNotEmpty) {
+        appLocale = Locale(initialLang);
+      }
 
       // Set Flutter's error handler
       FlutterError.onError = (FlutterErrorDetails details) {
@@ -119,7 +118,7 @@ class RecipemateApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: const [Locale('en'), Locale('id')],
-        locale: const Locale('id'),
+        locale: appLocale,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: themeController.themeMode.value,
