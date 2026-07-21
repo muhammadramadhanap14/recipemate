@@ -10,6 +10,7 @@ import '../../../utils/view_utils/no_data_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../../../utils/view_utils/connection_wrapper.dart';
 import '../view_model/home_detail_view_model.dart';
+import '../../07_chat_session/view/view_model/chat_history_controller.dart';
 
 class HomeDetailView extends StatelessWidget {
   const HomeDetailView({super.key});
@@ -38,6 +39,25 @@ class HomeDetailView extends StatelessWidget {
     return ConnectionWrapper(
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            final chatHistoryController = Get.find<ChatHistoryController>();
+            final session = chatHistoryController.createNewSession();
+            final recipeName = viewModel.recipeDetail.value?.title ?? "";
+            Get.toNamed('/chat', arguments: {
+              'session': session,
+              'initialMessage': "bantu saya buatkan masakan $recipeName",
+            });
+          },
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          icon: Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.onPrimary),
+          label: customText(
+            text: AppLocalizations.of(context)!.stAskAI,
+            color: Theme.of(context).colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+            fontSize: DimensText.bodySmallText(context),
+          ),
+        ),
         body: Obx(() {
           if (viewModel.isLoading.value) {
             return Center(child: CircularProgressIndicator(

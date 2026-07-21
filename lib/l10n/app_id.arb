@@ -111,6 +111,6 @@
   "stBrowseByCategoryMsg" : "Jelajahi berdasarkan kategori atau pilih resep di bawah.",
   "stPopularRecipes" : "Resep Populer",
   "stRecommendedRecipes" : "Rekomendasi Resep",
-  "stPopularRecipesMsg" : "Jelajahi resep lain yang dipilih secara acak untuk Anda."
-
+  "stPopularRecipesMsg" : "Jelajahi resep lain yang dipilih secara acak untuk Anda.",
+  "stAskAI" : "Tanya AI"
 }

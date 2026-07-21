@@ -361,4 +361,7 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get stPopularRecipesMsg =>
       'Jelajahi resep lain yang dipilih secara acak untuk Anda.';
+
+  @override
+  String get stAskAI => 'Tanya AI';
 }

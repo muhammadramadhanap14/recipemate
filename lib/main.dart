@@ -171,8 +171,16 @@ class RecipemateApp extends StatelessWidget {
           GetPage(
             name: '/chat',
             page: () {
-              final session = Get.arguments as ChatSession;
-              return ChatView(session: session);
+              final args = Get.arguments;
+              if (args is ChatSession) {
+                return ChatView(session: args);
+              } else if (args is Map) {
+                return ChatView(
+                  session: args['session'] as ChatSession,
+                  initialText: args['initialMessage'] as String?,
+                );
+              }
+              return const ErrorView(errorMessage: "Invalid Chat Arguments");
             },
           ),
           GetPage(

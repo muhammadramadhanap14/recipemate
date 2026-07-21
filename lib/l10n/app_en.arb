@@ -111,5 +111,6 @@
   "stBrowseByCategoryMsg" : "Browse by category or pick a recipe below.",
   "stPopularRecipes" : "Popular Recipes",
   "stRecommendedRecipes" : "Recommended Recipes",
-  "stPopularRecipesMsg" : "Explore more recipes randomly selected for you."
+  "stPopularRecipesMsg" : "Explore more recipes randomly selected for you.",
+  "stAskAI" : "Ask AI"
 }

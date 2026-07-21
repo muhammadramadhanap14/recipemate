@@ -775,6 +775,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Explore more recipes randomly selected for you.'**
   String get stPopularRecipesMsg;
+
+  /// No description provided for @stAskAI.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask AI'**
+  String get stAskAI;
 }
 
 class _AppLocalizationsDelegate

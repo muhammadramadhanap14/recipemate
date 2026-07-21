@@ -359,4 +359,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get stPopularRecipesMsg =>
       'Explore more recipes randomly selected for you.';
+
+  @override
+  String get stAskAI => 'Ask AI';
 }

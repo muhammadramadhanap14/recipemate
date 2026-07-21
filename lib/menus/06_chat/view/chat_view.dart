@@ -16,9 +16,10 @@ import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 import '../../07_chat_session/view/view_model/chat_history_controller.dart';
 
 class ChatView extends StatefulWidget {
-  const ChatView({required this.session, super.key});
+  const ChatView({required this.session, this.initialText, super.key});
 
   final ChatSession session;
+  final String? initialText;
 
   @override
   State<ChatView> createState() => _ChatViewState();
@@ -26,10 +27,12 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   late final ChatViewModel controller;
+  late final TextEditingController inputController;
 
   @override
   void initState() {
     super.initState();
+    inputController = TextEditingController(text: widget.initialText);
 
     // Gunakan tag unik untuk setiap sesi agar GetX tidak menggunakan
     // ViewModel yang lama untuk sesi yang berbeda.
@@ -40,8 +43,6 @@ class _ChatViewState extends State<ChatView> {
       permanent: false,
     );
   }
-
-  late final inputController = TextEditingController();
 
   @override
   void dispose() {
@@ -582,6 +583,8 @@ class _ChatViewState extends State<ChatView> {
               ),
               child: TextField(
                 controller: inputController,
+                maxLines: 5,
+                minLines: 1,
                 style: TextStyle(
                   color: colorScheme.onSurface,
                   fontSize: DimensText.bodyText(context),
