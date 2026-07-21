@@ -107,7 +107,7 @@ class _ChatViewState extends State<ChatView> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+            icon: Icon(Icons.chevron_left),
             onPressed: () => Get.offNamed('/home'),
           ),
           Builder(
