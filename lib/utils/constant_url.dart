@@ -1,5 +1,5 @@
 class ConstantUrl {
-  static const String recipemateBaseUrl = "https://recipemate-api-653474751718.asia-southeast2.run.app";
+  static const String recipemateBaseUrl = "https://recipemate-backend-758249342696.asia-southeast2.run.app";
   static const String recipemateUrl = "$recipemateBaseUrl/api";
   static const String authLogin = "$recipemateUrl/auth/login";
   static const String authRegister = "$recipemateUrl/auth/register";
