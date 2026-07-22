@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../utils/constant_url.dart';
+import '../utils/token_interceptor.dart';
 
 class ApiRepository {
   late Dio _dio;
@@ -17,6 +18,7 @@ class ApiRepository {
     );
 
     _dio = Dio(options);
+    _dio.interceptors.add(TokenInterceptor());
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (RequestOptions options, RequestInterceptorHandler handler) {

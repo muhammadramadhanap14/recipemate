@@ -362,4 +362,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stAskAI => 'Ask AI';
+
+  @override
+  String get stSessionExpiredTitle => 'Session Expired';
+
+  @override
+  String get stSessionExpiredMessage =>
+      'Your session has expired. Please login again to continue.';
+
+  @override
+  String get stLoginAgainBtn => 'Login Again';
 }

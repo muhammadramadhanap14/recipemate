@@ -364,4 +364,14 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get stAskAI => 'Tanya AI';
+
+  @override
+  String get stSessionExpiredTitle => 'Sesi Berakhir';
+
+  @override
+  String get stSessionExpiredMessage =>
+      'Sesi Anda telah berakhir. Silakan masuk kembali untuk melanjutkan.';
+
+  @override
+  String get stLoginAgainBtn => 'Masuk Lagi';
 }

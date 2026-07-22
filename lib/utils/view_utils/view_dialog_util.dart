@@ -4,9 +4,93 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 import '../../l10n/app_localizations.dart';
+import '../../utils/data_session_util_controller.dart';
 import '../dimens_text.dart';
 
 class ViewDialogUtil {
+  static bool _isSessionExpiredDialogShowing = false;
+
+  static void showSessionExpiredDialog(BuildContext context) {
+    if (_isSessionExpiredDialogShowing) return;
+    _isSessionExpiredDialogShowing = true;
+
+    final l10n = AppLocalizations.of(context)!;
+    final screenW = RecipeMateAppUtil.screenWidth;
+    final screenH = RecipeMateAppUtil.screenHeight;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(screenW * 0.04),
+          ),
+          backgroundColor: Theme.of(dialogContext).scaffoldBackgroundColor,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: screenW * 0.75,
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(screenW * 0.05),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(screenW * 0.030),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.timer_off_outlined,
+                      color: Theme.of(dialogContext).colorScheme.primary,
+                      size: screenW * 0.06,
+                    ),
+                  ),
+                  SizedBox(height: screenH * 0.02),
+                  customText(
+                    text: l10n.stSessionExpiredTitle,
+                    fontSize: DimensText.bodyText(context),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(dialogContext).colorScheme.onSurface,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: screenH * 0.01),
+                  customText(
+                    text: l10n.stSessionExpiredMessage,
+                    fontSize: DimensText.captionText(context),
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(dialogContext).colorScheme.onSurfaceVariant,
+                    textAlign: TextAlign.center,
+                    intMaxLine: null,
+                  ),
+                  SizedBox(height: screenH * 0.025),
+                  SizedBox(
+                    width: double.infinity,
+                    child: customElevatedButton(
+                      onPressed: () async {
+                        _isSessionExpiredDialogShowing = false;
+                        final sessionController = Get.find<DataSessionUtilController>();
+                        await sessionController.logout();
+                        Get.offAllNamed('/login');
+                      },
+                      text: l10n.stLoginAgainBtn,
+                      backgroundColor: Theme.of(dialogContext).colorScheme.primary,
+                      fontColor: Theme.of(dialogContext).colorScheme.onPrimary,
+                      borderRadius: screenW * 0.03,
+                      fontSize: DimensText.buttonSmallText(context),
+                      padding: EdgeInsets.symmetric(vertical: screenH * 0.015),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   // Dialog choose theme
   static Future<ThemeMode?> dialogSelectTheme(BuildContext context, ThemeMode currentTheme) {

@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import 'data_session_util.dart';
 import 'notification_util.dart';
 
@@ -84,15 +86,32 @@ class DataSessionUtilController extends GetxController {
   Future<void> loadProfileImage() async {
     final path = await dataSessionUtil.getProfileImagePath();
     if (path != null && path.isNotEmpty) {
-      profileImage.value = File(path);
+      final file = File(path);
+      if (await file.exists()) {
+        profileImage.value = file;
+      } else {
+        profileImage.value = null;
+        await dataSessionUtil.clearProfileImagePath();
+      }
     } else {
       profileImage.value = null;
     }
   }
 
-  Future<void> setProfileImage(String path) async {
-    profileImage.value = File(path);
-    await dataSessionUtil.setProfileImagePath(path);
+  Future<void> setProfileImage(String tempPath) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final fileName = p.basename(tempPath);
+      final persistentPath = p.join(directory.path, fileName);
+      final tempFile = File(tempPath);
+      if (await tempFile.exists()) {
+        final persistentFile = await tempFile.copy(persistentPath);
+        profileImage.value = persistentFile;
+        await dataSessionUtil.setProfileImagePath(persistentPath);
+      }
+    } catch (e) {
+      Get.log("Error saving profile image: $e");
+    }
   }
 
   Future<void> clearProfileImage() async {

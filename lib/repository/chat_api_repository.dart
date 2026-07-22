@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/utils/constant_url.dart';
+import 'package:recipemate/utils/token_interceptor.dart';
 
 class ChatApiRepository {
   late Dio _dio;
@@ -19,6 +20,7 @@ class ChatApiRepository {
     );
 
     _dio = Dio(options);
+    _dio.interceptors.add(TokenInterceptor());
   }
 
   Future<List<ChatSession>> getChatSessions(

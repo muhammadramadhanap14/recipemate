@@ -781,6 +781,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ask AI'**
   String get stAskAI;
+
+  /// No description provided for @stSessionExpiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Session Expired'**
+  String get stSessionExpiredTitle;
+
+  /// No description provided for @stSessionExpiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please login again to continue.'**
+  String get stSessionExpiredMessage;
+
+  /// No description provided for @stLoginAgainBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Again'**
+  String get stLoginAgainBtn;
 }
 
 class _AppLocalizationsDelegate
