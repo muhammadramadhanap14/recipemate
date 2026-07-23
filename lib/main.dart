@@ -106,7 +106,17 @@ class RecipemateApp extends StatelessWidget {
     final themeController = Get.find<ThemeController>();
     return Obx(() {
       return GetMaterialApp(
-        title: 'Recipe Mate',
+        title: 'RecipeMate',
+        builder: (context, child) {
+          final mediaQuery = MediaQuery.of(context);
+
+          return MediaQuery(
+            data: mediaQuery.copyWith(
+              textScaler: const TextScaler.linear(1.0),
+            ),
+            child: child!,
+          );
+        },
         //uncomment untuk aktifkan flutter talker
         // navigatorObservers: [TalkerRouteObserver(talker)], // Correct way to pass talker instance
         // navigatorKey: navigatorKey,
