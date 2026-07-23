@@ -17,6 +17,8 @@ class LoginViewModel extends GetxController {
   final DataSessionUtilController sessionController;
   final BuildContext context;
   final LocalAuthentication auth = LocalAuthentication();
+  final emailFocusNode = FocusNode();
+  final passwordFocusNode = FocusNode();
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool _isDialogShowing = false;
 
@@ -44,6 +46,8 @@ class LoginViewModel extends GetxController {
 
   @override
   void onClose() {
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
     _connectivitySubscription?.cancel();
     super.onClose();
   }
@@ -101,7 +105,7 @@ class LoginViewModel extends GetxController {
   }
 
   void togglePasswordVisibility() {
-    isObscureText.value = !isObscureText.value;
+    isObscureText.toggle();
   }
 
   void _validate() {

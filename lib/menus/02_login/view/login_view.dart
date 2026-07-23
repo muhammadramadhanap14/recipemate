@@ -93,7 +93,7 @@ class LoginView extends StatelessWidget {
                         SizedBox(height: screenH * 0.01),
 
                         TextFormField(
-                          focusNode: FocusNode(),
+                          focusNode: viewModel.emailFocusNode,
                           keyboardType: TextInputType.emailAddress,
                           onChanged: viewModel.setEmail,
                           style: TextStyle(
@@ -147,7 +147,7 @@ class LoginView extends StatelessWidget {
                         SizedBox(height: screenH * 0.01),
 
                         Obx(() => TextFormField(
-                          focusNode: FocusNode(),
+                          focusNode: viewModel.passwordFocusNode,
                           obscureText: viewModel.isObscureText.value,
                           onChanged: viewModel.setPassword,
                           style: TextStyle(

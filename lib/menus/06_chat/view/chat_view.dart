@@ -57,41 +57,52 @@ class _ChatViewState extends State<ChatView> {
     return ConnectionWrapper(
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        resizeToAvoidBottomInset: false,
         drawer: _buildDrawer(context, historyController),
         appBar: _buildAppBar(context),
-        body: Column(
-          children: [
-            Expanded(
-              child: Obx(
-                () => ListView.builder(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Obx(() => ListView.builder(
+                  keyboardDismissBehavior:
+                  ScrollViewKeyboardDismissBehavior.onDrag,
                   reverse: true,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 20,
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    20,
+                    16,
+                    controller.isReady.value && !controller.isCooking.value
+                      ? 120
+                      : 80,
                   ),
                   itemCount: controller.messages.length,
                   itemBuilder: (context, index) {
                     final msg = controller
-                        .messages[controller.messages.length - 1 - index];
-                    return msg.isUser
-                        ? _buildUserMessage(context, msg)
-                        : _buildAiMessage(context, msg);
+                      .messages[controller.messages.length - 1 - index];
+                    return msg.isUser ? _buildUserMessage(context, msg) : _buildAiMessage(context, msg);
                   },
-                ),
+                )),
               ),
-            ),
 
-            /// START COOKING BUTTON (IF READY)
-            Obx(() {
-              if (!controller.isReady.value || controller.isCooking.value) {
-                return const SizedBox();
-              }
-              return _buildStartCookingCard(context);
-            }),
+              /// START COOKING BUTTON (IF READY)
+              Obx(() {
+                if (!controller.isReady.value || controller.isCooking.value) {
+                  return const SizedBox();
+                }
+                return _buildStartCookingCard(context);
+              }),
 
-            /// INPUT FIELD
-            _buildInputField(context),
-          ],
+              AnimatedPadding(
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOut,
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: _buildInputField(context),
+              ),
+            ],
+          ),
         ),
       ),
     );

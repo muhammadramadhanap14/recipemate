@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,9 @@ import '../../../utils/view_utils/view_dialog_util.dart';
 class RegisterViewModel extends GetxController {
   final ApiRepository apiRepository;
   final BuildContext context;
+  final fullnameFocusNode = FocusNode();
+  final emailFocusNode = FocusNode();
+  final passwordFocusNode = FocusNode();
 
   RegisterViewModel({required this.apiRepository, required this.context});
 
@@ -39,6 +41,9 @@ class RegisterViewModel extends GetxController {
 
   @override
   void onClose() {
+    fullnameFocusNode.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
     _connectivitySubscription?.cancel();
     super.onClose();
   }
@@ -94,7 +99,7 @@ class RegisterViewModel extends GetxController {
   }
 
   void togglePasswordVisibility() {
-    isObscureText.value = !isObscureText.value;
+    isObscureText.toggle();
   }
 
   void _validate() {
