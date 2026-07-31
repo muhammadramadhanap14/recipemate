@@ -9,8 +9,11 @@ import 'package:http/http.dart' as http;
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/utils/constant_url.dart';
+import 'package:recipemate/utils/notification_util.dart';
+import 'package:vibration/vibration.dart';
 
 import '../../../../repository/chat_api_repository.dart';
+import '../../../../utils/data_session_util.dart';
 import '../../../../utils/data_session_util_controller.dart';
 import '../../../07_chat_session/view/view_model/chat_history_controller.dart';
 
@@ -72,8 +75,13 @@ class ChatViewModel extends GetxController {
   /// INIT (LOAD HISTORY)
   /// =========================
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
+
+    final sessionUtil = Get.find<DataSessionUtil>();
+    await sessionUtil.setCurrentChatSessionId(
+      session.id,
+    );
 
     dev.log("ChatViewModel: Initializing with session ID: ${session.id}");
     dev.log("ChatViewModel: Session has ${session.messages.length} messages");
@@ -329,6 +337,7 @@ class ChatViewModel extends GetxController {
     timer?.cancel();
     isTimerRunning.value = false;
     remainingSeconds.value = 0;
+    NotificationUtil.cancelTimerNotifications();
 
     isCooking.value = false;
     isReady.value = false;
@@ -425,15 +434,23 @@ class ChatViewModel extends GetxController {
     if (isTimerRunning.value) {
       timer?.cancel();
       isTimerRunning.value = false;
+      NotificationUtil.cancelTimerNotifications();
     } else {
       isTimerRunning.value = true;
+      NotificationUtil.showTimerNotification(remainingSeconds.value, recipeName.value);
+      NotificationUtil.scheduleTimerFinishedNotification(remainingSeconds.value, recipeName.value);
 
-      timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      timer = Timer.periodic(const Duration(seconds: 1), (t) async {
         if (remainingSeconds.value > 0) {
           remainingSeconds.value--;
         } else {
           t.cancel();
           isTimerRunning.value = false;
+
+          if (await Vibration.hasVibrator()) {
+            Vibration.vibrate(duration: 1000);
+          }
+          NotificationUtil.cancelTimerNotifications();
 
           messages.add(ChatMessage(text: "⏰ Waktu selesai!", isUser: false));
 
@@ -448,6 +465,7 @@ class ChatViewModel extends GetxController {
 
     timer?.cancel();
     isTimerRunning.value = false;
+    NotificationUtil.cancelTimerNotifications();
 
     if (seconds > 0) {
       remainingSeconds.value = seconds;
@@ -462,5 +480,12 @@ class ChatViewModel extends GetxController {
   void _saveToHistory() {
     final historyController = Get.find<ChatHistoryController>();
     historyController.updateSession(session, messages);
+  }
+
+  @override
+  void onClose() {
+    timer?.cancel();
+    NotificationUtil.cancelTimerNotifications();
+    super.onClose();
   }
 }

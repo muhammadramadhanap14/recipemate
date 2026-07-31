@@ -9,13 +9,11 @@ import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 
 import '../../../l10n/app_localizations.dart';
-import '../../../repository/chat_api_repository.dart';
 import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 
 class AccountViewModel extends GetxController {
   final DataSessionUtilController session;
-  final ChatApiRepository chatApiRepository;
   final fullName = ''.obs;
   final emailId = ''.obs;
   final appVersion = '-'.obs;
@@ -27,14 +25,12 @@ class AccountViewModel extends GetxController {
   bool _isDialogShowing = false;
 
   AccountViewModel({
-    required this.session,
-    required this.chatApiRepository,
+    required this.session
   });
 
   @override
   void onInit(){
     super.onInit();
-    checkTokenValidity();
     _startConnectivityListener();
     checkInitialConnection();
     initializeLanguage();
@@ -42,21 +38,6 @@ class AccountViewModel extends GetxController {
     getUserFullName();
     getUserEmail();
     initAppVersion();
-  }
-
-  Future<void> checkTokenValidity() async {
-    await session.loadToken();
-    final token = session.stToken.value;
-
-    if (token.isEmpty) {
-      final context = Get.context;
-      if (context != null) {
-        ViewDialogUtil.showSessionExpiredDialog(context);
-      }
-      return;
-    }
-
-    await chatApiRepository.getChatSessions(token);
   }
 
   @override

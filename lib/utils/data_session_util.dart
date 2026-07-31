@@ -15,6 +15,22 @@ class DataSessionUtil {
   static const String _lastThemeKey = 'last_theme';
   static const String _lastLoginTimestampKey = 'last_login_timestamp';
   static const String _notificationHistoryKey = 'notification_history';
+  static const String currentChatSessionKey = "current_chat_session";
+
+  Future<void> setCurrentChatSessionId(String sessionId) async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.setString(currentChatSessionKey, sessionId);
+  }
+
+  Future<String?> getCurrentChatSessionId() async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.getString(currentChatSessionKey);
+  }
+
+  Future<void> clearCurrentChatSessionId() async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.remove(currentChatSessionKey);
+  }
 
   Future<void> setFingerprint(bool value) async {
     final prefs = await SharedPreferences.getInstance();

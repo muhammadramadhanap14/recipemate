@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -31,7 +32,6 @@ class NotificationUtil {
           'Reminder',
           'Don\'t forget to use RecipeMate today!',
         );
-        Get.toNamed('/');
       },
     );
 
@@ -43,6 +43,9 @@ class NotificationUtil {
   }
 
   static Future<void> _saveToHistory(String title, String body) async {
+    if (!Get.isRegistered<DataSessionUtilController>()) {
+      return;
+    }
     final session = Get.find<DataSessionUtilController>();
     await session.addNotification({
       'title': title,
@@ -94,6 +97,80 @@ class NotificationUtil {
         icon: 'ic_notification',
       ),
     );
+  }
+
+  static NotificationDetails _timerNotificationDetails({
+    bool ongoing = false,
+    bool showWhen = true,
+    int? when,
+    bool usesChronometer = false,
+    bool chronometerCountDown = false,
+    Int64List? vibrationPattern,
+  }) {
+    return NotificationDetails(
+      android: AndroidNotificationDetails(
+        'recipemate_timer_channel',
+        'Cooking Timer',
+        channelDescription: 'Notifications for active cooking timers',
+        importance: Importance.max,
+        priority: Priority.high,
+        ongoing: ongoing,
+        showWhen: showWhen,
+        when: when,
+        usesChronometer: usesChronometer,
+        chronometerCountDown: chronometerCountDown,
+        icon: 'ic_notification',
+        vibrationPattern: vibrationPattern,
+        category: AndroidNotificationCategory.alarm,
+      ),
+    );
+  }
+
+  static Future<void> showTimerNotification(
+      int seconds,
+      String recipeName,
+      ) async {
+    final expiryTime = DateTime.now()
+        .add(Duration(seconds: seconds))
+        .millisecondsSinceEpoch;
+
+    await _notificationsPlugin.show(
+      id: 1,
+      title: 'Timer: $recipeName',
+      body: 'Cooking in progress...',
+      notificationDetails: _timerNotificationDetails(
+        ongoing: true,
+        when: expiryTime,
+        usesChronometer: true,
+        chronometerCountDown: true,
+      ),
+    );
+  }
+
+  static Future<void> scheduleTimerFinishedNotification(
+      int seconds,
+      String recipeName,
+      ) async {
+    final scheduledTime =
+    tz.TZDateTime.now(tz.local).add(Duration(seconds: seconds));
+
+    final vibrationPattern = Int64List.fromList([0, 500, 200, 500]);
+
+    await _notificationsPlugin.zonedSchedule(
+      id: 2,
+      title: '⏰ Time\'s Up!',
+      body: 'Step for $recipeName is finished!',
+      scheduledDate: scheduledTime,
+      notificationDetails: _timerNotificationDetails(
+        vibrationPattern: vibrationPattern,
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+  }
+
+  static Future<void> cancelTimerNotifications() async {
+    await _notificationsPlugin.cancel(id: 1);
+    await _notificationsPlugin.cancel(id: 2);
   }
 
   // ================= SHOW INSTANT =================

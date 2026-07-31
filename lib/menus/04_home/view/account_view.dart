@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../repository/chat_api_repository.dart';
 import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/dimens_text.dart';
@@ -18,7 +17,6 @@ class AccountView extends StatelessWidget {
     final AccountViewModel viewModel = Get.put(
       AccountViewModel(
         session: Get.find<DataSessionUtilController>(),
-        chatApiRepository: Get.find<ChatApiRepository>(),
       )
     );
     RecipeMateAppUtil.init(context);
