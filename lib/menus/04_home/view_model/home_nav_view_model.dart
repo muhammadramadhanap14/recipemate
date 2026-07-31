@@ -7,6 +7,7 @@ import 'package:recipemate/menus/04_home/view_model/home_view_model.dart';
 import '../../../utils/view_utils/app_snackbar.dart';
 import '../view/account_view.dart';
 import '../view/home_view.dart';
+import 'account_view_model.dart';
 
 class HomeNavViewModel extends GetxController {
   var selectedIndex = 0.obs;
@@ -24,8 +25,25 @@ class HomeNavViewModel extends GetxController {
       final homeVM = Get.find<HomeViewModel>();
       homeVM.resetSearch();
     } catch (_) {
-      // Jika belum di-inject, abaikan
+      AppSnackbar.show(
+        title: AppLocalizations.of(Get.context!)!.stError,
+        message: "HomeViewModel not found"
+      );
     }
+
+    if (index == 1) {
+      try {
+        final accountVM = Get.find<AccountViewModel>();
+        accountVM.checkTokenValidity();
+      } catch (_) {
+        debugPrint("HomeNavViewModel: AccountViewModel not found");
+        AppSnackbar.show(
+          title: AppLocalizations.of(Get.context!)!.stError,
+          message: "AccountViewModel not found"
+        );
+      }
+    }
+
     selectedIndex.value = index;
     update();
   }
