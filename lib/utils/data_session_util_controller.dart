@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:recipemate/repository/chat_api_repository.dart';
 import 'data_session_util.dart';
 import 'notification_util.dart';
 
@@ -188,6 +189,12 @@ class DataSessionUtilController extends GetxController {
 
   Future<void> _persist() async {
     await dataSessionUtil.saveNotificationHistory(notificationHistory);
+  }
+
+  Future<void> checkSession() async {
+    if (stToken.value.isNotEmpty) {
+      Get.find<ChatApiRepository>().validateToken(stToken.value);
+    }
   }
 
   Future<void> logout() async {

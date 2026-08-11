@@ -142,13 +142,4 @@ class SecurityViewModel extends GetxController {
       );
     }
   }
-
-  void openChangePasswordDialog (BuildContext context) {
-    ViewDialogUtil().dialogChangePassword(
-      context: context,
-      onConfirm: (oldPassword, newPassword) {
-        //TODO Fungsi untuk mengubah kata sandi
-      }
-    );
-  }
 }

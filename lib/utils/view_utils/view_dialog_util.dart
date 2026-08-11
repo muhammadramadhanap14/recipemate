@@ -355,6 +355,10 @@ class ViewDialogUtil {
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(screenW * 0.04),
+            side: BorderSide(
+              color: Theme.of(dialogContext).colorScheme.surface,
+              width: 1.0,
+            ),
           ),
           backgroundColor: Theme.of(dialogContext).scaffoldBackgroundColor,
           child: ConstrainedBox(
@@ -418,127 +422,6 @@ class ViewDialogUtil {
                     fontColor: Theme.of(dialogContext).colorScheme.onSurfaceVariant,
                     fontSize: DimensText.buttonSmallText(context),
                     fontWeight: FontWeight.w600,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void dialogChangePassword({
-    required BuildContext context,
-    required void Function(
-      String oldPassword,
-      String newPassword
-    )
-    onConfirm,
-  }) {
-    final TextEditingController oldPasswordController = TextEditingController();
-    final TextEditingController newPasswordController = TextEditingController();
-    final FocusNode oldPasswordFocus = FocusNode();
-    final FocusNode newPasswordFocus = FocusNode();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        final theme = Theme.of(dialogContext);
-        final screenW = RecipeMateAppUtil.screenWidth;
-        final screenH = RecipeMateAppUtil.screenHeight;
-
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(screenW * 0.04),
-          ),
-          backgroundColor: theme.scaffoldBackgroundColor,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: screenW * 0.85,
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(screenW * 0.06),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: customText(
-                      text: AppLocalizations.of(context)!.stChangePassword,
-                      fontSize: DimensText.bodyText(context),
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  SizedBox(height: screenH * 0.03),
-                  customText(
-                    text: AppLocalizations.of(context)!.stOldPassword,
-                    fontSize: DimensText.microText(context),
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
-                  SizedBox(height: screenH * 0.01),
-                  customTextFormField(
-                    context: context,
-                    controller: oldPasswordController,
-                    focusNode: oldPasswordFocus,
-                    obscureText: false,
-                    isSuffixIcon: false,
-                    enableTextColor: theme.colorScheme.onSurface.toHex(),
-                    enableFillColor: theme.cardColor.toHex(),
-                    isBorderSide: false,
-                  ),
-                  SizedBox(height: screenH * 0.02),
-                  customText(
-                    text: AppLocalizations.of(context)!.stNewPaswword,
-                    fontSize: DimensText.microText(context),
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
-                  SizedBox(height: screenH * 0.01),
-                  customTextFormField(
-                    context: context,
-                    controller: newPasswordController,
-                    focusNode: newPasswordFocus,
-                    obscureText: false,
-                    isSuffixIcon: false,
-                    enableTextColor: theme.colorScheme.onSurface.toHex(),
-                    enableFillColor: theme.cardColor.toHex(),
-                    isBorderSide: false,
-                  ),
-                  SizedBox(height: screenH * 0.04),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: customOutlinedButton(
-                          onPressed: () => Navigator.of(dialogContext).pop(),
-                          text: AppLocalizations.of(context)!.stCancelTitle,
-                          backgroundColor: theme.scaffoldBackgroundColor,
-                          borderColor: theme.scaffoldBackgroundColor,
-                          fontColor: theme.colorScheme.onSurface,
-                          fontSize: DimensText.buttonSmallText(context),
-                        ),
-                      ),
-                      SizedBox(width: screenW * 0.03),
-                      Expanded(
-                        child: customRawMaterialButton(
-                          onPressed: () {
-                            if (oldPasswordController.text.isNotEmpty && newPasswordController.text.isNotEmpty) {
-                              Navigator.of(dialogContext).pop();
-                              onConfirm(oldPasswordController.text, newPasswordController.text);
-                            }
-                          },
-                          text: AppLocalizations.of(context)!.confirmBtn,
-                          fontColor: theme.colorScheme.onPrimary,
-                          backgroundColor: theme.colorScheme.primary,
-                          fontSize: DimensText.buttonSmallText(context),
-                          douWidth: double.infinity,
-                          douHeight: 40,
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),

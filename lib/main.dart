@@ -107,6 +107,22 @@ class RecipemateApp extends StatelessWidget {
     return Obx(() {
       return GetMaterialApp(
         title: 'RecipeMate',
+        routingCallback: (routing) {
+          if (routing != null) {
+            final protectedRoutes = [
+              '/home',
+              '/home_detail',
+              '/home_list',
+              '/chat',
+              '/security',
+              '/notification'
+            ];
+            if (protectedRoutes.contains(routing.current)) {
+              final sessionController = Get.find<DataSessionUtilController>();
+              sessionController.checkSession();
+            }
+          }
+        },
         builder: (context, child) {
           final mediaQuery = MediaQuery.of(context);
 

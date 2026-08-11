@@ -23,6 +23,18 @@ class ChatApiRepository {
     _dio.interceptors.add(TokenInterceptor());
   }
 
+  Future<void> validateToken(String token) async {
+    try {
+      await _dio.get(
+        '/chat/sessions',
+        queryParameters: {'limit': 1},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } catch (e) {
+      debugPrint("ChatApiRepository: validateToken check done");
+    }
+  }
+
   Future<List<ChatSession>> getChatSessions(
     String token, {
     bool includeMessages = true,
