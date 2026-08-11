@@ -6,9 +6,12 @@ class TokenInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (err.response?.statusCode == 401) {
-      final context = Get.context;
-      if (context != null) {
-        ViewDialogUtil.showSessionExpiredDialog(context);
+      final currentRoute = Get.currentRoute;
+      if (currentRoute != '/' && currentRoute != '/login' && currentRoute != '/register') {
+        final context = Get.context;
+        if (context != null) {
+          ViewDialogUtil.showReloginDialog(context);
+        }
       }
     }
     super.onError(err, handler);
