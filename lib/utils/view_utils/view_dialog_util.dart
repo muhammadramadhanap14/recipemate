@@ -7,6 +7,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/model_response/login_response.dart';
 import '../../repository/api_repository.dart';
 import '../../utils/data_session_util_controller.dart';
+import 'package:local_auth/local_auth.dart';
 import '../constant_var.dart';
 import '../dimens_text.dart';
 import 'app_snackbar.dart';
@@ -26,6 +27,7 @@ class ViewDialogUtil {
 
     final TextEditingController passwordController = TextEditingController();
     final FocusNode passwordFocusNode = FocusNode();
+    final LocalAuthentication auth = LocalAuthentication();
 
     showDialog(
       context: context,
@@ -36,6 +38,63 @@ class ViewDialogUtil {
 
         return StatefulBuilder(
           builder: (context, setState) {
+            Future<void> loginWithBiometric() async {
+              try {
+                final bool authenticated = await auth.authenticate(
+                  localizedReason: l10n.stLoginFingerprint,
+                  options: const AuthenticationOptions(
+                    stickyAuth: true,
+                    biometricOnly: true,
+                  ),
+                );
+
+                if (authenticated) {
+                  final savedEmail = sessionController.stEmail.value;
+                  final savedPassword = await sessionController.getSavedPassword();
+
+                  if (savedEmail.isNotEmpty && savedPassword != null) {
+                    setState(() {
+                      isLoading = true;
+                      errorMessage = '';
+                    });
+
+                    final result = await apiRepository.postApiLogin(savedEmail, savedPassword);
+
+                    if (result == null) {
+                      setState(() {
+                        errorMessage = l10n.stInternalServerError;
+                        isLoading = false;
+                      });
+                      return;
+                    }
+
+                    final response = LoginResponse.fromJson(result);
+                    if (response.status == ConstantVar.stSuccess && response.data?.token != null) {
+                      await sessionController.setToken(response.data?.token ?? '');
+                      await sessionController.onUserLoggedIn();
+                      _isReloginDialogShowing = false;
+                      Get.back();
+                      AppSnackbar.show(title: l10n.stSuccess, message: response.message ?? l10n.stSuccess);
+                    } else {
+                      setState(() {
+                        errorMessage = response.message ?? l10n.stFailedLogin;
+                        isLoading = false;
+                      });
+                    }
+                  } else {
+                    setState(() {
+                      errorMessage = l10n.stLoginFingerprintErrorMessage;
+                    });
+                  }
+                }
+              } catch (e) {
+                setState(() {
+                  errorMessage = e.toString();
+                  isLoading = false;
+                });
+              }
+            }
+
             return PopScope(
               canPop: false,
               child: Dialog(
@@ -142,71 +201,84 @@ class ViewDialogUtil {
                             ),
                           ],
                           SizedBox(height: screenH * 0.04),
-                          SizedBox(
-                            width: double.infinity,
-                            child: customElevatedButton(
-                              onPressed: isLoading ? null : () async {
-                                if (passwordController.text.isEmpty) {
-                                  setState(() {
-                                    errorMessage = "Password cannot be empty";
-                                  });
-                                  return;
-                                }
+                          Row(
+                            children: [
+                              Expanded(
+                                child: customElevatedButton(
+                                  onPressed: isLoading ? null : () async {
+                                    if (passwordController.text.isEmpty) {
+                                      setState(() {
+                                        errorMessage = "Password cannot be empty";
+                                      });
+                                      return;
+                                    }
 
-                                setState(() {
-                                  isLoading = true;
-                                  errorMessage = '';
-                                });
-
-                                try {
-                                  final result = await apiRepository.postApiLogin(
-                                    sessionController.stEmail.value,
-                                    passwordController.text,
-                                  );
-
-                                  if (result == null) {
                                     setState(() {
-                                      errorMessage = l10n.stInternalServerError;
-                                      isLoading = false;
+                                      isLoading = true;
+                                      errorMessage = '';
                                     });
-                                    return;
-                                  }
 
-                                  final response = LoginResponse.fromJson(result);
-                                  final isSuccess = response.status == ConstantVar.stSuccess;
+                                    try {
+                                      final result = await apiRepository.postApiLogin(
+                                        sessionController.stEmail.value,
+                                        passwordController.text,
+                                      );
 
-                                  if (isSuccess && response.data?.token != null) {
-                                    await sessionController.setToken(response.data?.token ?? '');
-                                    await sessionController.setSavedPassword(passwordController.text);
-                                    await sessionController.onUserLoggedIn();
-                                    
-                                    _isReloginDialogShowing = false;
-                                    Get.back(); // Close dialog
-                                    
-                                    AppSnackbar.show(
-                                      title: l10n.stSuccess,
-                                      message: response.message ?? l10n.stSuccess,
-                                    );
-                                  } else {
-                                    setState(() {
-                                      errorMessage = response.message ?? l10n.stFailedLogin;
-                                      isLoading = false;
-                                    });
-                                  }
-                                } catch (e) {
-                                  setState(() {
-                                    errorMessage = e.toString();
-                                    isLoading = false;
-                                  });
-                                }
-                              },
-                              text: isLoading ? "Logging in..." : l10n.stLoginAgainBtn,
-                              backgroundColor: Theme.of(dialogContext).colorScheme.primary,
-                              fontColor: Theme.of(dialogContext).colorScheme.onPrimary,
-                              borderRadius: screenW * 0.03,
-                              fontSize: DimensText.buttonSmallText(context),
-                              padding: EdgeInsets.symmetric(vertical: screenH * 0.015),
-                            ),
+                                      if (result == null) {
+                                        setState(() {
+                                          errorMessage = l10n.stInternalServerError;
+                                          isLoading = false;
+                                        });
+                                        return;
+                                      }
+
+                                      final response = LoginResponse.fromJson(result);
+                                      final isSuccess = response.status == ConstantVar.stSuccess;
+
+                                      if (isSuccess && response.data?.token != null) {
+                                        await sessionController.setToken(response.data?.token ?? '');
+                                        await sessionController.setSavedPassword(passwordController.text);
+                                        await sessionController.onUserLoggedIn();
+                                        
+                                        _isReloginDialogShowing = false;
+                                        Get.back();
+                                        
+                                        AppSnackbar.show(
+                                          title: l10n.stSuccess,
+                                          message: response.message ?? l10n.stSuccess,
+                                        );
+                                      } else {
+                                        setState(() {
+                                          errorMessage = response.message ?? l10n.stFailedLogin;
+                                          isLoading = false;
+                                        });
+                                      }
+                                    } catch (e) {
+                                      setState(() {
+                                        errorMessage = e.toString();
+                                        isLoading = false;
+                                      });
+                                    }
+                                  },
+                                  text: isLoading ? "Logging in..." : l10n.stLoginAgainBtn,
+                                  backgroundColor: Theme.of(dialogContext).colorScheme.primary,
+                                  fontColor: Theme.of(dialogContext).colorScheme.onPrimary,
+                                  borderRadius: screenW * 0.03,
+                                  fontSize: DimensText.buttonSmallText(context),
+                                  padding: EdgeInsets.symmetric(vertical: screenH * 0.015),
+                                ),
+                              ),
+                              if (sessionController.isFingerprintEnabled.value) ...[
+                                SizedBox(width: screenW * 0.03),
+                                customIconButton(
+                                  icon: Icons.fingerprint,
+                                  onPressed: isLoading ? null : () => loginWithBiometric(),
+                                  enabledColor: Theme.of(dialogContext).colorScheme.primary,
+                                  size: 48,
+                                  iconSize: 30,
+                                ),
+                              ],
+                            ],
                           ),
                           SizedBox(height: screenH * 0.01),
                           customTextButton(
@@ -228,7 +300,6 @@ class ViewDialogUtil {
             );
           },
         );
-
       },
     );
   }
