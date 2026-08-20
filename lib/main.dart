@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
@@ -33,6 +34,9 @@ void main() async {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      // Initialize Liquid Glass Widgets
+      await LiquidGlassWidgets.initialize();
 
       // Inisialisasi Notifikasi
       await NotificationUtil.init();
@@ -105,9 +109,10 @@ class RecipemateApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
     return Obx(() {
-      return GetMaterialApp(
-        title: 'RecipeMate',
-        routingCallback: (routing) {
+      return LiquidGlassWidgets.wrap(
+        child: GetMaterialApp(
+          title: 'RecipeMate',
+          routingCallback: (routing) {
           if (routing != null) {
             final protectedRoutes = [
               '/home',
@@ -221,7 +226,7 @@ class RecipemateApp extends StatelessWidget {
             transitionDuration: const Duration(milliseconds: 600),
           ),
         ],
-      );
+      ));
     });
   }
 }
