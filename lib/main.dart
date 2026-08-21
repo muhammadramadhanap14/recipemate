@@ -25,6 +25,7 @@ import 'menus/05_security/view/security_view.dart';
 import 'menus/06_chat/view/chat_view.dart';
 import 'menus/07_chat_session/view/view_model/chat_history_controller.dart';
 import 'utils/view_utils/app_theme.dart';
+import 'utils/view_utils/transition_controller.dart';
 
 final talker = TalkerFlutter.init(); // Initialize Talker instance here
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -87,7 +88,13 @@ void main() async {
         });
       };
 
-      runApp(const RecipemateApp());
+      runApp(
+        LiquidGlassWidgets.wrap(
+          child: const RecipemateApp(),
+          brightnessResolver: Theme.maybeBrightnessOf,
+          adaptiveQuality: true,
+        ),
+      );
     },
     (error, stackTrace) {
       talker.handle(error, stackTrace);
@@ -159,44 +166,44 @@ class RecipemateApp extends StatelessWidget {
           GetPage(
             name: '/',
             page: () => const SplashView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/error',
             page: () => ErrorView(errorMessage: Get.arguments as String),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/login',
             page: () => const LoginView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/register',
             page: () => const RegisterView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/home',
             page: () => const HomeNavView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/home_detail',
             page: () => const HomeDetailView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/home_list',
             page: () => const HomeListView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/chat',
@@ -216,14 +223,14 @@ class RecipemateApp extends StatelessWidget {
           GetPage(
             name: '/security',
             page: () => const SecurityView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/notification',
             page: () => const NotificationView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
         ],
       ));
