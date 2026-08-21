@@ -54,8 +54,8 @@ class HomeNavView extends StatelessWidget {
         ? const SizedBox.shrink() : Padding(
           padding: EdgeInsets.only(
             bottom: RecipeMateAppUtil.screenHeight * 0.02,
-            left: RecipeMateAppUtil.screenWidth * 0.04,
-            right: RecipeMateAppUtil.screenWidth * 0.04,
+            left: RecipeMateAppUtil.screenWidth * 0.05,
+            right: RecipeMateAppUtil.screenWidth * 0.05,
           ),
           child: Material(
             color: Colors.transparent,

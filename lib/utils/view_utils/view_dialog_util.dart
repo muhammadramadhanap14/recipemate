@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/primary_global_view.dart';
 import '../../l10n/app_localizations.dart';
@@ -98,21 +99,19 @@ class ViewDialogUtil {
             return PopScope(
               canPop: false,
               child: Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(screenW * 0.04),
-                  side: BorderSide(
-                    color: Theme.of(dialogContext).colorScheme.surface,
-                    width: 1.0,
-                  ),
+                backgroundColor: Colors.transparent,
+                insetPadding: EdgeInsets.symmetric(
+                  horizontal: screenW * 0.075,
+                  vertical: screenH * 0.05,
                 ),
-                backgroundColor: Theme.of(dialogContext).scaffoldBackgroundColor,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: screenW * 0.85,
                   ),
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.all(screenW * 0.06),
+                  child: GlassCard(
+                    padding: EdgeInsets.all(screenW * 0.06),
+                    shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
+                    child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -306,45 +305,61 @@ class ViewDialogUtil {
 
   // Dialog choose theme
   static Future<ThemeMode?> dialogSelectTheme(BuildContext context, ThemeMode currentTheme) {
+    final screenW = RecipeMateAppUtil.screenWidth;
+    final screenH = RecipeMateAppUtil.screenHeight;
+
     return Get.dialog<ThemeMode>(
-      AlertDialog(
-        title: customText(
-          text: AppLocalizations.of(context)!.selectTheme,
-          fontSize: DimensText.bodyText(context),
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSurface
-        ),
-        content: RadioGroup<ThemeMode>(
-          groupValue: currentTheme,
-          onChanged: (ThemeMode? value) {
-            Get.back(result: value);
-          },
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: screenW * 0.075),
+        child: GlassCard(
+          padding: EdgeInsets.all(screenW * 0.05),
+          shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RadioListTile<ThemeMode>(
-                title: customText(
-                  text: "Default System",
-                  fontSize: DimensText.bodySmallText(context),
-                  color: Theme.of(context).colorScheme.onSurface
-                ),
-                value: ThemeMode.system,
+              customText(
+                text: AppLocalizations.of(context)!.selectTheme,
+                fontSize: DimensText.bodyText(context),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
-              RadioListTile<ThemeMode>(
-                title: customText(
-                  text: "Light",
-                  fontSize: DimensText.bodySmallText(context),
-                  color: Theme.of(context).colorScheme.onSurface
+              SizedBox(height: screenH * 0.01),
+              RadioGroup<ThemeMode>(
+                groupValue: currentTheme,
+                onChanged: (ThemeMode? value) {
+                  Get.back(result: value);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile<ThemeMode>(
+                      title: customText(
+                        text: "Default System",
+                        fontSize: DimensText.bodySmallText(context),
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      value: ThemeMode.system,
+                    ),
+                    RadioListTile<ThemeMode>(
+                      title: customText(
+                        text: "Light",
+                        fontSize: DimensText.bodySmallText(context),
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      value: ThemeMode.light,
+                    ),
+                    RadioListTile<ThemeMode>(
+                      title: customText(
+                        text: "Dark",
+                        fontSize: DimensText.bodySmallText(context),
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      value: ThemeMode.dark,
+                    ),
+                  ],
                 ),
-                value: ThemeMode.light,
-              ),
-              RadioListTile<ThemeMode>(
-                title: customText(
-                  text: "Dark",
-                  fontSize: DimensText.bodySmallText(context),
-                  color: Theme.of(context).colorScheme.onSurface
-                ),
-                value: ThemeMode.dark,
               ),
             ],
           ),
@@ -357,51 +372,62 @@ class ViewDialogUtil {
     required BuildContext context,
     required Function(Locale? locale, String label) onSelected
   }) {
+    final screenW = RecipeMateAppUtil.screenWidth;
+    final screenH = RecipeMateAppUtil.screenHeight;
+
     Get.dialog(
-      AlertDialog(
-        title: customText(
-          text: AppLocalizations.of(context)!.selectLanguage,
-          fontSize: DimensText.bodyText(context),
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSurface
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: customText(
-                text: "System Language",
-                fontSize: DimensText.bodySmallText(context),
-                color: Theme.of(context).colorScheme.onSurface
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: screenW * 0.075),
+        child: GlassCard(
+          padding: EdgeInsets.all(screenW * 0.05),
+          shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              customText(
+                text: AppLocalizations.of(context)!.selectLanguage,
+                fontSize: DimensText.bodyText(context),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
-              onTap: () {
-                onSelected(null, "System");
-                Get.back();
-              },
-            ),
-            ListTile(
-              title: customText(
-                text: "English",
-                fontSize: DimensText.bodySmallText(context),
-                color: Theme.of(context).colorScheme.onSurface
+              SizedBox(height: screenH * 0.01),
+              ListTile(
+                title: customText(
+                  text: "System Language",
+                  fontSize: DimensText.bodySmallText(context),
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onTap: () {
+                  onSelected(null, "System");
+                  Get.back();
+                },
               ),
-              onTap: () {
-                onSelected(const Locale('en'), "English");
-                Get.back();
-              },
-            ),
-            ListTile(
-              title: customText(
-                text: "Bahasa Indonesia",
-                fontSize: DimensText.bodySmallText(context),
-                color: Theme.of(context).colorScheme.onSurface
+              ListTile(
+                title: customText(
+                  text: "English",
+                  fontSize: DimensText.bodySmallText(context),
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onTap: () {
+                  onSelected(const Locale('en'), "English");
+                  Get.back();
+                },
               ),
-              onTap: () {
-                onSelected(const Locale('id'), "Indonesia");
-                Get.back();
-              },
-            ),
-          ],
+              ListTile(
+                title: customText(
+                  text: "Bahasa Indonesia",
+                  fontSize: DimensText.bodySmallText(context),
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onTap: () {
+                  onSelected(const Locale('id'), "Indonesia");
+                  Get.back();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -424,20 +450,15 @@ class ViewDialogUtil {
         final screenW = RecipeMateAppUtil.screenWidth;
         final screenH = RecipeMateAppUtil.screenHeight;
         return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(screenW * 0.04),
-            side: BorderSide(
-              color: Theme.of(dialogContext).colorScheme.surface,
-              width: 1.0,
-            ),
-          ),
-          backgroundColor: Theme.of(dialogContext).scaffoldBackgroundColor,
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.symmetric(horizontal: screenW * 0.075),
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: screenW * 0.75,
             ),
-            child: Padding(
+            child: GlassCard(
               padding: EdgeInsets.all(screenW * 0.05),
+              shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -504,55 +525,59 @@ class ViewDialogUtil {
   }
 
   void showOneButtonActionDialog(
-    String content, String btnTitle,
-    String pictureParam,BuildContext context,
-    dynamic intentData,
-    Function(dynamic model) onClick,
-    ) {
+      String content, String btnTitle,
+      String pictureParam,BuildContext context,
+      dynamic intentData,
+      Function(dynamic model) onClick,
+      ) {
     showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        final screenWidth = MediaQuery.of(dialogContext).size.width;
-        return Dialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0)),
-          backgroundColor: Theme.of(context).colorScheme.onPrimary,
-          child: Container(
-            width: screenWidth * 0.7,
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 20),
-                Image.asset('assets/images/$pictureParam', width: 160, height: 110),
-                const SizedBox(height: 15),
-                customText(
-                  text: content,
-                  textAlign: TextAlign.center,
-                  color: Theme.of(context).colorScheme.onTertiary,
-                  isSoftWrap: true,
-                  intMaxLine: null,
-                  fontSize: DimensText.bodyText(context),
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext dialogContext) {
+          final screenWidth = MediaQuery.of(dialogContext).size.width;
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.075),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: screenWidth * 0.7,
+              ),
+              child: GlassCard(
+                padding: const EdgeInsets.all(15.0),
+                shape: LiquidRoundedRectangle(borderRadius: 15.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 20),
+                    Image.asset('assets/images/$pictureParam', width: 160, height: 110),
+                    const SizedBox(height: 15),
+                    customText(
+                      text: content,
+                      textAlign: TextAlign.center,
+                      color: Theme.of(context).colorScheme.onTertiary,
+                      isSoftWrap: true,
+                      intMaxLine: null,
+                      fontSize: DimensText.bodyText(context),
+                    ),
+                    const SizedBox(height: 30),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: customTextButton(
+                          text: btnTitle,
+                          fontColor: Theme.of(context).colorScheme.onTertiary,
+                          fontSize: DimensText.buttonSmallText(context),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            onClick(intentData);
+                          }
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 30),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: customTextButton(
-                    text: btnTitle,
-                    fontColor: Theme.of(context).colorScheme.onTertiary,
-                    fontSize: DimensText.buttonSmallText(context),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      onClick(intentData);
-                    }
-                  ),
-                ),
-              ],
+              ),
             ),
-          )
-        );
-      }
+          );
+        }
     );
   }
 }
