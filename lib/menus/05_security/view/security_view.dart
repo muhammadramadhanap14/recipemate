@@ -31,21 +31,9 @@ class SecurityView extends StatelessWidget {
 
     return ConnectionWrapper(
       child: GlassScaffold(
-        background: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
-                Theme.of(context).scaffoldBackgroundColor,
-                Theme.of(context).scaffoldBackgroundColor,
-              ],
-              stops: const [0.0, 0.35, 1.0],
-            ),
-          ),
-        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: GlassAppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           leading: IconButton(
             icon: Icon(Icons.keyboard_arrow_left, color: theme.colorScheme.onSurface),
             onPressed: () => Get.back(),
@@ -58,8 +46,8 @@ class SecurityView extends StatelessWidget {
             fontFamily: 'times_new_roman_bold',
           ),
         ),
-        body: DefaultTextStyle.merge(
-          style: const TextStyle(decoration: TextDecoration.none),
+        body: Material(
+          color: Colors.transparent,
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(
