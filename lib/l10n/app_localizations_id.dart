@@ -366,6 +366,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get stAskAI => 'Tanya AI';
 
   @override
+  String get stFoodArticles => 'Artikel Makanan';
+
+  @override
   String get stSessionExpiredTitle => 'Sesi Berakhir';
 
   @override

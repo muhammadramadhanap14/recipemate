@@ -364,6 +364,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stAskAI => 'Ask AI';
 
   @override
+  String get stFoodArticles => 'Food Articles';
+
+  @override
   String get stSessionExpiredTitle => 'Session Expired';
 
   @override

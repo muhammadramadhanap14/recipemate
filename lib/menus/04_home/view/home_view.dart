@@ -280,10 +280,130 @@ class HomeView extends StatelessWidget {
             _buildRecommendedForYouSection(context, viewModel),
             SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
             _buildTopSearchingFoodSection(context, viewModel),
+            _buildFoodArticlesCarousel(context, viewModel),
           ],
         ),
       );
     });
+  }
+
+  Widget _buildFoodArticlesCarousel(
+    BuildContext context,
+    HomeViewModel viewModel,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+          ),
+          child: customText(
+            text: AppLocalizations.of(context)!.stFoodArticles,
+            fontSize: DimensText.headerMenusText(context),
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'times_new_roman_bold',
+          ),
+        ),
+        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+        Obx(() {
+          if (viewModel.isLoadingArticles.value) {
+            return SizedBox(
+              height: RecipeMateAppUtil.screenHeight * 0.22,
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (viewModel.foodArticles.isEmpty) {
+            return const SizedBox.shrink();
+          }
+
+          return SizedBox(
+            height: RecipeMateAppUtil.screenHeight * 0.22,
+            child: PageView.builder(
+              controller: PageController(viewportFraction: 0.85),
+              itemCount: viewModel.foodArticles.length,
+              itemBuilder: (context, index) {
+                final article = viewModel.foodArticles[index];
+                final String title = article['title'] ?? "No Title";
+                final String image = article['image'] ?? "";
+                final String url = article['link'] ?? "";
+
+                return Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: GestureDetector(
+                    onTap: () {
+                      if (url.isNotEmpty) {
+                        viewModel.launchBrowser(url);
+                      }
+                    },
+                    child: GlassCard(
+                      padding: EdgeInsets.zero,
+                      shape: LiquidRoundedRectangle(
+                        borderRadius: RecipeMateAppUtil.screenWidth * 0.04,
+                      ),
+                      settings: LiquidGlassSettings(
+                        glassColor: Colors.black.withValues(alpha: 0.2),
+                        thickness: 40,
+                        blur: 4,
+                      ),
+                      child: Stack(
+                        children: [
+                          if (image.isNotEmpty)
+                            Positioned.fill(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  RecipeMateAppUtil.screenWidth * 0.04,
+                                ),
+                                child: Image.network(
+                                  image,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Container(color: Colors.grey[900]),
+                                ),
+                              ),
+                            ),
+                          Positioned.fill(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withValues(alpha: 0.7),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  RecipeMateAppUtil.screenWidth * 0.04,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 16,
+                            left: 16,
+                            right: 16,
+                            child: customText(
+                              text: title,
+                              fontSize: DimensText.bodyText(context),
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              intMaxLine: 2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        }),
+      ],
+    );
   }
 
   Widget _buildSearchResultsSection(

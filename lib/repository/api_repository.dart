@@ -104,7 +104,7 @@ class ApiRepository {
         queryParameters: {
           "query": query,
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 
@@ -152,7 +152,7 @@ class ApiRepository {
         "/recipes/$recipeId/information",
         queryParameters: {
           "includeNutrition": true,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 
@@ -174,11 +174,34 @@ class ApiRepository {
         "/recipes/random",
         queryParameters: {
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 
       log("response random: ${response.data}");
+
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Dio error: ${e.response?.data}");
+      return e.response?.data;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return null;
+    }
+  }
+
+  Future<dynamic> getFoodArticles({required String query, int number = 5}) async {
+    try {
+      final response = await _dio.get(
+        "/food/articles/search",
+        queryParameters: {
+          "query": query,
+          "number": number,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
+        },
+      );
+
+      log("response articles: ${response.data}");
 
       return response.data;
     } on DioException catch (e) {

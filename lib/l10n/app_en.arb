@@ -113,6 +113,7 @@
   "stRecommendedRecipes" : "Recommended Recipes",
   "stPopularRecipesMsg" : "Explore more recipes randomly selected for you.",
   "stAskAI" : "Ask AI",
+  "stFoodArticles": "Food Articles",
   "stSessionExpiredTitle": "Session Expired",
   "stSessionExpiredMessage": "Your session has expired. Please login again to continue.",
   "stLoginAgainBtn": "Login Again"

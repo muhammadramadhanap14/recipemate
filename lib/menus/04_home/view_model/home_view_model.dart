@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/constant_var.dart';
 import '../../../l10n/app_localizations.dart';
@@ -24,6 +25,21 @@ class HomeViewModel extends GetxController {
   final RxList<dynamic> autoCompleteResults = <dynamic>[].obs;
   final RxBool isAutoCompleteLoading = false.obs;
   final RxString searchText = ''.obs;
+  final RxList<dynamic> foodArticles = <dynamic>[].obs;
+  final RxBool isLoadingArticles = false.obs;
+  final List<String> articleKeywords = [
+    'cooking',
+    'healthy',
+    'nutrition',
+    'food',
+    'restaurant',
+    'recipe',
+    'diet',
+    'organic',
+    'vegan',
+    'gourmet',
+  ];
+
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
@@ -38,6 +54,7 @@ class HomeViewModel extends GetxController {
     _startConnectivityListener();
     checkInitialConnection();
     getRecommendedRecipes();
+    getDynamicFoodArticles();
     searchController.addListener(() {
       searchText.value = searchController.text;
     });
@@ -141,6 +158,56 @@ class HomeViewModel extends GetxController {
     } finally {
       isSearching.value = false;
     }
+  }
+
+  Future<void> launchBrowser(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      AppSnackbar.show(title: "Error", message: "Could not launch $url");
+    }
+  }
+
+  Future<void> getDynamicFoodArticles() async {
+    isLoadingArticles.value = true;
+    try {
+      final randomKeyword = (articleKeywords..shuffle()).first;
+      final response = await apiRepository.getFoodArticles(query: randomKeyword);
+
+      if (response != null && response['articles'] != null) {
+        final List<dynamic> articles = response['articles'];
+        if (articles.isNotEmpty) {
+          foodArticles.assignAll(articles);
+          return;
+        }
+      }
+
+      _setFallbackArticles();
+    } catch (e) {
+      debugPrint("Error fetching dynamic food articles: $e");
+      _setFallbackArticles();
+    } finally {
+      isLoadingArticles.value = false;
+    }
+  }
+
+  void _setFallbackArticles() {
+    foodArticles.assignAll([
+      {
+        'title': '10 Healthy Breakfast Ideas for a Productive Day',
+        'image': 'https://images.unsplash.com/photo-1494390248081-4e521a5940db?q=80&w=1000&auto=format&fit=crop',
+        'link': 'https://www.healthline.com/nutrition/healthy-breakfast-ideas',
+      },
+      {
+        'title': 'Mastering Italian Cuisine: The Basics You Need to Know',
+        'image': 'https://images.unsplash.com/photo-1498579150354-977475b7ea0b?q=80&w=1000&auto=format&fit=crop',
+        'link': 'https://www.bonappetit.com/test-kitchen/how-to/article/italian-cooking-basics',
+      },
+      {
+        'title': 'The Secret to Perfect Sushi Rice Every Single Time',
+        'image': 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=1000&auto=format&fit=crop',
+        'link': 'https://www.japancentre.com/en/recipes/10-how-to-make-perfect-sushi-rice',
+      },
+    ]);
   }
 
   Future<void> getRecommendedRecipes() async {

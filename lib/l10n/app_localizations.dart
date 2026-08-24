@@ -782,6 +782,12 @@ abstract class AppLocalizations {
   /// **'Ask AI'**
   String get stAskAI;
 
+  /// No description provided for @stFoodArticles.
+  ///
+  /// In en, this message translates to:
+  /// **'Food Articles'**
+  String get stFoodArticles;
+
   /// No description provided for @stSessionExpiredTitle.
   ///
   /// In en, this message translates to:
