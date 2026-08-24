@@ -54,7 +54,6 @@ class AccountView extends StatelessWidget {
                   _buildProfileHeader(context, viewModel),
                   SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
                   GlassGroupedSection(
-                    quality: GlassQuality.standard,
                     settings: const LiquidGlassSettings(
                       glassColor: Colors.transparent,
                       thickness: 60,

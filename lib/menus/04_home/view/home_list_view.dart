@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
@@ -37,57 +38,66 @@ class HomeListView extends StatelessWidget {
         : AppLocalizations.of(context)!.stPopularRecipesMsg;
 
     return ConnectionWrapper(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: AppBar(
-          elevation: 0,
+      child: Material(
+        color: Colors.transparent,
+        child: GlassScaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          leading: IconButton(
-            icon: Icon(Icons.keyboard_arrow_left, color: Theme.of(context).colorScheme.onSurface),
-            onPressed: () => Get.back(),
-          ),
-          title: customText(
-            text: title,
-            fontSize: DimensText.headerMenusText(context),
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-          ),
-          centerTitle: true,
-        ),
-        body: Obx(() {
-          if (viewModel.isLoading.value) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            );
-          }
-
-          return SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-                vertical: RecipeMateAppUtil.screenHeight * 0.02,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  customText(
-                    text: subtitle,
-                    fontSize: DimensText.bodySmallText(context),
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                    intMaxLine: null
-                  ),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                  if (mode == 'popular')
-                    _buildCategorySection(context, viewModel),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                  _buildRecipeGrid(context, viewModel),
-                ],
-              ),
+          edgeToEdge: true,
+          extendBody: true,
+          edgeFade: false,
+          appBar: GlassAppBar(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            leading: IconButton(
+              icon: Icon(Icons.keyboard_arrow_left, color: Theme.of(context).colorScheme.onSurface),
+              onPressed: () => Get.back(),
             ),
-          );
-        }),
+            title: customText(
+              text: title,
+              fontSize: DimensText.headerMenusText(context),
+              color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'times_new_roman_bold',
+            ),
+            centerTitle: true,
+          ),
+          body: Material(
+            color: Colors.transparent,
+            child: Obx(() {
+              if (viewModel.isLoading.value) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                );
+              }
+
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+                    vertical: RecipeMateAppUtil.screenHeight * 0.02,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      customText(
+                        text: subtitle,
+                        fontSize: DimensText.bodySmallText(context),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                        intMaxLine: null
+                      ),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                      if (mode == 'popular')
+                        _buildCategorySection(context, viewModel),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.002),
+                      _buildRecipeGrid(context, viewModel),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }
@@ -119,29 +129,32 @@ class HomeListView extends StatelessWidget {
                   viewModel.selectedCategory.value == category;
               return GestureDetector(
                 onTap: () => viewModel.searchByCategory(category),
-                child: Container(
+                child: GlassCard(
                   padding: EdgeInsets.symmetric(
                     horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-                    vertical: RecipeMateAppUtil.screenHeight * 0.015,
                   ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary.withValues(
-                        alpha: isSelected ? 0.0 : 0.12,
-                      ),
+                  shape: LiquidRoundedRectangle(borderRadius: 24),
+                  settings: LiquidGlassSettings(
+                    glassColor: isSelected
+                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.8)
+                      : Colors.transparent,
+                    thickness: isSelected ? 40 : 60,
+                    blur: 3,
+                    chromaticAberration: 0.3,
+                    lightIntensity: 0.6,
+                    refractiveIndex: 1.59,
+                    saturation: 1.0,
+                    ambientStrength: 1,
+                  ),
+                  child: Center(
+                    child: customText(
+                      text: category,
+                      fontSize: DimensText.captionText(context),
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ),
-                  child: customText(
-                    text: category,
-                    fontSize: DimensText.captionText(context),
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
               );
@@ -233,67 +246,67 @@ class HomeListView extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.65),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                ),
-              ),
               Positioned(
-                left: 10,
-                right: 10,
-                bottom: 10,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(
-                      text: title,
-                      fontSize: DimensText.bodySmallText(context),
-                      intMaxLine: 2,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.008),
-                    Row(
-                      children: [
-                        if (readyInMinutes != 0) ...[
-                          Icon(
-                            Icons.schedule_rounded,
-                            size: 14,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                          SizedBox(width: 4),
-                          customText(
-                            text: '$readyInMinutes min',
-                            fontSize: DimensText.captionText(context),
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                          SizedBox(width: 12),
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: GlassCard(
+                  padding: const EdgeInsets.all(12),
+                  shape: const LiquidRoundedRectangle(borderRadius: 0),
+                  settings: LiquidGlassSettings(
+                    glassColor: Colors.black.withValues(alpha: 0.4),
+                    thickness: 60,
+                    blur: 3,
+                    chromaticAberration: 0.3,
+                    lightIntensity: 0.6,
+                    refractiveIndex: 1.59,
+                    saturation: 1.0,
+                    ambientStrength: 1,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      customText(
+                        text: title,
+                        fontSize: DimensText.bodySmallText(context),
+                        intMaxLine: 2,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          if (readyInMinutes != 0) ...[
+                            const Icon(
+                              Icons.schedule_rounded,
+                              size: 14,
+                              color: Colors.white70,
+                            ),
+                            const SizedBox(width: 4),
+                            customText(
+                              text: '$readyInMinutes min',
+                              fontSize: DimensText.captionText(context),
+                              color: Colors.white70,
+                            ),
+                            const SizedBox(width: 12),
+                          ],
+                          if (aggregateLikes != 0) ...[
+                            const Icon(
+                              Icons.favorite_rounded,
+                              size: 14,
+                              color: Colors.white70,
+                            ),
+                            const SizedBox(width: 4),
+                            customText(
+                              text: '$aggregateLikes',
+                              fontSize: DimensText.captionText(context),
+                              color: Colors.white70,
+                            ),
+                          ],
                         ],
-                        if (aggregateLikes != 0) ...[
-                          Icon(
-                            Icons.favorite_rounded,
-                            size: 14,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                          SizedBox(width: 4),
-                          customText(
-                            text: '$aggregateLikes',
-                            fontSize: DimensText.captionText(context),
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

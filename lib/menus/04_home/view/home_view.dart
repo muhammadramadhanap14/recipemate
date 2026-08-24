@@ -561,9 +561,13 @@ class HomeView extends StatelessWidget {
                           shape: const LiquidOval(),
                           settings: LiquidGlassSettings(
                             glassColor: baseColor.withValues(alpha: 0.2),
-                            thickness: 40,
-                            blur: 4,
-                            chromaticAberration: 0.1,
+                            thickness: 60,
+                            blur: 3,
+                            chromaticAberration: 0.3,
+                            lightIntensity: 0.6,
+                            refractiveIndex: 1.59,
+                            saturation: 1.0,
+                            ambientStrength: 1,
                           ),
                           child: Center(
                             child: Icon(
@@ -648,8 +652,13 @@ class HomeView extends StatelessWidget {
                   shape: const LiquidRoundedRectangle(borderRadius: 0), // Flat bottom
                   settings: LiquidGlassSettings(
                     glassColor: Colors.black.withValues(alpha: 0.4),
-                    thickness: 40,
-                    blur: 6,
+                    thickness: 60,
+                    blur: 3,
+                    chromaticAberration: 0.3,
+                    lightIntensity: 0.6,
+                    refractiveIndex: 1.59,
+                    saturation: 1.0,
+                    ambientStrength: 1,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
