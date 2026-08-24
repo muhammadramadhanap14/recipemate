@@ -146,8 +146,8 @@ class RecipemateApp extends StatelessWidget {
           );
         },
         //uncomment untuk aktifkan flutter talker
-        navigatorObservers: [TalkerRouteObserver(talker)], // Correct way to pass talker instance
-        navigatorKey: navigatorKey,
+        // navigatorObservers: [TalkerRouteObserver(talker)], // Correct way to pass talker instance
+        // navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           AppLocalizations.delegate,

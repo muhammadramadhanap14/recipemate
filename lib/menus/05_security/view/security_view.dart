@@ -75,8 +75,14 @@ class SecurityView extends StatelessWidget {
                   GlassGroupedSection(
                     quality: GlassQuality.standard,
                     settings: const LiquidGlassSettings(
-                      thickness: 50,
-                      blur: 20,
+                      glassColor: Colors.transparent,
+                      thickness: 60,
+                      blur: 3,
+                      chromaticAberration: 0.3,
+                      lightIntensity: 0.6,
+                      refractiveIndex: 1.59,
+                      saturation: 1.0,
+                      ambientStrength: 1,
                     ),
                     children: [
                       _buildMenuTile(

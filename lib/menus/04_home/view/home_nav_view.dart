@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 
-import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../07_chat_session/view/view_model/chat_history_controller.dart';
 import '../view_model/home_nav_view_model.dart';
@@ -31,6 +30,7 @@ class HomeNavView extends StatelessWidget {
       child: GlassScaffold(
         edgeToEdge: true,
         extendBody: true,
+        edgeFade: false,
         resizeToAvoidBottomInset: true,
         background: AnimatedContainer(
           duration: const Duration(milliseconds: 400),
@@ -40,10 +40,7 @@ class HomeNavView extends StatelessWidget {
               end: Alignment.bottomRight,
               colors: [
                 Theme.of(context).scaffoldBackgroundColor,
-                Theme.of(context)
-                    .colorScheme
-                    .primaryContainer
-                    .withValues(alpha: 0.20),
+                Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.20),
                 Theme.of(context).scaffoldBackgroundColor,
               ],
             ),
@@ -53,9 +50,9 @@ class HomeNavView extends StatelessWidget {
         bottomBar: isKeyboardVisible
         ? const SizedBox.shrink() : Padding(
           padding: EdgeInsets.only(
-            bottom: RecipeMateAppUtil.screenHeight * 0.02,
-            left: RecipeMateAppUtil.screenWidth * 0.05,
-            right: RecipeMateAppUtil.screenWidth * 0.05,
+            bottom: RecipeMateAppUtil.screenHeight * 0.03,
+            left: RecipeMateAppUtil.screenWidth * 0.21,
+            right: RecipeMateAppUtil.screenWidth * 0.21,
           ),
           child: Material(
             color: Colors.transparent,
@@ -80,7 +77,6 @@ class HomeNavView extends StatelessWidget {
                             Icons.home_rounded,
                             size: RecipeMateAppUtil.screenWidth * 0.07,
                           ),
-                          label: AppLocalizations.of(context)!.home,
                         ),
                         GlassTab(
                           icon: Icon(
@@ -91,7 +87,6 @@ class HomeNavView extends StatelessWidget {
                             Icons.person_rounded,
                             size: RecipeMateAppUtil.screenWidth * 0.07,
                           ),
-                          label: AppLocalizations.of(context)!.account,
                         ),
                       ],
                       selectedLabelColor: Theme.of(context).colorScheme.primary,
@@ -102,6 +97,16 @@ class HomeNavView extends StatelessWidget {
                       barHeight: RecipeMateAppUtil.screenHeight * 0.075,
                       barBorderRadius: 35,
                       enableBlend: true,
+                      settings: const LiquidGlassSettings(
+                        glassColor: Colors.transparent,
+                        thickness: 60,
+                        blur: 3,
+                        chromaticAberration: 0.3,
+                        lightIntensity: 0.6,
+                        refractiveIndex: 1.59,
+                        saturation: 1.0,
+                        ambientStrength: 1,
+                      ),
                     ),
                   ),
                 ),
@@ -120,6 +125,17 @@ class HomeNavView extends StatelessWidget {
                   icon: Icon(
                     Icons.auto_awesome,
                     color: Theme.of(context).colorScheme.primary,
+                  ),
+                  useOwnLayer: true,
+                  settings: const LiquidGlassSettings(
+                    glassColor: Colors.transparent,
+                    thickness: 60,
+                    blur: 3,
+                    chromaticAberration: 0.3,
+                    lightIntensity: 0.6,
+                    refractiveIndex: 1.59,
+                    saturation: 1.0,
+                    ambientStrength: 1,
                   ),
                 ),
               ],
