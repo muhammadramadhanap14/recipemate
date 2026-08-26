@@ -110,7 +110,7 @@ class ApiRepository {
         queryParameters: {
           "query": query,
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 
@@ -136,7 +136,7 @@ class ApiRepository {
         queryParameters: {
           "query": query,
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 
@@ -158,7 +158,7 @@ class ApiRepository {
         "/recipes/$recipeId/information",
         queryParameters: {
           "includeNutrition": true,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 
@@ -180,7 +180,7 @@ class ApiRepository {
         "/recipes/random",
         queryParameters: {
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 

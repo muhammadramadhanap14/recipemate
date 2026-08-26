@@ -4,6 +4,7 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 
 import '../../../utils/recipemate_app_util.dart';
+import '../../../utils/view_utils/primary_global_view.dart';
 import '../../07_chat_session/view/view_model/chat_history_controller.dart';
 import '../view_model/home_nav_view_model.dart';
 
@@ -34,6 +35,35 @@ class HomeNavView extends StatelessWidget {
           extendBody: true,
           edgeFade: false,
           resizeToAvoidBottomInset: true,
+          background: Stack(
+            children: [
+              Container(color: Theme.of(context).scaffoldBackgroundColor),
+              Positioned(
+                top: -50,
+                right: -50,
+                child: buildBlurBlob(
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                  350,
+                ),
+              ),
+              Positioned(
+                bottom: 200,
+                left: -100,
+                child: buildBlurBlob(
+                  Colors.deepPurple.withValues(alpha: 0.1),
+                  400,
+                ),
+              ),
+              Positioned(
+                top: 250,
+                left: -50,
+                child: buildBlurBlob(
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+                  250,
+                ),
+              ),
+            ],
+          ),
           body: Obx(() => viewModel.currentPage),
           bottomBar: isKeyboardVisible
           ? const SizedBox.shrink() : Padding(

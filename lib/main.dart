@@ -114,8 +114,8 @@ class RecipemateApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
-    return Obx(() {
+    // final themeController = Get.find<ThemeController>();
+    // return Obx(() {
       return LiquidGlassWidgets.wrap(
         child: GetMaterialApp(
           title: 'RecipeMate',
@@ -157,9 +157,9 @@ class RecipemateApp extends StatelessWidget {
         ],
         supportedLocales: const [Locale('en'), Locale('id')],
         locale: appLocale,
-        theme: AppTheme.lightTheme,
+        theme: AppTheme.darkTheme,
         darkTheme: AppTheme.darkTheme,
-        themeMode: themeController.themeMode.value,
+        themeMode: ThemeMode.dark,
         initialRoute: '/',
         getPages: [
           //GOTO FORM
@@ -234,6 +234,6 @@ class RecipemateApp extends StatelessWidget {
           ),
         ],
       ));
-    });
+    // });
   }
 }

@@ -33,10 +33,38 @@ class LoginView extends StatelessWidget {
     final double logoSize = screenW * 0.45;
 
     return GlassScaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       edgeToEdge: true,
       extendBody: true,
       edgeFade: false,
+      background: Stack(
+        children: [
+          Container(color: Theme.of(context).scaffoldBackgroundColor),
+          Positioned(
+            top: -50,
+            right: -50,
+            child: buildBlurBlob(
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+              350,
+            ),
+          ),
+          Positioned(
+            bottom: 200,
+            left: -100,
+            child: buildBlurBlob(
+              Colors.deepPurple.withValues(alpha: 0.1),
+              400,
+            ),
+          ),
+          Positioned(
+            top: 250,
+            left: -50,
+            child: buildBlurBlob(
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+              250,
+            ),
+          ),
+        ],
+      ),
       body: Material(
         color: Colors.transparent,
         child: SafeArea(

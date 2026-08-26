@@ -45,8 +45,37 @@ class HomeListView extends StatelessWidget {
           edgeToEdge: true,
           extendBody: true,
           edgeFade: false,
+          background: Stack(
+            children: [
+              Container(color: Theme.of(context).scaffoldBackgroundColor),
+              Positioned(
+                top: -50,
+                right: -50,
+                child: buildBlurBlob(
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                  350,
+                ),
+              ),
+              Positioned(
+                bottom: 200,
+                left: -100,
+                child: buildBlurBlob(
+                  Colors.deepPurple.withValues(alpha: 0.1),
+                  400,
+                ),
+              ),
+              Positioned(
+                top: 250,
+                left: -50,
+                child: buildBlurBlob(
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+                  250,
+                ),
+              ),
+            ],
+          ),
           appBar: GlassAppBar(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Colors.transparent,
             leading: IconButton(
               icon: Icon(Icons.keyboard_arrow_left, color: Theme.of(context).colorScheme.onSurface),
               onPressed: () => Get.back(),
@@ -71,6 +100,8 @@ class HomeListView extends StatelessWidget {
                 );
               }
 
+              final double topReserved = MediaQuery.of(context).padding.top + 44.0;
+
               return SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -80,6 +111,7 @@ class HomeListView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: topReserved),
                       customText(
                         text: subtitle,
                         fontSize: DimensText.bodySmallText(context),

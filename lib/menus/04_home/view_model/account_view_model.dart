@@ -133,38 +133,54 @@ class AccountViewModel extends GetxController {
   }
 
   void initializeTheme() {
-    final savedTheme = session.stTheme.value;
-    if (savedTheme == 'light') {
-      themeMode.value = ThemeMode.light;
-      currentTheme.value = "Light";
-    } else if (savedTheme == 'dark') {
-      themeMode.value = ThemeMode.dark;
-      currentTheme.value = "Dark";
-    } else {
-      themeMode.value = ThemeMode.system;
-      currentTheme.value = "Default System";
-    }
+    // final savedTheme = session.stTheme.value;
+    // if (savedTheme == 'light') {
+    //   themeMode.value = ThemeMode.light;
+    //   currentTheme.value = "Light";
+    // } else if (savedTheme == 'dark') {
+    //   themeMode.value = ThemeMode.dark;
+    //   currentTheme.value = "Dark";
+    // } else {
+    //   themeMode.value = ThemeMode.system;
+    //   currentTheme.value = "Default System";
+    // }
+
+    // Forced Darkmode
+    themeMode.value = ThemeMode.dark;
+    currentTheme.value = "Dark";
   }
 
   void changeTheme(ThemeMode mode) async {
+    if (mode != ThemeMode.dark) {
+      AppSnackbar.show(
+        title: "Coming Soon",
+        message: "Tema selain Dark Mode akan segera hadir!",
+      );
+      return;
+    }
+
     themeMode.value = mode;
     Get.changeThemeMode(mode);
-    String themeStr = 'system';
-    switch (mode) {
-      case ThemeMode.system:
-        currentTheme.value = "Default System";
-        themeStr = 'system';
-        break;
-      case ThemeMode.light:
-        currentTheme.value = "Light";
-        themeStr = 'light';
-        break;
-      case ThemeMode.dark:
-        currentTheme.value = "Dark";
-        themeStr = 'dark';
-        break;
-    }
-    await session.setLastTheme(themeStr);
+    // String themeStr = 'system';
+    // switch (mode) {
+    //   case ThemeMode.system:
+    //     currentTheme.value = "Default System";
+    //     themeStr = 'system';
+    //     break;
+    //   case ThemeMode.light:
+    //     currentTheme.value = "Light";
+    //     themeStr = 'light';
+    //     break;
+    //   case ThemeMode.dark:
+    //     currentTheme.value = "Dark";
+    //     themeStr = 'dark';
+    //     break;
+    // }
+    // await session.setLastTheme(themeStr);
+
+    // Forced Darkmode
+    currentTheme.value = "Dark";
+    await session.setLastTheme('dark');
   }
 
   void openThemeDialog(BuildContext context) async {

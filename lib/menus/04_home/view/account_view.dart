@@ -29,10 +29,44 @@ class AccountView extends StatelessWidget {
     final double topReserved = MediaQuery.of(context).padding.top + kToolbarHeight;
 
     return ConnectionWrapper(
-      child: GlassScaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: GlassAppBar(
+      child: Material(
+        color: Colors.transparent,
+        child: GlassScaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          edgeToEdge: true,
+          extendBody: true,
+          edgeFade: false,
+          background: Stack(
+            children: [
+              Container(color: Theme.of(context).scaffoldBackgroundColor),
+              Positioned(
+                top: -50,
+                right: -50,
+                child: buildBlurBlob(
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                  350,
+                ),
+              ),
+              Positioned(
+                bottom: 200,
+                left: -100,
+                child: buildBlurBlob(
+                  Colors.deepPurple.withValues(alpha: 0.1),
+                  400,
+                ),
+              ),
+              Positioned(
+                top: 250,
+                left: -50,
+                child: buildBlurBlob(
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+                  250,
+                ),
+              ),
+            ],
+          ),
+          appBar: GlassAppBar(
+          backgroundColor: Colors.transparent,
           title: customText(
             text: AppLocalizations.of(context)!.account,
             fontSize: DimensText.headerMenusText(context),
@@ -152,7 +186,7 @@ class AccountView extends StatelessWidget {
           ),
         ),
       )
-    );
+    ));
   }
 
   Widget _buildProfileHeader(BuildContext context, AccountViewModel viewModel) {
