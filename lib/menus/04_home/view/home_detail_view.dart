@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_texture/liquid_glass_texture.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../models/model_response/detail_recipe_response.dart';
 import '../../../repository/api_repository.dart';
@@ -37,67 +39,76 @@ class HomeDetailView extends StatelessWidget {
       await RecipeMateAppUtil.lockToPortrait();
     });
     return ConnectionWrapper(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            final chatHistoryController = Get.find<ChatHistoryController>();
-            final session = chatHistoryController.createNewSession();
-            final recipeName = viewModel.recipeDetail.value?.title ?? "";
-            Get.toNamed('/chat', arguments: {
-              'session': session,
-              'initialMessage': "bantu saya buatkan masakan $recipeName",
-            });
-          },
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          icon: Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.onPrimary),
-          label: customText(
-            text: AppLocalizations.of(context)!.stAskAI,
-            color: Theme.of(context).colorScheme.onPrimary,
-            fontWeight: FontWeight.bold,
-            fontSize: DimensText.bodySmallText(context),
-          ),
-        ),
-        body: Obx(() {
-          if (viewModel.isLoading.value) {
-            return Center(child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.primary,
-            ));
-          }
-          final DetailRecipeResponse? recipe = viewModel.recipeDetail.value;
-          if (recipe == null) {
-            return const Center(child: NoDataUtil());
-          }
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildImageHeader(context, recipe.image ?? ""),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.06),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                      _buildTitleSection(context, recipe),
-                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                      _buildTagsSection(context, recipe),
-                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                      _buildNutritionalCard(context, recipe),
-                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                      _buildSummaryCard(context, recipe.summary ?? ''),
-                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                      _buildIngredientsSection(context, recipe.extendedIngredients ?? []),
-                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                      _buildInstructionsSection(context, recipe.analyzedInstructions ?? []),
-                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                    ],
-                  ),
-                ),
-              ],
+      child: Material(
+        color: Colors.transparent,
+        child: GlassScaffold(
+          edgeToEdge: true,
+          extendBody: true,
+          edgeFade: false,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          bodyOverlays: [
+            Positioned(
+              right: 25,
+              bottom: 25,
+              child: LiquidGlassFloatingActionButton(
+                size: 70,
+                onPressed: () {
+                  final chatHistoryController = Get.find<ChatHistoryController>();
+                  final session = chatHistoryController.createNewSession();
+                  final recipeName = viewModel.recipeDetail.value?.title ?? "";
+                  Get.toNamed('/chat', arguments: {
+                    'session': session,
+                    'initialMessage': "bantu saya buatkan masakan $recipeName",
+                  });
+                },
+                child: Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary, size: 35),
+              ),
             ),
-          );
-        }),
+          ],
+          body: Obx(() {
+            if (viewModel.isLoading.value) {
+              return Center(child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
+              ));
+            }
+            final DetailRecipeResponse? recipe = viewModel.recipeDetail.value;
+            if (recipe == null) {
+              return const Center(child: NoDataUtil());
+            }
+            return Material(
+              color: Colors.transparent,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildImageHeader(context, recipe.image ?? ""),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.06),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                          _buildTitleSection(context, recipe),
+                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                          _buildTagsSection(context, recipe),
+                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                          _buildNutritionalCard(context, recipe),
+                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                          _buildSummaryCard(context, recipe.summary ?? ''),
+                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                          _buildIngredientsSection(context, recipe.extendedIngredients ?? []),
+                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                          _buildInstructionsSection(context, recipe.analyzedInstructions ?? []),
+                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03 + 80),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -124,34 +135,28 @@ class HomeDetailView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildCircleButton(
-                  context: context,
-                  onTap: () => Get.back(),
-                  icon: Icons.chevron_left,
+                GlassIconButton(
+                  onPressed: () => Get.back(),
+                  icon: const Icon(Icons.chevron_left),
+                  size: RecipeMateAppUtil.screenWidth * 0.12,
+                  iconSize: RecipeMateAppUtil.screenWidth * 0.07,
+                  settings: const LiquidGlassSettings(
+                    glassColor: Colors.transparent,
+                    thickness: 20,
+                    blur: 3,
+                    chromaticAberration: 0.3,
+                    lightIntensity: 0.6,
+                    refractiveIndex: 1.59,
+                    saturation: 1.0,
+                    ambientStrength: 1,
+                  ),
+                  useOwnLayer: true
                 )
               ],
             ),
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildCircleButton({required BuildContext context, required VoidCallback onTap, required IconData icon, Color? iconColor}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.02),
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          icon,
-          color: iconColor ?? Theme.of(context).colorScheme.onSurface,
-          size: RecipeMateAppUtil.screenWidth * 0.07,
-        ),
-      ),
     );
   }
 
@@ -169,10 +174,13 @@ class HomeDetailView extends StatelessWidget {
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
         Row(
           children: [
-            Icon(
-              Icons.access_time_filled, 
-              color: Theme.of(context).colorScheme.primary,
-              size: RecipeMateAppUtil.screenWidth * 0.05
+            GlassContainer(
+              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+              child: Icon(
+                Icons.access_time_filled,
+                color: Theme.of(context).colorScheme.onPrimary,
+                size: RecipeMateAppUtil.screenWidth * 0.05
+              ),
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.015),
             customText(
@@ -181,10 +189,13 @@ class HomeDetailView extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.04),
-            Icon(
-              Icons.star, 
-              color: Theme.of(context).colorScheme.primary,
-              size: RecipeMateAppUtil.screenWidth * 0.05
+            GlassContainer(
+              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+              child: Icon(
+                Icons.star,
+                color: Theme.of(context).colorScheme.onPrimary,
+                size: RecipeMateAppUtil.screenWidth * 0.05
+              ),
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.015),
             customText(
@@ -212,16 +223,8 @@ class HomeDetailView extends StatelessWidget {
     return Wrap(
       spacing: 8,
       runSpacing: 4,
-      children: tags.map((tag) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.primary,
-            width: 2,
-          ),
-        ),
+      children: tags.map((tag) => GlassContainer(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
         child: customText(
           text: tag,
           fontSize: DimensText.bodySmallText(context),
@@ -253,26 +256,29 @@ class HomeDetailView extends StatelessWidget {
     final cholesterol = getNutrient("Cholesterol");
     final sodium = getNutrient("Sodium");
 
-    return Container(
+    return GlassCard(
       padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.05),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius:
-        BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.06),
+      shape: LiquidRoundedRectangle(
+        borderRadius: RecipeMateAppUtil.screenWidth * 0.06,
+      ),
+      settings: const LiquidGlassSettings(
+        glassColor: Colors.transparent,
+        thickness: 60,
+        blur: 3,
+        chromaticAberration: 0.3,
+        lightIntensity: 0.6,
+        refractiveIndex: 1.59,
+        saturation: 1.0,
+        ambientStrength: 1,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              customText(
-                text: AppLocalizations.of(context)!.stNutritionalPrediction,
-                fontSize: DimensText.headerMenusText(context),
-                color: Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-              ),
-            ],
+          customText(
+            text: AppLocalizations.of(context)!.stNutritionalPrediction,
+            fontSize: DimensText.headerMenusText(context),
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
           ),
           SizedBox(height: RecipeMateAppUtil.screenHeight * 0.025),
           Row(
@@ -377,32 +383,37 @@ class HomeDetailView extends StatelessWidget {
   }
 
   Widget _buildSummaryCard(BuildContext context, String summary) {
-    return Container(
+    return GlassCard(
       padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.05),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.06),
+      shape: LiquidRoundedRectangle(
+        borderRadius: RecipeMateAppUtil.screenWidth * 0.06,
+      ),
+      settings: const LiquidGlassSettings(
+        glassColor: Colors.transparent,
+        thickness: 60,
+        blur: 3,
+        chromaticAberration: 0.3,
+        lightIntensity: 0.6,
+        refractiveIndex: 1.59,
+        saturation: 1.0,
+        ambientStrength: 1,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              customText(
-                text: AppLocalizations.of(context)!.stRecipeSummary,
-                fontSize: DimensText.headerMenusText(context),
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ],
+          customText(
+            text: AppLocalizations.of(context)!.stRecipeSummary,
+            fontSize: DimensText.headerMenusText(context),
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
           SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-          Container(
+          GlassContainer(
             padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.04),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(RecipeMateAppUtil.screenWidth * 0.04),
+            useOwnLayer: true,
+            settings: LiquidGlassSettings(
+              glassColor: Colors.transparent,
+              thickness: 20,
             ),
             child: Html(
               data: summary,
@@ -526,13 +537,13 @@ class HomeDetailView extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        Container(
+                        GlassContainer(
                           width: RecipeMateAppUtil.screenWidth * 0.08,
                           height: RecipeMateAppUtil.screenWidth * 0.08,
                           alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
-                            shape: BoxShape.circle,
+                          settings: LiquidGlassSettings(
+                            glassColor: Colors.transparent,
+                            thickness: 20,
                           ),
                           child: customText(
                             text: "${step.number}",
@@ -543,9 +554,12 @@ class HomeDetailView extends StatelessWidget {
                         ),
                         if (!isLastStep)
                           Expanded(
-                            child: Container(
+                            child: GlassContainer(
                               width: 2,
-                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                              settings: LiquidGlassSettings(
+                                glassColor: Colors.transparent,
+                                thickness: 20,
+                              ),
                             ),
                           ),
                       ],
