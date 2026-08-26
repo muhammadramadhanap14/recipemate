@@ -17,6 +17,22 @@ import '../view_model/home_detail_view_model.dart';
 class HomeDetailView extends StatelessWidget {
   const HomeDetailView({super.key});
 
+  static LiquidGlassSettings _glassSettings(BuildContext context, {double backerAlpha = 0.06}) {
+    return LiquidGlassSettings(
+      glassColor: Theme.of(context).cardColor,
+      backerColor: Colors.black.withValues(alpha: backerAlpha),
+      thickness: 100,
+      blur: 8,
+      chromaticAberration: 0.4,
+      lightIntensity: 1.2,
+      refractiveIndex: 1.68,
+      saturation: 1.1,
+      ambientStrength: 1.1,
+      ambientRim: 0.3,
+      edgeAbsorption: 0.12,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final dynamic arguments = Get.arguments;
@@ -38,6 +54,9 @@ class HomeDetailView extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
     });
+
+    final primary = Theme.of(context).colorScheme.primary;
+
     return ConnectionWrapper(
       child: Material(
         color: Colors.transparent,
@@ -49,28 +68,24 @@ class HomeDetailView extends StatelessWidget {
             children: [
               Container(color: Theme.of(context).scaffoldBackgroundColor),
               Positioned(
-                top: -50,
-                right: -50,
-                child: buildBlurBlob(
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                  350,
-                ),
+                top: -60,
+                right: -60,
+                child: buildBlurBlob(primary.withValues(alpha: 0.35), 400),
               ),
               Positioned(
-                bottom: 200,
-                left: -100,
-                child: buildBlurBlob(
-                  Colors.deepPurple.withValues(alpha: 0.1),
-                  400,
-                ),
+                top: 500,
+                left: -120,
+                child: buildBlurBlob(primary.withValues(alpha: 0.22), 380),
               ),
               Positioned(
-                top: 250,
-                left: -50,
-                child: buildBlurBlob(
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
-                  250,
-                ),
+                top: 1000,
+                right: -100,
+                child: buildBlurBlob(primary.withValues(alpha: 0.25), 360),
+              ),
+              Positioned(
+                bottom: -60,
+                left: -80,
+                child: buildBlurBlob(primary.withValues(alpha: 0.3), 380),
               ),
             ],
           ),
@@ -170,13 +185,16 @@ class HomeDetailView extends StatelessWidget {
                   iconSize: RecipeMateAppUtil.screenWidth * 0.07,
                   settings: const LiquidGlassSettings(
                     glassColor: Colors.transparent,
-                    thickness: 20,
-                    blur: 3,
-                    chromaticAberration: 0.3,
-                    lightIntensity: 0.6,
-                    refractiveIndex: 1.59,
+                    backerColor: Colors.black38,
+                    thickness: 90,
+                    blur: 6,
+                    chromaticAberration: 0.4,
+                    lightIntensity: 1.1,
+                    refractiveIndex: 1.65,
                     saturation: 1.0,
-                    ambientStrength: 1,
+                    ambientStrength: 1.1,
+                    ambientRim: 0.3,
+                    edgeAbsorption: 0.1,
                   ),
                   useOwnLayer: true
                 )
@@ -203,7 +221,18 @@ class HomeDetailView extends StatelessWidget {
         Row(
           children: [
             GlassContainer(
-              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              settings: LiquidGlassSettings(
+                glassColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.9),
+                backerColor: Colors.black.withValues(alpha: 0.02),
+                thickness: 60,
+                blur: 5,
+                chromaticAberration: 0.2,
+                lightIntensity: 1.2,
+                refractiveIndex: 1.65,
+                ambientRim: 0.3,
+                edgeAbsorption: 0.1,
+              ),
               child: Icon(
                 Icons.access_time_filled,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -218,7 +247,18 @@ class HomeDetailView extends StatelessWidget {
             ),
             SizedBox(width: RecipeMateAppUtil.screenWidth * 0.04),
             GlassContainer(
-              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              settings: LiquidGlassSettings(
+                glassColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.9),
+                backerColor: Colors.black.withValues(alpha: 0.02),
+                thickness: 60,
+                blur: 5,
+                chromaticAberration: 0.2,
+                lightIntensity: 1.2,
+                refractiveIndex: 1.65,
+                ambientRim: 0.3,
+                edgeAbsorption: 0.1,
+              ),
               child: Icon(
                 Icons.star,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -245,14 +285,14 @@ class HomeDetailView extends StatelessWidget {
     if (recipe.dairyFree == true) tags.add("Dairy Free");
     if (recipe.veryHealthy == true) tags.add("Healthy");
     if (recipe.cheap == true) tags.add("Cheap");
-    
     if (tags.isEmpty) return const SizedBox.shrink();
 
     return Wrap(
       spacing: 8,
       runSpacing: 4,
       children: tags.map((tag) => GlassContainer(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        settings: _glassSettings(context),
         child: customText(
           text: tag,
           fontSize: DimensText.bodySmallText(context),
@@ -289,16 +329,7 @@ class HomeDetailView extends StatelessWidget {
       shape: LiquidRoundedRectangle(
         borderRadius: RecipeMateAppUtil.screenWidth * 0.06,
       ),
-      settings: const LiquidGlassSettings(
-        glassColor: Colors.transparent,
-        thickness: 60,
-        blur: 3,
-        chromaticAberration: 0.3,
-        lightIntensity: 0.6,
-        refractiveIndex: 1.59,
-        saturation: 1.0,
-        ambientStrength: 1,
-      ),
+      settings: _glassSettings(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -416,16 +447,7 @@ class HomeDetailView extends StatelessWidget {
       shape: LiquidRoundedRectangle(
         borderRadius: RecipeMateAppUtil.screenWidth * 0.06,
       ),
-      settings: const LiquidGlassSettings(
-        glassColor: Colors.transparent,
-        thickness: 60,
-        blur: 3,
-        chromaticAberration: 0.3,
-        lightIntensity: 0.6,
-        refractiveIndex: 1.59,
-        saturation: 1.0,
-        ambientStrength: 1,
-      ),
+      settings: _glassSettings(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -440,8 +462,15 @@ class HomeDetailView extends StatelessWidget {
             padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.04),
             useOwnLayer: true,
             settings: LiquidGlassSettings(
-              glassColor: Colors.transparent,
-              thickness: 20,
+              glassColor: Colors.black.withValues(alpha: 0.05),
+              backerColor: Colors.black.withValues(alpha: 0.08),
+              thickness: 60,
+              blur: 6,
+              chromaticAberration: 0.25,
+              lightIntensity: 1.1,
+              refractiveIndex: 1.6,
+              ambientRim: 0.2,
+              edgeAbsorption: 0.15,
             ),
             child: Html(
               data: summary,
@@ -570,8 +599,15 @@ class HomeDetailView extends StatelessWidget {
                           height: RecipeMateAppUtil.screenWidth * 0.08,
                           alignment: Alignment.center,
                           settings: LiquidGlassSettings(
-                            glassColor: Colors.transparent,
-                            thickness: 20,
+                            glassColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.9),
+                            backerColor: Colors.black.withValues(alpha: 0.02),
+                            thickness: 60,
+                            blur: 5,
+                            chromaticAberration: 0.2,
+                            lightIntensity: 1.2,
+                            refractiveIndex: 1.65,
+                            ambientRim: 0.3,
+                            edgeAbsorption: 0.1,
                           ),
                           child: customText(
                             text: "${step.number}",
@@ -585,7 +621,7 @@ class HomeDetailView extends StatelessWidget {
                             child: GlassContainer(
                               width: 2,
                               settings: LiquidGlassSettings(
-                                glassColor: Colors.transparent,
+                                glassColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
                                 thickness: 20,
                               ),
                             ),

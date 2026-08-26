@@ -14,6 +14,22 @@ import '../view_model/account_view_model.dart';
 class AccountView extends StatelessWidget {
   const AccountView({super.key});
 
+  static LiquidGlassSettings _glassSettings(BuildContext context, {double backerAlpha = 0.06}) {
+    return LiquidGlassSettings(
+      glassColor: Theme.of(context).cardColor,
+      backerColor: Colors.black.withValues(alpha: backerAlpha),
+      thickness: 100,
+      blur: 8,
+      chromaticAberration: 0.4,
+      lightIntensity: 1.2,
+      refractiveIndex: 1.68,
+      saturation: 1.1,
+      ambientStrength: 1.1,
+      ambientRim: 0.3,
+      edgeAbsorption: 0.12,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final AccountViewModel viewModel = Get.put(
@@ -27,6 +43,7 @@ class AccountView extends StatelessWidget {
     });
 
     final double topReserved = MediaQuery.of(context).padding.top + kToolbarHeight;
+    final primary = Theme.of(context).colorScheme.primary;
 
     return ConnectionWrapper(
       child: Material(
@@ -40,153 +57,135 @@ class AccountView extends StatelessWidget {
             children: [
               Container(color: Theme.of(context).scaffoldBackgroundColor),
               Positioned(
-                top: -50,
-                right: -50,
-                child: buildBlurBlob(
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                  350,
-                ),
+                top: -60,
+                right: -60,
+                child: buildBlurBlob(primary.withValues(alpha: 0.35), 400),
               ),
               Positioned(
-                bottom: 200,
-                left: -100,
-                child: buildBlurBlob(
-                  Colors.deepPurple.withValues(alpha: 0.1),
-                  400,
-                ),
+                top: 420,
+                left: -120,
+                child: buildBlurBlob(primary.withValues(alpha: 0.22), 380),
               ),
               Positioned(
-                top: 250,
-                left: -50,
-                child: buildBlurBlob(
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
-                  250,
-                ),
+                bottom: -60,
+                right: -80,
+                child: buildBlurBlob(primary.withValues(alpha: 0.28), 380),
               ),
             ],
           ),
           appBar: GlassAppBar(
-          backgroundColor: Colors.transparent,
-          title: customText(
-            text: AppLocalizations.of(context)!.account,
-            fontSize: DimensText.headerMenusText(context),
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSurface,
-            fontFamily: 'times_new_roman_bold',
+            backgroundColor: Colors.transparent,
+            title: customText(
+              text: AppLocalizations.of(context)!.account,
+              fontSize: DimensText.headerMenusText(context),
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+              fontFamily: 'times_new_roman_bold',
+            ),
           ),
-        ),
-        body: Material(
-          color: Colors.transparent,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: RecipeMateAppUtil.screenWidth * 0.01,
-              ),
-              child: Column(
-                children: [
-                  SizedBox(height: topReserved + RecipeMateAppUtil.screenHeight * 0.02),
-                  _buildProfileHeader(context, viewModel),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                  GlassGroupedSection(
-                    settings: const LiquidGlassSettings(
-                      glassColor: Colors.transparent,
-                      thickness: 60,
-                      blur: 3,
-                      chromaticAberration: 0.3,
-                      lightIntensity: 0.6,
-                      refractiveIndex: 1.59,
-                      saturation: 1.0,
-                      ambientStrength: 1,
+          body: Material(
+            color: Colors.transparent,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: RecipeMateAppUtil.screenWidth * 0.01,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: topReserved + RecipeMateAppUtil.screenHeight * 0.02),
+                    _buildProfileHeader(context, viewModel),
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                    GlassGroupedSection(
+                      settings: _glassSettings(context),
+                      children: [
+                        _buildMenuTile(
+                          context: context,
+                          icon: Icons.security,
+                          title: AppLocalizations.of(context)!.security,
+                          trailing: Icon(
+                            Icons.keyboard_arrow_right,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            size: RecipeMateAppUtil.screenWidth * 0.05,
+                          ),
+                          onTap: () => viewModel.navigateToSecurityPage(context),
+                        ),
+                        _buildMenuTile(
+                          context: context,
+                          icon: Icons.language,
+                          title: AppLocalizations.of(context)!.language,
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Obx(() => customText(
+                                text: viewModel.currentLanguage.value,
+                                fontSize: DimensText.captionText(context),
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              )),
+                              SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+                              Icon(
+                                Icons.keyboard_arrow_right,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                size: RecipeMateAppUtil.screenWidth * 0.05,
+                              ),
+                            ],
+                          ),
+                          onTap: () => viewModel.openLanguageDialog(),
+                        ),
+                        _buildMenuTile(
+                          context: context,
+                          icon: Icons.dark_mode,
+                          title: AppLocalizations.of(context)!.theme,
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Obx(() => customText(
+                                text: viewModel.currentTheme.value,
+                                fontSize: DimensText.captionText(context),
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              )),
+                              SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+                              Icon(
+                                Icons.keyboard_arrow_right,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                size: RecipeMateAppUtil.screenWidth * 0.05,
+                              ),
+                            ],
+                          ),
+                          onTap: () => viewModel.openThemeDialog(context),
+                        ),
+                        _buildMenuTile(
+                          context: context,
+                          icon: Icons.logout_rounded,
+                          title: AppLocalizations.of(context)!.logout,
+                          titleColor: Theme.of(context).colorScheme.primary,
+                          iconColor: Theme.of(context).colorScheme.primary,
+                          trailing: Icon(
+                            Icons.keyboard_arrow_right,
+                            color: Theme.of(context).colorScheme.primary,
+                            size: RecipeMateAppUtil.screenWidth * 0.05,
+                          ),
+                          onTap: () => viewModel.openLogoutDialog(context),
+                        ),
+                      ],
                     ),
-                    children: [
-                      _buildMenuTile(
-                        context: context,
-                        icon: Icons.security,
-                        title: AppLocalizations.of(context)!.security,
-                        trailing: Icon(
-                          Icons.keyboard_arrow_right,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          size: RecipeMateAppUtil.screenWidth * 0.05,
-                        ),
-                        onTap: () => viewModel.navigateToSecurityPage(context),
-                      ),
-                      _buildMenuTile(
-                        context: context,
-                        icon: Icons.language,
-                        title: AppLocalizations.of(context)!.language,
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Obx(() => customText(
-                              text: viewModel.currentLanguage.value,
-                              fontSize: DimensText.captionText(context),
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            )),
-                            SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
-                            Icon(
-                              Icons.keyboard_arrow_right,
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              size: RecipeMateAppUtil.screenWidth * 0.05,
-                            ),
-                          ],
-                        ),
-                        onTap: () => viewModel.openLanguageDialog(),
-                      ),
-                      _buildMenuTile(
-                        context: context,
-                        icon: Icons.dark_mode,
-                        title: AppLocalizations.of(context)!.theme,
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Obx(() => customText(
-                              text: viewModel.currentTheme.value,
-                              fontSize: DimensText.captionText(context),
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            )),
-                            SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
-                            Icon(
-                              Icons.keyboard_arrow_right,
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              size: RecipeMateAppUtil.screenWidth * 0.05,
-                            ),
-                          ],
-                        ),
-                        onTap: () => viewModel.openThemeDialog(context),
-                      ),
-                      _buildMenuTile(
-                        context: context,
-                        icon: Icons.logout_rounded,
-                        title: AppLocalizations.of(context)!.logout,
-                        titleColor: Theme.of(context).colorScheme.primary,
-                        iconColor: Theme.of(context).colorScheme.primary,
-                        trailing: Icon(
-                          Icons.keyboard_arrow_right,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: RecipeMateAppUtil.screenWidth * 0.05,
-                        ),
-                        onTap: () => viewModel.openLogoutDialog(context),
-                      ),
-                    ],
-                  ),
 
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.06),
-                  Obx(() => Center(
-                    child: customText(
-                      text: viewModel.appVersion.value,
-                      fontSize: DimensText.captionText(context),
-                      color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  )),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                ],
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.06),
+                    Obx(() => Center(
+                      child: customText(
+                        text: viewModel.appVersion.value,
+                        fontSize: DimensText.captionText(context),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )),
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      )
-    ));
+        )
+      ));
   }
 
   Widget _buildProfileHeader(BuildContext context, AccountViewModel viewModel) {
@@ -202,7 +201,7 @@ class AccountView extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
                   width: RecipeMateAppUtil.screenWidth * 0.01,
                 ),
               ),
@@ -240,22 +239,22 @@ class AccountView extends StatelessWidget {
         ),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
         Obx(() => customText(
-          text: viewModel.fullName.value,
-          fontSize: DimensText.subHeaderLargeText(context),
-          fontWeight: FontWeight.w900,
-          color: Theme.of(context).colorScheme.onSurface,
-          fontFamily: 'times_new_roman_bold',
-          intMaxLine: null,
-          textAlign: TextAlign.center
+            text: viewModel.fullName.value,
+            fontSize: DimensText.subHeaderLargeText(context),
+            fontWeight: FontWeight.w900,
+            color: Theme.of(context).colorScheme.onSurface,
+            fontFamily: 'times_new_roman_bold',
+            intMaxLine: null,
+            textAlign: TextAlign.center
         )),
         SizedBox(height: RecipeMateAppUtil.screenHeight * 0.005),
         Obx(() => customText(
-          text: viewModel.emailId.value,
-          fontWeight: FontWeight.w400,
-          fontSize: DimensText.captionText(context),
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          textAlign: TextAlign.center,
-          intMaxLine: null
+            text: viewModel.emailId.value,
+            fontWeight: FontWeight.w400,
+            fontSize: DimensText.captionText(context),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            textAlign: TextAlign.center,
+            intMaxLine: null
         )),
       ],
     );
@@ -374,6 +373,7 @@ class AccountView extends StatelessWidget {
       child: GlassCard(
         padding: EdgeInsets.zero,
         shape: LiquidRoundedRectangle(borderRadius: borderRadius),
+        settings: _glassSettings(context, backerAlpha: 0.08),
         child: Container(
           width: double.infinity,
           padding: EdgeInsets.symmetric(

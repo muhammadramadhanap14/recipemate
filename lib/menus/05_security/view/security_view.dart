@@ -14,6 +14,22 @@ import '../view_model/security_view_model.dart';
 class SecurityView extends StatelessWidget {
   const SecurityView({super.key});
 
+  static LiquidGlassSettings _glassSettings(BuildContext context, {double backerAlpha = 0.06}) {
+    return LiquidGlassSettings(
+      glassColor: Theme.of(context).cardColor,
+      backerColor: Colors.black.withValues(alpha: backerAlpha),
+      thickness: 100,
+      blur: 8,
+      chromaticAberration: 0.4,
+      lightIntensity: 1.2,
+      refractiveIndex: 1.68,
+      saturation: 1.1,
+      ambientStrength: 1.1,
+      ambientRim: 0.3,
+      edgeAbsorption: 0.12,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final SecurityViewModel viewModel = Get.put(
@@ -28,6 +44,7 @@ class SecurityView extends StatelessWidget {
     });
 
     final double topReserved = MediaQuery.of(context).padding.top + kToolbarHeight;
+    final primary = Theme.of(context).colorScheme.primary;
 
     return ConnectionWrapper(
       child: Material(
@@ -41,37 +58,50 @@ class SecurityView extends StatelessWidget {
             children: [
               Container(color: Theme.of(context).scaffoldBackgroundColor),
               Positioned(
-                top: -50,
-                right: -50,
-                child: buildBlurBlob(
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                  350,
-                ),
+                top: -60,
+                right: -60,
+                child: buildBlurBlob(primary.withValues(alpha: 0.35), 400),
               ),
               Positioned(
-                bottom: 200,
-                left: -100,
-                child: buildBlurBlob(
-                  Colors.deepPurple.withValues(alpha: 0.1),
-                  400,
-                ),
+                top: 420,
+                left: -120,
+                child: buildBlurBlob(primary.withValues(alpha: 0.22), 380),
               ),
               Positioned(
-                top: 250,
-                left: -50,
-                child: buildBlurBlob(
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
-                  250,
-                ),
+                bottom: -60,
+                right: -80,
+                child: buildBlurBlob(primary.withValues(alpha: 0.28), 380),
               ),
             ],
           ),
           appBar: GlassAppBar(
           backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: Icon(Icons.keyboard_arrow_left, color: theme.colorScheme.onSurface),
-            onPressed: () => Get.back(),
-          ),
+            leading: Padding(
+              padding: EdgeInsets.only(
+                left: RecipeMateAppUtil.screenWidth * 0.03,
+              ),
+              child: GlassIconButton(
+                onPressed: () => Get.back(),
+                size: RecipeMateAppUtil.screenWidth * 0.11,
+                iconSize: RecipeMateAppUtil.screenWidth * 0.06,
+                shape: GlassIconButtonShape.circle,
+                icon: Icon(
+                  Icons.keyboard_arrow_left_rounded,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                settings: LiquidGlassSettings(
+                  glassColor: Theme.of(context).cardColor,
+                  backerColor: Colors.black.withValues(alpha: 0.05),
+                  thickness: 70,
+                  blur: 6,
+                  chromaticAberration: 0.35,
+                  lightIntensity: 1.2,
+                  refractiveIndex: 1.65,
+                  ambientRim: 0.3,
+                  edgeAbsorption: 0.12,
+                ),
+              ),
+            ),
           title: customText(
             text: AppLocalizations.of(context)!.security,
             fontSize: DimensText.headerMenusText(context),
@@ -79,6 +109,7 @@ class SecurityView extends StatelessWidget {
             color: theme.colorScheme.onSurface,
             fontFamily: 'times_new_roman_bold',
           ),
+            centerTitle: true,
         ),
         body: Material(
           color: Colors.transparent,
@@ -95,17 +126,7 @@ class SecurityView extends StatelessWidget {
                   _buildSectionTitle(AppLocalizations.of(context)!.stBiometric, context),
                   SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
                   GlassGroupedSection(
-                    quality: GlassQuality.standard,
-                    settings: const LiquidGlassSettings(
-                      glassColor: Colors.transparent,
-                      thickness: 60,
-                      blur: 3,
-                      chromaticAberration: 0.3,
-                      lightIntensity: 0.6,
-                      refractiveIndex: 1.59,
-                      saturation: 1.0,
-                      ambientStrength: 1,
-                    ),
+                    settings: _glassSettings(context),
                     children: [
                       _buildMenuTile(
                         context: context,
@@ -141,28 +162,33 @@ class SecurityView extends StatelessWidget {
   }
 
   Widget _buildProfileHeader(BuildContext context, SecurityViewModel viewModel) {
-    final double profileSize = RecipeMateAppUtil.screenWidth * 0.28;
+    final double profileSize = RecipeMateAppUtil.screenWidth * 0.35;
 
-    return Center(
-      child: Column(
-        children: [
-          Obx(() {
-            return Container(
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Obx(() => Container(
               width: profileSize,
               height: profileSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: viewModel.session.profileImage.value != null
-                      ? FileImage(viewModel.session.profileImage.value!)
-                      : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
-                  fit: BoxFit.cover,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
+                  width: RecipeMateAppUtil.screenWidth * 0.01,
                 ),
               ),
-            );
-          }),
-          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-          Obx(() => customText(
+              child: CircleAvatar(
+                backgroundImage: viewModel.session.profileImage.value != null
+                    ? FileImage(viewModel.session.profileImage.value!)
+                    : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
+                backgroundColor: Colors.transparent,
+              ),
+            )),
+          ],
+        ),
+        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+        Obx(() => customText(
             text: viewModel.fullName.value,
             fontSize: DimensText.subHeaderLargeText(context),
             fontWeight: FontWeight.w900,
@@ -170,18 +196,17 @@ class SecurityView extends StatelessWidget {
             fontFamily: 'times_new_roman_bold',
             intMaxLine: null,
             textAlign: TextAlign.center
-          )),
-          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.002),
-          Obx(() => customText(
+        )),
+        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.005),
+        Obx(() => customText(
             text: viewModel.emailId.value,
             fontWeight: FontWeight.w400,
             fontSize: DimensText.captionText(context),
             color: Theme.of(context).colorScheme.onSurfaceVariant,
-            intMaxLine: null,
-            textAlign: TextAlign.center
-          )),
-        ],
-      ),
+            textAlign: TextAlign.center,
+            intMaxLine: null
+        )),
+      ],
     );
   }
 

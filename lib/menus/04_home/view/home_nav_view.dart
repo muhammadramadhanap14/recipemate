@@ -21,6 +21,8 @@ class HomeNavView extends StatelessWidget {
 
     final double iconSizeCenter = RecipeMateAppUtil.screenWidth * 0.085;
     final bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    final primary = Theme.of(context).colorScheme.primary;
+    final cardColor = Theme.of(context).cardColor;
 
     return PopScope(
       canPop: false,
@@ -39,34 +41,26 @@ class HomeNavView extends StatelessWidget {
             children: [
               Container(color: Theme.of(context).scaffoldBackgroundColor),
               Positioned(
-                top: -50,
-                right: -50,
-                child: buildBlurBlob(
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                  350,
-                ),
+                top: -60,
+                right: -60,
+                child: buildBlurBlob(primary.withValues(alpha: 0.32), 380),
               ),
               Positioned(
-                bottom: 200,
-                left: -100,
-                child: buildBlurBlob(
-                  Colors.deepPurple.withValues(alpha: 0.1),
-                  400,
-                ),
+                bottom: 180,
+                left: -120,
+                child: buildBlurBlob(primary.withValues(alpha: 0.22), 400),
               ),
               Positioned(
-                top: 250,
-                left: -50,
-                child: buildBlurBlob(
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
-                  250,
-                ),
+                top: 260,
+                left: -60,
+                child: buildBlurBlob(primary.withValues(alpha: 0.18), 260),
               ),
             ],
           ),
           body: Obx(() => viewModel.currentPage),
           bottomBar: isKeyboardVisible
-          ? const SizedBox.shrink() : Padding(
+            ? const SizedBox.shrink()
+            : Padding(
             padding: EdgeInsets.only(
               bottom: RecipeMateAppUtil.screenHeight * 0.03,
               left: RecipeMateAppUtil.screenWidth * 0.21,
@@ -107,23 +101,25 @@ class HomeNavView extends StatelessWidget {
                             ),
                           ),
                         ],
-                        selectedLabelColor: Theme.of(context).colorScheme.primary,
-                        selectedIconColor: Theme.of(context).colorScheme.primary,
-                        unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
-                        unselectedIconColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                        selectedIconColor: Theme.of(context).colorScheme.onPrimary,
+                        unselectedIconColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                        indicatorColor: primary,
                         labelFontSize: DimensText.buttonMicroText(context),
                         barHeight: RecipeMateAppUtil.screenHeight * 0.075,
                         barBorderRadius: 35,
                         enableBlend: true,
-                        settings: const LiquidGlassSettings(
-                          glassColor: Colors.transparent,
-                          thickness: 60,
-                          blur: 3,
-                          chromaticAberration: 0.3,
-                          lightIntensity: 0.6,
-                          refractiveIndex: 1.59,
-                          saturation: 1.0,
-                          ambientStrength: 1,
+                        settings: LiquidGlassSettings(
+                          glassColor: cardColor,
+                          backerColor: Colors.black.withValues(alpha: 0.06),
+                          thickness: 100,
+                          blur: 8,
+                          chromaticAberration: 0.4,
+                          lightIntensity: 1.2,
+                          refractiveIndex: 1.68,
+                          saturation: 1.1,
+                          ambientStrength: 1.1,
+                          ambientRim: 0.3,
+                          edgeAbsorption: 0.12,
                         ),
                       ),
                     ),
@@ -142,17 +138,20 @@ class HomeNavView extends StatelessWidget {
                     },
                     icon: Icon(
                       Icons.auto_awesome,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    settings: const LiquidGlassSettings(
-                      glassColor: Colors.transparent,
-                      thickness: 60,
-                      blur: 3,
-                      chromaticAberration: 0.3,
-                      lightIntensity: 0.6,
-                      refractiveIndex: 1.59,
-                      saturation: 1.0,
-                      ambientStrength: 1,
+                    settings: LiquidGlassSettings(
+                      glassColor: primary.withValues(alpha: 0.95),
+                      backerColor: Colors.black.withValues(alpha: 0.02),
+                      thickness: 80,
+                      blur: 6,
+                      chromaticAberration: 0.2,
+                      lightIntensity: 1.3,
+                      refractiveIndex: 1.7,
+                      saturation: 1.1,
+                      ambientStrength: 1.2,
+                      ambientRim: 0.35,
+                      edgeAbsorption: 0.15,
                     ),
                   ),
                 ],

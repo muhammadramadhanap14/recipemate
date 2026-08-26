@@ -43,7 +43,7 @@ class LoginView extends StatelessWidget {
             top: -50,
             right: -50,
             child: buildBlurBlob(
-              Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.30),
               350,
             ),
           ),
@@ -51,7 +51,7 @@ class LoginView extends StatelessWidget {
             bottom: 200,
             left: -100,
             child: buildBlurBlob(
-              Colors.deepPurple.withValues(alpha: 0.1),
+              Colors.deepPurple.withValues(alpha: 0.25),
               400,
             ),
           ),
@@ -59,7 +59,7 @@ class LoginView extends StatelessWidget {
             top: 250,
             left: -50,
             child: buildBlurBlob(
-              Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.20),
               250,
             ),
           ),
@@ -148,13 +148,14 @@ class LoginView extends StatelessWidget {
                           ),
                           settings: const LiquidGlassSettings(
                             glassColor: Colors.transparent,
-                            thickness: 60,
+                            thickness: 100,
                             blur: 3,
                             chromaticAberration: 0.3,
-                            lightIntensity: 0.6,
+                            lightIntensity: 0.8,
                             refractiveIndex: 1.59,
                             saturation: 1.0,
                             ambientStrength: 1,
+                            edgeAbsorption: 0.15,
                           ),
                         ),
 
@@ -238,13 +239,14 @@ class LoginView extends StatelessWidget {
                                   glassColor: viewModel.isValidButton.value
                                     ? Theme.of(context).colorScheme.primary
                                     : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                                  thickness: 60,
+                                  thickness: 100,
                                   blur: 3,
                                   chromaticAberration: 0.3,
-                                  lightIntensity: 0.6,
+                                  lightIntensity: 0.8,
                                   refractiveIndex: 1.59,
                                   saturation: 1.0,
                                   ambientStrength: 1,
+                                  edgeAbsorption: 0.15,
                                 ),
                                 child: Center(
                                   child: customText(
