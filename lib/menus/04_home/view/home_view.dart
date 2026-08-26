@@ -36,29 +36,38 @@ class HomeView extends StatelessWidget {
           extendBody: true,
           edgeFade: false,
           body: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                  _buildHeader(context, viewModel),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await viewModel.getRecommendedRecipes();
+                await viewModel.getDynamicFoodArticles();
+              },
+              color: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                    _buildHeader(context, viewModel),
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSearchBar(context, viewModel),
+                          _buildAutoCompleteList(context, viewModel),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSearchBar(context, viewModel),
-                        _buildAutoCompleteList(context, viewModel),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                  _buildContent(context, viewModel),
-                  SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                ],
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                    _buildContent(context, viewModel),
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.13),
+                  ],
+                ),
               ),
             ),
           ),

@@ -8,6 +8,7 @@ import '../utils/token_interceptor.dart';
 
 class ApiRepository {
   late Dio _dio;
+  late Dio _dioNews;
 
   ApiRepository() {
     BaseOptions options = BaseOptions(
@@ -17,28 +18,33 @@ class ApiRepository {
       receiveTimeout: const Duration(minutes: 4),
     );
 
-    _dio = Dio(options);
-    _dio.interceptors.add(TokenInterceptor());
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-          // Print request data
-          debugPrint('Request to: ${options.uri}');
-          debugPrint('Request data: ${options.data}');
-          return handler.next(options); // Continue with the request
-        },
-        onResponse: (Response response, ResponseInterceptorHandler handler) {
-          // Print response data
-          // debugPrint('Response data: ${response.data}');
-          return handler.next(response); // Continue with the response
-        },
-        onError: (DioException e, ErrorInterceptorHandler handler) {
-          // Print error
-          debugPrint('Error: ${e.response?.statusCode} ${e.response?.data}');
-          return handler.next(e);
-        },
-      ),
+    BaseOptions newsOptions = BaseOptions(
+      baseUrl: ConstantUrl.foodNewsUrl,
+      receiveDataWhenStatusError: true,
+      connectTimeout: const Duration(minutes: 1),
+      receiveTimeout: const Duration(minutes: 1),
     );
+
+    _dio = Dio(options);
+    _dioNews = Dio(newsOptions);
+
+    _dio.interceptors.add(TokenInterceptor());
+    final logger = InterceptorsWrapper(
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
+        debugPrint('Request to: ${options.uri}');
+        return handler.next(options);
+      },
+      onResponse: (Response response, ResponseInterceptorHandler handler) {
+        return handler.next(response);
+      },
+      onError: (DioException e, ErrorInterceptorHandler handler) {
+        debugPrint('Error: ${e.response?.statusCode} ${e.response?.data}');
+        return handler.next(e);
+      },
+    );
+
+    _dio.interceptors.add(logger);
+    _dioNews.interceptors.add(logger);
   }
   Future<dynamic> postApiLogin(String email, String password) async {
     try {
@@ -104,7 +110,7 @@ class ApiRepository {
         queryParameters: {
           "query": query,
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey2,
+          "apiKey": ConstantUrl.spoonacularApiKey,
         },
       );
 
@@ -130,7 +136,7 @@ class ApiRepository {
         queryParameters: {
           "query": query,
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey2,
+          "apiKey": ConstantUrl.spoonacularApiKey,
         },
       );
 
@@ -152,7 +158,7 @@ class ApiRepository {
         "/recipes/$recipeId/information",
         queryParameters: {
           "includeNutrition": true,
-          "apiKey": ConstantUrl.spoonacularApiKey2,
+          "apiKey": ConstantUrl.spoonacularApiKey,
         },
       );
 
@@ -174,7 +180,7 @@ class ApiRepository {
         "/recipes/random",
         queryParameters: {
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey2,
+          "apiKey": ConstantUrl.spoonacularApiKey,
         },
       );
 
@@ -190,25 +196,31 @@ class ApiRepository {
     }
   }
 
-  Future<dynamic> getFoodArticles({required String query, int number = 5}) async {
+  Future<dynamic> getFoodNews({
+    required String query,
+    int number = 5,
+    String sortBy = "relevancy",
+  }) async {
     try {
-      final response = await _dio.get(
-        "/food/articles/search",
+      final response = await _dioNews.get(
+        "everything",
         queryParameters: {
-          "query": query,
-          "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey2,
+          "q": query,
+          "pageSize": number,
+          "apiKey": ConstantUrl.foodNewsApiKey,
+          "language": "en",
+          "sortBy": sortBy,
         },
       );
 
-      log("response articles: ${response.data}");
+      log("response news: ${response.data}");
 
       return response.data;
     } on DioException catch (e) {
-      debugPrint("Dio error: ${e.response?.data}");
+      debugPrint("Dio error news: ${e.response?.data}");
       return e.response?.data;
     } catch (e) {
-      debugPrint("Error: $e");
+      debugPrint("Error news: $e");
       return null;
     }
   }

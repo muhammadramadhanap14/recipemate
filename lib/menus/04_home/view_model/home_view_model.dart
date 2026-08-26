@@ -170,14 +170,46 @@ class HomeViewModel extends GetxController {
   Future<void> getDynamicFoodArticles() async {
     isLoadingArticles.value = true;
     try {
-      final randomKeyword = (articleKeywords..shuffle()).first;
-      final response = await apiRepository.getFoodArticles(query: randomKeyword);
+      final articleKeywords = [
+        'gourmet',
+        'culinary',
+        'recipe',
+        'cooking',
+        'healthy food',
+        'nutrition',
+        'restaurant',
+        'street food',
+        'dessert',
+        'main course',
+      ];
+      final sortOptions = ['relevancy', 'popularity', 'publishedAt'];
 
-      if (response != null && response['articles'] != null) {
-        final List<dynamic> articles = response['articles'];
-        if (articles.isNotEmpty) {
-          foodArticles.assignAll(articles);
-          return;
+      final randomKeyword = (articleKeywords..shuffle()).first;
+      final randomSort = (sortOptions..shuffle()).first;
+
+      final query = 'food AND $randomKeyword';
+      debugPrint("Query nya adalah: $query");
+
+      final response = await apiRepository.getFoodNews(
+        query: query,
+        sortBy: randomSort,
+      );
+
+      if (response != null && response['status'] == 'ok' && response['articles'] != null) {
+        final List<dynamic> rawArticles = response['articles'];
+        if (rawArticles.isNotEmpty) {
+          final mappedArticles =
+            rawArticles.where((art) => art['title'] != '[Removed]' && art['urlToImage'] != null).map(
+              (art) => {
+                'title': art['title'] ?? 'No Title',
+                'image': art['urlToImage'] ?? '',
+                'link': art['url'] ?? '',
+              },
+            ).toList();
+          if (mappedArticles.isNotEmpty) {
+            foodArticles.assignAll(mappedArticles);
+            return;
+          }
         }
       }
 
