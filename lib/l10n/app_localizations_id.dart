@@ -42,19 +42,16 @@ class AppLocalizationsId extends AppLocalizations {
   String get changeFoodTypes => 'Ubah jenis makanan & preferensi diet';
 
   @override
-  String get stConfirmLogout =>
-      'Apakah Anda yakin ingin keluar? Semua data sesi akan dihapus, termasuk foto profil, autentikasi sidik jari, dan informasi tersimpan lainnya.';
+  String get stConfirmLogout => 'Apakah Anda yakin ingin keluar? Semua data sesi akan dihapus, termasuk foto profil, autentikasi sidik jari, dan informasi tersimpan lainnya.';
 
   @override
   String get stConfirmChange => 'Apakah Anda yakin ingin mengubah?';
 
   @override
-  String get stTimeOutConnection =>
-      'Waktu koneksi habis, silakan coba lagi nanti.';
+  String get stTimeOutConnection => 'Waktu koneksi habis, silakan coba lagi nanti.';
 
   @override
-  String get stNoConnectionMessage =>
-      'Gagal terhubung ke server,\nsilahkan periksa koneksi internet Anda kembali';
+  String get stNoConnectionMessage => 'Gagal terhubung ke server,\nsilahkan periksa koneksi internet Anda kembali';
 
   @override
   String get stNotFound => 'Tidak Ada Data yang Ditemukan';
@@ -111,8 +108,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stRegister => 'Buat Akun';
 
   @override
-  String get stRegisterGreet =>
-      'Mulailah perjalanan memasak cerdas Anda hari ini.';
+  String get stRegisterGreet => 'Mulailah perjalanan memasak cerdas Anda hari ini.';
 
   @override
   String get stFullName => 'NAMA LENGKAP';
@@ -163,15 +159,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get stgreetPrefFood => 'Ceritakan tentang dirimu!';
 
   @override
-  String get stgreetPrefFood2 =>
-      'Bantu kami mempersonalisasi pengalaman Anda dengan memberikan beberapa informasi dasar.';
+  String get stgreetPrefFood2 => 'Bantu kami mempersonalisasi pengalaman Anda dengan memberikan beberapa informasi dasar.';
 
   @override
   String get stgreetPrefFood3 => 'Ceritakan selera Anda!';
 
   @override
-  String get stgreetPrefFood4 =>
-      'Apa jenis makanan favorit atau preferensi diet Anda?';
+  String get stgreetPrefFood4 => 'Apa jenis makanan favorit atau preferensi diet Anda?';
 
   @override
   String get stBiometric => 'OTENTIKASI BIOMETRIK';
@@ -246,8 +240,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stNoConnectionInternetTitle => 'Tidak Ada Koneksi Internet';
 
   @override
-  String get stNoConnectionInternetMessage =>
-      'Silakan periksa pengaturan internet Anda dan coba lagi';
+  String get stNoConnectionInternetMessage => 'Silakan periksa pengaturan internet Anda dan coba lagi';
 
   @override
   String get stRetryBtn => 'Coba Lagi';
@@ -277,8 +270,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stNoDataFound => 'Tidak Ada Data yang Ditemukan';
 
   @override
-  String get stNoDataFoundMessage =>
-      'Tidak ada data yang tersedia untuk ditampilkan.';
+  String get stNoDataFoundMessage => 'Tidak ada data yang tersedia untuk ditampilkan.';
 
   @override
   String get stNutritionalPrediction => 'Prediksi Nutrisi';
@@ -293,22 +285,19 @@ class AppLocalizationsId extends AppLocalizations {
   String get stLoginFingerprint => 'Pindai untuk Masuk';
 
   @override
-  String get stLoginFingerprintErrorMessage =>
-      'Kredensial tersimpan tidak ditemukan. Silakan masuk secara manual.';
+  String get stLoginFingerprintErrorMessage => 'Kredensial tersimpan tidak ditemukan. Silakan masuk secara manual.';
 
   @override
   String get stEnableFingerprintNowTitle => 'Aktifkan Sidik Jari?';
 
   @override
-  String get stEnableFingerprintNowMessage =>
-      'Buka kunci lebih cepat dan aman dengan sidik jari Anda. Apakah Anda ingin mengaktifkannya sekarang?';
+  String get stEnableFingerprintNowMessage => 'Buka kunci lebih cepat dan aman dengan sidik jari Anda. Apakah Anda ingin mengaktifkannya sekarang?';
 
   @override
   String get stRemindMeLaterBtn => 'Ingatkan saya nanti';
 
   @override
-  String get stRemindMeLaterMessage =>
-      'Kami akan mengingatkan Anda setelah 48 jam.';
+  String get stRemindMeLaterMessage => 'Kami akan mengingatkan Anda setelah 48 jam.';
 
   @override
   String get stInstructions => 'Petunjuk';
@@ -326,8 +315,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stDeleteAll => 'Hapus Semua?';
 
   @override
-  String get stDeleteAllMessage =>
-      'Apakah Anda yakin ingin menghapus semua notifikasi?';
+  String get stDeleteAllMessage => 'Apakah Anda yakin ingin menghapus semua notifikasi?';
 
   @override
   String get stHistoryChat => 'Riwayat Chat';
@@ -336,8 +324,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stNoNotificationYet => 'Tidak Ada Notifikasi';
 
   @override
-  String get stNoNotificationYetMessage =>
-      'Kami akan memberitahu Anda ketika ada hal baru dan seru untuk Anda!';
+  String get stNoNotificationYetMessage => 'Kami akan memberitahu Anda ketika ada hal baru dan seru untuk Anda!';
 
   @override
   String get stCheckBackLater => 'Cek kembali nanti untuk pembaruan';
@@ -349,8 +336,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stBrowseByCategory => 'Jelajahi berdasarkan kategori';
 
   @override
-  String get stBrowseByCategoryMsg =>
-      'Jelajahi berdasarkan kategori atau pilih resep di bawah.';
+  String get stBrowseByCategoryMsg => 'Jelajahi berdasarkan kategori atau pilih resep di bawah.';
 
   @override
   String get stPopularRecipes => 'Resep Populer';
@@ -359,8 +345,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stRecommendedRecipes => 'Rekomendasi Resep';
 
   @override
-  String get stPopularRecipesMsg =>
-      'Jelajahi resep lain yang dipilih secara acak untuk Anda.';
+  String get stPopularRecipesMsg => 'Jelajahi resep lain yang dipilih secara acak untuk Anda.';
 
   @override
   String get stAskAI => 'Tanya AI';
@@ -372,8 +357,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get stSessionExpiredTitle => 'Sesi Berakhir';
 
   @override
-  String get stSessionExpiredMessage =>
-      'Sesi Anda telah berakhir. Silakan masuk kembali untuk melanjutkan.';
+  String get stSessionExpiredMessage => 'Sesi Anda telah berakhir. Silakan masuk kembali untuk melanjutkan.';
 
   @override
   String get stLoginAgainBtn => 'Masuk Lagi';
