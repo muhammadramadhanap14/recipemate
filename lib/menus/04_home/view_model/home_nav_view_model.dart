@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/04_home/view_model/home_view_model.dart';
+import 'package:recipemate/menus/08_nfc_reader/view/nfc_view.dart';
 
 import '../../../utils/view_utils/app_snackbar.dart';
 import '../view/account_view.dart';
@@ -14,6 +15,7 @@ class HomeNavViewModel extends GetxController {
 
   final List<Widget> _pages = [
     const HomeView(),
+    const NfcView(),
     const AccountView()
   ];
 

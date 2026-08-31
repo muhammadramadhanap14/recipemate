@@ -8,6 +8,8 @@ import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
 import 'package:recipemate/menus/04_home/view/home_list_view.dart';
 import 'package:recipemate/menus/04_home/view/notification_view.dart';
+import 'package:recipemate/menus/08_nfc_reader/view/nfc_result_view.dart';
+import 'package:recipemate/menus/08_nfc_reader/view/nfc_view.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/repository/chat_api_repository.dart';
@@ -23,7 +25,7 @@ import 'menus/02_login/view/login_view.dart';
 import 'menus/04_home/view/home_nav_view.dart';
 import 'menus/05_security/view/security_view.dart';
 import 'menus/06_chat/view/chat_view.dart';
-import 'menus/07_chat_session/view/view_model/chat_history_controller.dart';
+import 'menus/07_chat_session/view_model/chat_history_controller.dart';
 import 'utils/view_utils/app_theme.dart';
 import 'utils/view_utils/transition_controller.dart';
 
@@ -229,6 +231,18 @@ class RecipemateApp extends StatelessWidget {
           GetPage(
             name: '/notification',
             page: () => const NotificationView(),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
+          ),
+          GetPage(
+            name: '/nfc',
+            page: () => const NfcView(),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
+          ),
+          GetPage(
+            name: '/nfc_result',
+            page: () => const NfcResultView(),
             customTransition: liquidGlassTransition(),
             transitionDuration: const Duration(milliseconds: 320),
           ),

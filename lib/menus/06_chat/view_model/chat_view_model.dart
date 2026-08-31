@@ -15,7 +15,7 @@ import 'package:vibration/vibration.dart';
 import '../../../../repository/chat_api_repository.dart';
 import '../../../../utils/data_session_util.dart';
 import '../../../../utils/data_session_util_controller.dart';
-import '../../../07_chat_session/view/view_model/chat_history_controller.dart';
+import '../../07_chat_session/view_model/chat_history_controller.dart';
 
 const String _initialAiGreeting =
     "Halo! Saya RecipeMate AI. Selamat datang di asisten memasakmu. Mau cari resep, minta ide menu, atau langsung tanya tips dapur?";

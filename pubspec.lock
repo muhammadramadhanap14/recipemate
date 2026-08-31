@@ -453,22 +453,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.3"
-  google_mlkit_commons:
-    dependency: transitive
-    description:
-      name: google_mlkit_commons
-      sha256: "621e94de22fd0f1e902e593b892746d80ab7542b39c2552aa091d904eb82fc6f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.13.0"
-  google_mlkit_face_detection:
-    dependency: "direct main"
-    description:
-      name: google_mlkit_face_detection
-      sha256: dd4a6c61e45390217cdc7522e7766b77e9d075cdface0503716ec6722e33d4f4
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.15.1"
   graphs:
     dependency: transitive
     description:
@@ -981,6 +965,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
+  prepaidcard_reader:
+    dependency: "direct main"
+    description:
+      name: prepaidcard_reader
+      sha256: a56590091af3ca13ed2da489cf4cad5787ca78c0f0d4817cdf68ec492bc0e588
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   pub_semver:
     dependency: transitive
     description:

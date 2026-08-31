@@ -76,40 +76,40 @@ class SecurityView extends StatelessWidget {
           ),
           appBar: GlassAppBar(
           backgroundColor: Colors.transparent,
-            leading: Padding(
-              padding: EdgeInsets.only(
-                left: RecipeMateAppUtil.screenWidth * 0.03,
+          leading: Padding(
+            padding: EdgeInsets.only(
+              left: RecipeMateAppUtil.screenWidth * 0.03,
+            ),
+            child: GlassIconButton(
+              onPressed: () => Get.back(),
+              size: RecipeMateAppUtil.screenWidth * 0.11,
+              iconSize: RecipeMateAppUtil.screenWidth * 0.06,
+              shape: GlassIconButtonShape.circle,
+              icon: Icon(
+                Icons.keyboard_arrow_left_rounded,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
-              child: GlassIconButton(
-                onPressed: () => Get.back(),
-                size: RecipeMateAppUtil.screenWidth * 0.11,
-                iconSize: RecipeMateAppUtil.screenWidth * 0.06,
-                shape: GlassIconButtonShape.circle,
-                icon: Icon(
-                  Icons.keyboard_arrow_left_rounded,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-                settings: LiquidGlassSettings(
-                  glassColor: Theme.of(context).cardColor,
-                  backerColor: Colors.black.withValues(alpha: 0.05),
-                  thickness: 70,
-                  blur: 6,
-                  chromaticAberration: 0.35,
-                  lightIntensity: 1.2,
-                  refractiveIndex: 1.65,
-                  ambientRim: 0.3,
-                  edgeAbsorption: 0.12,
-                ),
+              settings: LiquidGlassSettings(
+                glassColor: Theme.of(context).cardColor,
+                backerColor: Colors.black.withValues(alpha: 0.05),
+                thickness: 70,
+                blur: 6,
+                chromaticAberration: 0.35,
+                lightIntensity: 1.2,
+                refractiveIndex: 1.65,
+                ambientRim: 0.3,
+                edgeAbsorption: 0.12,
               ),
             ),
+          ),
           title: customText(
             text: AppLocalizations.of(context)!.security,
             fontSize: DimensText.headerMenusText(context),
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,
-            fontFamily: 'times_new_roman_bold',
+            fontFamily: 'times_new_roman_bold'
           ),
-            centerTitle: true,
+          centerTitle: true,
         ),
         body: Material(
           color: Colors.transparent,

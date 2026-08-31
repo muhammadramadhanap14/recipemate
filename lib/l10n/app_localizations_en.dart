@@ -42,16 +42,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changeFoodTypes => 'Change food types & dietary preferences';
 
   @override
-  String get stConfirmLogout => 'Are you sure you want to log out? All session data will be cleared, including your profile photo, fingerprint authentication, and other saved information.';
+  String get stConfirmLogout =>
+      'Are you sure you want to log out? All session data will be cleared, including your profile photo, fingerprint authentication, and other saved information.';
 
   @override
   String get stConfirmChange => 'Are you sure you want to change?';
 
   @override
-  String get stTimeOutConnection => 'Connection timeout, please try again later';
+  String get stTimeOutConnection =>
+      'Connection timeout, please try again later';
 
   @override
-  String get stNoConnectionMessage => 'Failed to connect to server,\nplease check your internet connection again';
+  String get stNoConnectionMessage =>
+      'Failed to connect to server,\nplease check your internet connection again';
 
   @override
   String get stNotFound => 'No Data Found';
@@ -159,13 +162,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stgreetPrefFood => 'Tell us about yourself!';
 
   @override
-  String get stgreetPrefFood2 => 'Help us personalize your experience by providing some basic information';
+  String get stgreetPrefFood2 =>
+      'Help us personalize your experience by providing some basic information';
 
   @override
   String get stgreetPrefFood3 => 'Tell us your taste!';
 
   @override
-  String get stgreetPrefFood4 => 'What are your favorite food types or dietary preferences?';
+  String get stgreetPrefFood4 =>
+      'What are your favorite food types or dietary preferences?';
 
   @override
   String get stBiometric => 'BIOMETRIC AUTHENTICATION';
@@ -216,7 +221,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stError => 'Error';
 
   @override
-  String get stFingerprintSuccess => 'Fingerprint has been successfully activated';
+  String get stFingerprintSuccess =>
+      'Fingerprint has been successfully activated';
 
   @override
   String get stFingerprintFailed => 'Authentication failed';
@@ -240,7 +246,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stNoConnectionInternetTitle => 'No Internet Connection';
 
   @override
-  String get stNoConnectionInternetMessage => 'Please check your internet settings and try again';
+  String get stNoConnectionInternetMessage =>
+      'Please check your internet settings and try again';
 
   @override
   String get stRetryBtn => 'Retry';
@@ -285,13 +292,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stLoginFingerprint => 'Scan to Login';
 
   @override
-  String get stLoginFingerprintErrorMessage => 'Saved credentials not found. Please login manually once.';
+  String get stLoginFingerprintErrorMessage =>
+      'Saved credentials not found. Please login manually once.';
 
   @override
   String get stEnableFingerprintNowTitle => 'Enable Fingerprint?';
 
   @override
-  String get stEnableFingerprintNowMessage => 'Unlock faster and more securely with your fingerprint. Would you like to enable it now?';
+  String get stEnableFingerprintNowMessage =>
+      'Unlock faster and more securely with your fingerprint. Would you like to enable it now?';
 
   @override
   String get stRemindMeLaterBtn => 'Remind me later';
@@ -315,7 +324,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stDeleteAll => 'Delete All?';
 
   @override
-  String get stDeleteAllMessage => 'Are you sure want to delete all notifications?';
+  String get stDeleteAllMessage =>
+      'Are you sure want to delete all notifications?';
 
   @override
   String get stHistoryChat => 'History Chat';
@@ -324,7 +334,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stNoNotificationYet => 'No Notifications Yet';
 
   @override
-  String get stNoNotificationYetMessage => 'We\'ll notify you when there\'s something new and exciting for you!';
+  String get stNoNotificationYetMessage =>
+      'We\'ll notify you when there\'s something new and exciting for you!';
 
   @override
   String get stCheckBackLater => 'Check back later for updates';
@@ -336,7 +347,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stBrowseByCategory => 'Browse by category';
 
   @override
-  String get stBrowseByCategoryMsg => 'Browse by category or pick a recipe below.';
+  String get stBrowseByCategoryMsg =>
+      'Browse by category or pick a recipe below.';
 
   @override
   String get stPopularRecipes => 'Popular Recipes';
@@ -345,7 +357,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stRecommendedRecipes => 'Recommended Recipes';
 
   @override
-  String get stPopularRecipesMsg => 'Explore more recipes randomly selected for you.';
+  String get stPopularRecipesMsg =>
+      'Explore more recipes randomly selected for you.';
 
   @override
   String get stAskAI => 'Ask AI';
@@ -357,7 +370,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stSessionExpiredTitle => 'Session Expired';
 
   @override
-  String get stSessionExpiredMessage => 'Your session has expired. Please login again to continue.';
+  String get stSessionExpiredMessage =>
+      'Your session has expired. Please login again to continue.';
 
   @override
   String get stLoginAgainBtn => 'Login Again';

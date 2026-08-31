@@ -5,7 +5,7 @@ import 'package:recipemate/utils/dimens_text.dart';
 
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
-import '../../07_chat_session/view/view_model/chat_history_controller.dart';
+import '../../07_chat_session/view_model/chat_history_controller.dart';
 import '../view_model/home_nav_view_model.dart';
 
 class HomeNavView extends StatelessWidget {
@@ -63,8 +63,8 @@ class HomeNavView extends StatelessWidget {
             : Padding(
             padding: EdgeInsets.only(
               bottom: RecipeMateAppUtil.screenHeight * 0.03,
-              left: RecipeMateAppUtil.screenWidth * 0.21,
-              right: RecipeMateAppUtil.screenWidth * 0.21,
+              left: RecipeMateAppUtil.screenWidth * 0.15,
+              right: RecipeMateAppUtil.screenWidth * 0.15,
             ),
             child: Material(
               color: Colors.transparent,
@@ -87,6 +87,16 @@ class HomeNavView extends StatelessWidget {
                             ),
                             activeIcon: Icon(
                               Icons.home_rounded,
+                              size: RecipeMateAppUtil.screenWidth * 0.07,
+                            ),
+                          ),
+                          GlassTab(
+                            icon: Icon(
+                              Icons.nfc_rounded,
+                              size: RecipeMateAppUtil.screenWidth * 0.065,
+                            ),
+                            activeIcon: Icon(
+                              Icons.nfc_rounded,
                               size: RecipeMateAppUtil.screenWidth * 0.07,
                             ),
                           ),

@@ -45,5 +45,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NFCReaderUsageDescription</key>
+	<string>Aplikasi membutuhkan akses NFC untuk membaca saldo dan riwayat kartu e-money.</string>
+	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+	<array>
+		<string>A00000000386980701</string>
+		<string>A0000000041010</string>
+		<string>A0000000042010</string>
+		<string>A0000000044010</string>
+	</array>
 </dict>
 </plist>
