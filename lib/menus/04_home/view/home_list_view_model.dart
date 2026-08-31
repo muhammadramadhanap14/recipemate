@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/models/model_response/search_recipes_response.dart';
 import 'package:recipemate/repository/api_repository.dart';
@@ -49,7 +50,9 @@ class HomeListViewModel extends GetxController {
         recipes.assignAll(response['recipes'] ?? []);
       }
     } catch (e) {
-      print('Error fetching random recipes: $e');
+      if (kDebugMode) {
+        print('Error fetching random recipes: $e');
+      }
     } finally {
       isLoading.value = false;
     }
@@ -72,7 +75,9 @@ class HomeListViewModel extends GetxController {
         recipes.assignAll(searchResponse.results ?? []);
       }
     } catch (e) {
-      print('Error searching recipes for category $category: $e');
+      if (kDebugMode) {
+        print('Error searching recipes for category $category: $e');
+      }
       recipes.clear();
     } finally {
       isSearching.value = false;

@@ -11,7 +11,7 @@ import '../../../utils/dimens_text.dart';
 import '../../../utils/view_utils/no_data_util.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../../../utils/view_utils/connection_wrapper.dart';
-import '../../07_chat_session/view/view_model/chat_history_controller.dart';
+import '../../07_chat_session/view_model/chat_history_controller.dart';
 import '../view_model/home_detail_view_model.dart';
 
 class HomeDetailView extends StatelessWidget {

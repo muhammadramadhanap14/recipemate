@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:recipemate/menus/07_chat_session/view/view_model/chat_history_controller.dart';
+import 'package:recipemate/menus/07_chat_session/view_model/chat_history_controller.dart';
 import 'package:recipemate/utils/view_utils/no_data_util.dart';
 
 import '../../../l10n/app_localizations.dart';
