@@ -60,97 +60,99 @@ class HomeDetailView extends StatelessWidget {
     return ConnectionWrapper(
       child: Material(
         color: Colors.transparent,
-        child: GlassScaffold(
-          edgeToEdge: true,
-          extendBody: true,
-          edgeFade: false,
-          background: Stack(
-            children: [
-              Container(color: Theme.of(context).scaffoldBackgroundColor),
-              Positioned(
-                top: -60,
-                right: -60,
-                child: buildBlurBlob(primary.withValues(alpha: 0.35), 400),
-              ),
-              Positioned(
-                top: 500,
-                left: -120,
-                child: buildBlurBlob(primary.withValues(alpha: 0.22), 380),
-              ),
-              Positioned(
-                top: 1000,
-                right: -100,
-                child: buildBlurBlob(primary.withValues(alpha: 0.25), 360),
-              ),
-              Positioned(
-                bottom: -60,
-                left: -80,
-                child: buildBlurBlob(primary.withValues(alpha: 0.3), 380),
-              ),
-            ],
-          ),
-          bodyOverlays: [
-            Positioned(
-              right: 25,
-              bottom: 25,
-              child: LiquidGlassFloatingActionButton(
-                size: 70,
-                onPressed: () {
-                  final chatHistoryController = Get.find<ChatHistoryController>();
-                  final session = chatHistoryController.createNewSession();
-                  final recipeName = viewModel.recipeDetail.value?.title ?? "";
-                  Get.toNamed('/chat', arguments: {
-                    'session': session,
-                    'initialMessage': "bantu saya buatkan masakan $recipeName",
-                  });
-                },
-                child: Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary, size: 35),
-              ),
+        child: SafeArea(
+          child: GlassScaffold(
+            edgeToEdge: true,
+            extendBody: true,
+            edgeFade: false,
+            background: Stack(
+              children: [
+                Container(color: Theme.of(context).scaffoldBackgroundColor),
+                Positioned(
+                  top: -60,
+                  right: -60,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.35), 400),
+                ),
+                Positioned(
+                  top: 500,
+                  left: -120,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.22), 380),
+                ),
+                Positioned(
+                  top: 1000,
+                  right: -100,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.25), 360),
+                ),
+                Positioned(
+                  bottom: -60,
+                  left: -80,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.3), 380),
+                ),
+              ],
             ),
-          ],
-          body: Obx(() {
-            if (viewModel.isLoading.value) {
-              return Center(child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ));
-            }
-            final DetailRecipeResponse? recipe = viewModel.recipeDetail.value;
-            if (recipe == null) {
-              return const Center(child: NoDataUtil());
-            }
-            return Material(
-              color: Colors.transparent,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildImageHeader(context, recipe.image ?? ""),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.06),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                          _buildTitleSection(context, recipe),
-                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                          _buildTagsSection(context, recipe),
-                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                          _buildNutritionalCard(context, recipe),
-                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                          _buildSummaryCard(context, recipe.summary ?? ''),
-                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                          _buildIngredientsSection(context, recipe.extendedIngredients ?? []),
-                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
-                          _buildInstructionsSection(context, recipe.analyzedInstructions ?? []),
-                          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03 + 80),
-                        ],
-                      ),
-                    ),
-                  ],
+            bodyOverlays: [
+              Positioned(
+                right: 25,
+                bottom: 25,
+                child: LiquidGlassFloatingActionButton(
+                  size: 70,
+                  onPressed: () {
+                    final chatHistoryController = Get.find<ChatHistoryController>();
+                    final session = chatHistoryController.createNewSession();
+                    final recipeName = viewModel.recipeDetail.value?.title ?? "";
+                    Get.toNamed('/chat', arguments: {
+                      'session': session,
+                      'initialMessage': "bantu saya buatkan masakan $recipeName",
+                    });
+                  },
+                  child: Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary, size: 35),
                 ),
               ),
-            );
-          }),
+            ],
+            body: Obx(() {
+              if (viewModel.isLoading.value) {
+                return Center(child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.primary,
+                ));
+              }
+              final DetailRecipeResponse? recipe = viewModel.recipeDetail.value;
+              if (recipe == null) {
+                return const Center(child: NoDataUtil());
+              }
+              return Material(
+                color: Colors.transparent,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildImageHeader(context, recipe.image ?? ""),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.06),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                            _buildTitleSection(context, recipe),
+                            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                            _buildTagsSection(context, recipe),
+                            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                            _buildNutritionalCard(context, recipe),
+                            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                            _buildSummaryCard(context, recipe.summary ?? ''),
+                            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                            _buildIngredientsSection(context, recipe.extendedIngredients ?? []),
+                            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                            _buildInstructionsSection(context, recipe.analyzedInstructions ?? []),
+                            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03 + 80),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
         ),
       ),
     );
