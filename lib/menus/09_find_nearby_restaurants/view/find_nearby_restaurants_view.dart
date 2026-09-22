@@ -307,6 +307,7 @@ class FindNearbyRestaurantView extends StatelessWidget {
               controller.openDirections(place.lat ?? 0, place.lon ?? 0, place.name ?? "");
             },
             enabled: true,
+            height: 38,
             shape: LiquidRoundedRectangle(borderRadius: 10),
             style: GlassButtonStyle.filled,
             useOwnLayer: true,
@@ -322,20 +323,25 @@ class FindNearbyRestaurantView extends StatelessWidget {
               ambientRim: 0.3,
               edgeAbsorption: 0.12,
             ),
-            child: Row(
-              children:[
-                Icon(
-                  Icons.near_me,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: 18
-                ),
-                const SizedBox(width: 4),
-                customText(
-                  text: "Petunjuk Arah",
-                  fontSize: DimensText.captionText(context),
-                  color: Theme.of(context).colorScheme.onSurface
-                ),
-              ]
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.near_me,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 6),
+                  customText(
+                    text: "Petunjuk Arah",
+                    fontSize: DimensText.captionText(context),
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ],
+              ),
             ),
           )
         ],
