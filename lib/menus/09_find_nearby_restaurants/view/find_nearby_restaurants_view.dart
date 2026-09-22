@@ -164,7 +164,6 @@ class FindNearbyRestaurantView extends StatelessWidget {
                 else
                   const Center(child: CircularProgressIndicator()),
 
-                // 4. Sliding Bottom Sheet
                 DraggableScrollableSheet(
                   initialChildSize: 0.4,
                   minChildSize: 0.4,
@@ -197,22 +196,15 @@ class FindNearbyRestaurantView extends StatelessWidget {
                                   children: [
                                     customText(
                                       text: "Restoran Terdekat",
-                                      fontSize: 22,
+                                      fontSize: DimensText.headerMenusText(context),
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontFamily: 'times_new_roman_bold',
+                                      color: Theme.of(context).colorScheme.onSurface,
                                     ),
                                     customText(
-                                      text: "${restaurants.length} Tempat Kuliner Terintegrasi Resep",
-                                      fontSize: 14,
-                                      color: Colors.grey,
+                                      text: "${restaurants.length} Tempat Kuliner Terdekat",
+                                      fontSize: DimensText.captionText(context),
+                                      color: Theme.of(context).colorScheme.onSecondary,
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    customText(text: "Urutkan", color: const Color(0xFFE99D8B), fontSize: 14),
-                                    const Icon(Icons.keyboard_arrow_down, color: Color(0xFFE99D8B), size: 16),
                                   ],
                                 ),
                               ],
