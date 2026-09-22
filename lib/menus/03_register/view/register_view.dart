@@ -112,7 +112,7 @@ class RegisterView extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
 
-                          SizedBox(height: screenH * 0.06),
+                          SizedBox(height: screenH * 0.09),
 
                           GlassButton.custom(
                             onTap: viewModel.onGoogleRegisterPressed,
