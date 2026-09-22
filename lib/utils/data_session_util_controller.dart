@@ -211,12 +211,6 @@ class DataSessionUtilController extends GetxController {
     await dataSessionUtil.saveNotificationHistory(notificationHistory);
   }
 
-  Future<void> checkSession() async {
-    if (stToken.value.isNotEmpty) {
-      Get.find<ChatApiRepository>().validateToken(stToken.value);
-    }
-  }
-
   Future<void> logout() async {
     await dataSessionUtil.clearSession();
     isFingerprintEnabled.value = false;

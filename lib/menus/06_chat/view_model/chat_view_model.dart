@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer' as dev;
 
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
-import 'package:recipemate/utils/constant_url.dart';
+import 'package:recipemate/services/openai_service.dart';
 import 'package:recipemate/utils/notification_util.dart';
 import 'package:vibration/vibration.dart';
 
@@ -21,7 +18,7 @@ const String _initialAiGreeting =
     "Halo! Saya RecipeMate AI. Selamat datang di asisten memasakmu. Mau cari resep, minta ide menu, atau langsung tanya tips dapur?";
 
 class ChatViewModel extends GetxController {
-  /// SESSION (🔥 NEW)
+  /// SESSION
   final ChatSession session;
 
   ChatViewModel({required this.session});
@@ -43,22 +40,7 @@ class ChatViewModel extends GetxController {
 
   Timer? timer;
 
-  final baseUrl = ConstantUrl.recipemateBaseUrl;
-
-  Uri _chatUri(String path) => Uri.parse('$baseUrl$path');
-
-  String _extractBackendError(String body, int statusCode) {
-    try {
-      final decoded = jsonDecode(body);
-      if (decoded is Map<String, dynamic>) {
-        if (decoded['message'] != null) return decoded['message'].toString();
-        if (decoded['error'] != null) return decoded['error'].toString();
-        if (decoded['detail'] != null) return decoded['detail'].toString();
-      }
-    } catch (_) {}
-    if (body.isNotEmpty) return body;
-    return 'Status code $statusCode';
-  }
+  final OpenAiService _openAiService = OpenAiService();
 
   String _sanitizeQuickReply(String option) {
     return option.replaceAll(RegExp(r'(\*\*|\*|__|_)'), '').trim();
@@ -100,7 +82,6 @@ class ChatViewModel extends GetxController {
 
   Future<void> _fetchLatestMessages() async {
     // Jika ini sesi baru (ID UUID v4), tidak perlu fetch ke server dulu
-    // karena server mungkin belum menyimpannya
     if (messages.isEmpty && session.title == "New Chat") {
       messages.add(ChatMessage(text: _initialAiGreeting, isUser: false));
       Future.microtask(() => _saveToHistory());
@@ -139,7 +120,7 @@ class ChatViewModel extends GetxController {
   }
 
   /// =========================
-  /// SEND MESSAGE (CHAT)
+  /// SEND MESSAGE (CHAT VIA OPENAI)
   /// =========================
   Future<void> sendMessage(String text) async {
     if (text.isEmpty) return;
@@ -193,110 +174,43 @@ class ChatViewModel extends GetxController {
     isLoading.value = true;
 
     try {
-      final uri = _chatUri(ConstantUrl.chatEndpoint);
-      final payload = jsonEncode({
-        "messages": messages
-            .map(
-              (e) => {
-                "role": e.isUser ? "user" : "assistant",
-                "content": e.text,
-              },
-            )
-            .toList(),
-      });
+      final response = await _openAiService.sendChatMessage(messages);
 
-      debugPrint('ChatViewModel sendMessage URL: $uri');
-      debugPrint('ChatViewModel sendMessage body: $payload');
-      final response = await http.post(
-        uri,
-        headers: {"Content-Type": "application/json"},
-        body: payload,
-      );
-
-      debugPrint('ChatViewModel sendMessage status: ${response.statusCode}');
-      debugPrint('ChatViewModel sendMessage response: ${response.body}');
-
-      if (response.statusCode < 200 || response.statusCode >= 300) {
-        final errorMessage = _extractBackendError(
-          response.body,
-          response.statusCode,
-        );
-        messages.add(
-          ChatMessage(
-            text: "Gagal mengirim pesan: $errorMessage",
-            isUser: false,
-          ),
-        );
-        return;
-      }
-
-      final data = jsonDecode(response.body);
-
-      if (data["ready"] == true) {
+      if (response.ready) {
         isReady.value = true;
-
-        messages.add(ChatMessage(text: data["message"], isUser: false));
+        messages.add(ChatMessage(text: response.reply, isUser: false));
       } else {
         messages.add(
           ChatMessage(
-            text: data["reply"],
+            text: response.reply,
             isUser: false,
-            options: data["options"] != null
-                ? _sanitizeQuickReplies(List<dynamic>.from(data["options"]))
+            options: response.options != null
+                ? _sanitizeQuickReplies(response.options!)
                 : null,
           ),
         );
       }
     } catch (e) {
-      messages.add(ChatMessage(text: "Error: $e", isUser: false));
+      final message = e.toString().replaceAll('Exception: ', '');
+      messages.add(ChatMessage(text: "Gagal mengirim pesan: $message", isUser: false));
     }
 
     isLoading.value = false;
 
-    /// 🔥 SAVE TO HISTORY
+    /// SAVE TO HISTORY
     _saveToHistory();
   }
 
   /// =========================
-  /// START COOKING
+  /// START COOKING (GENERATE RESEP VIA OPENAI)
   /// =========================
   Future<void> startCooking() async {
+    isLoading.value = true;
     try {
-      final uri = _chatUri(ConstantUrl.generateRecipeEndpoint);
-      final payload = jsonEncode({
-        "context": messages.map((e) => e.text).join(" "),
-      });
+      final recipeResponse = await _openAiService.generateRecipe(messages);
 
-      debugPrint('ChatViewModel startCooking URL: $uri');
-      debugPrint('ChatViewModel startCooking body: $payload');
-      final response = await http.post(
-        uri,
-        headers: {"Content-Type": "application/json"},
-        body: payload,
-      );
-
-      debugPrint('ChatViewModel startCooking status: ${response.statusCode}');
-      debugPrint('ChatViewModel startCooking response: ${response.body}');
-
-      if (response.statusCode < 200 || response.statusCode >= 300) {
-        final errorMessage = _extractBackendError(
-          response.body,
-          response.statusCode,
-        );
-        messages.add(
-          ChatMessage(
-            text: "Gagal generate resep: $errorMessage",
-            isUser: false,
-          ),
-        );
-        return;
-      }
-
-      final data = jsonDecode(response.body);
-      final recipe = data["recipe"];
-
-      recipeName.value = recipe["name"];
-      steps.value = List<String>.from(recipe["steps"]);
+      recipeName.value = recipeResponse.name;
+      steps.value = recipeResponse.steps;
       currentStep.value = 0;
       isCooking.value = true;
 
@@ -324,7 +238,10 @@ class ChatViewModel extends GetxController {
         ),
       );
     } catch (e) {
-      messages.add(ChatMessage(text: "Gagal generate resep 😢", isUser: false));
+      final message = e.toString().replaceAll('Exception: ', '');
+      messages.add(ChatMessage(text: "Gagal generate resep: $message 😢", isUser: false));
+    } finally {
+      isLoading.value = false;
     }
 
     _saveToHistory();
@@ -475,7 +392,7 @@ class ChatViewModel extends GetxController {
   }
 
   /// =========================
-  /// SAVE HISTORY 🔥
+  /// SAVE HISTORY
   /// =========================
   void _saveToHistory() {
     final historyController = Get.find<ChatHistoryController>();

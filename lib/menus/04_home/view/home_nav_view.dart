@@ -131,7 +131,7 @@ class HomeNavView extends StatelessWidget {
                         settings: LiquidGlassSettings(
                           glassColor: cardColor,
                           backerColor: Colors.black.withValues(alpha: 0.06),
-                          thickness: 100,
+                          thickness: 10,
                           blur: 8,
                           chromaticAberration: 0.4,
                           lightIntensity: 1.2,

@@ -141,10 +141,6 @@ class RecipemateApp extends StatelessWidget {
               '/security',
               '/notification'
             ];
-            if (protectedRoutes.contains(routing.current)) {
-              final sessionController = Get.find<DataSessionUtilController>();
-              sessionController.checkSession();
-            }
           }
         },
         builder: (context, child) {

@@ -12,7 +12,7 @@ class ChatApiRepository {
 
   ChatApiRepository() {
     final options = BaseOptions(
-      baseUrl: ConstantUrl.recipemateUrl,
+      baseUrl: ConstantUrl.openAiUrl,
       receiveDataWhenStatusError: true,
       connectTimeout: const Duration(minutes: 4),
       receiveTimeout: const Duration(minutes: 4),
@@ -21,18 +21,6 @@ class ChatApiRepository {
 
     _dio = Dio(options);
     _dio.interceptors.add(TokenInterceptor());
-  }
-
-  Future<void> validateToken(String token) async {
-    try {
-      await _dio.get(
-        '/chat/sessions',
-        queryParameters: {'limit': 1},
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-      );
-    } catch (e) {
-      debugPrint("ChatApiRepository: validateToken check done");
-    }
   }
 
   Future<List<ChatSession>> getChatSessions(
