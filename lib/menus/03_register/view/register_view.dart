@@ -28,7 +28,7 @@ class RegisterView extends StatelessWidget {
 
     final double screenW = RecipeMateAppUtil.screenWidth;
     final double screenH = RecipeMateAppUtil.screenHeight;
-    final double logoSize = screenW * 0.45;
+    final double logoSize = screenW * 0.42;
 
     return GlassScaffold(
       edgeToEdge: true,
@@ -81,7 +81,7 @@ class RegisterView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(height: screenH * 0.03),
+                          SizedBox(height: screenH * 0.06),
 
                           Image.asset(
                             "assets/images/ic_logo_recipemate.png",
@@ -90,16 +90,19 @@ class RegisterView extends StatelessWidget {
                             fit: BoxFit.contain,
                           ),
 
-                          SizedBox(height: screenH * 0.02),
+                          SizedBox(height: screenH * 0.03),
 
                           customText(
-                              text: AppLocalizations.of(context)!.stRegister,
-                              fontSize: DimensText.superHeaderText(context),
-                              fontWeight: FontWeight.w800,
-                              fontFamily: 'times_new_roman_med_italic',
-                              color: Theme.of(context).colorScheme.onSurface,
-                              textAlign: TextAlign.center
+                            text: AppLocalizations.of(context)!.stRegister,
+                            fontSize: DimensText.superHeaderText(context) * 1.1,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'times_new_roman_med_italic',
+                            color: Theme.of(context).colorScheme.onSurface,
+                            textAlign: TextAlign.center,
+                            intMaxLine: null,
                           ),
+
+                          SizedBox(height: screenH * 0.008),
 
                           customText(
                             text: AppLocalizations.of(context)!.stRegisterGreet,
@@ -109,224 +112,43 @@ class RegisterView extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
 
-                          SizedBox(height: screenH * 0.05),
-
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: customText(
-                              text: AppLocalizations.of(context)!.stFullName,
-                              fontSize: DimensText.microText(context),
-                              fontWeight: FontWeight.w700,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-
-                          SizedBox(height: screenH * 0.01),
-
-                          GlassTextField(
-                            height: RecipeMateAppUtil.screenHeight * 0.065,
-                            focusNode: viewModel.fullnameFocusNode,
-                            keyboardType: TextInputType.name,
-                            onChanged: viewModel.setFullname,
-                            placeholder: 'Alex Darmono',
-                            textStyle: TextStyle(
-                              fontSize: DimensText.captionText(context),
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontFamily: 'Poppins-Regular',
-                            ),
-                            placeholderStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                              fontSize: DimensText.captionText(context),
-                              fontFamily: 'Poppins-Regular',
-                            ),
-                            prefixIcon: Icon(
-                              Icons.person,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: screenW * 0.06,
-                            ),
-                            settings: const LiquidGlassSettings(
-                              glassColor: Colors.transparent,
-                              thickness: 100,
-                              blur: 3,
-                              chromaticAberration: 0.3,
-                              lightIntensity: 0.8,
-                              refractiveIndex: 1.59,
-                              saturation: 1.0,
-                              ambientStrength: 1,
-                              edgeAbsorption: 0.15,
-                            ),
-                          ),
-
-                          SizedBox(height: screenH * 0.022),
-
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: customText(
-                              text: AppLocalizations.of(context)!.stEmailAddress,
-                              fontSize: DimensText.microText(context),
-                              fontWeight: FontWeight.w700,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-
-                          SizedBox(height: screenH * 0.01),
-
-                          GlassTextField(
-                            height: RecipeMateAppUtil.screenHeight * 0.065,
-                            focusNode: viewModel.emailFocusNode,
-                            keyboardType: TextInputType.emailAddress,
-                            onChanged: viewModel.setEmail,
-                            placeholder: "alex@example.com",
-                            textStyle: TextStyle(
-                              fontSize: DimensText.captionText(context),
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontFamily: 'Poppins-Regular',
-                            ),
-                            placeholderStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                              fontSize: DimensText.captionText(context),
-                              fontFamily: 'Poppins-Regular',
-                            ),
-                            prefixIcon: Icon(
-                              Icons.email_rounded,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: screenW * 0.06,
-                            ),
-                            settings: const LiquidGlassSettings(
-                              glassColor: Colors.transparent,
-                              thickness: 100,
-                              blur: 3,
-                              chromaticAberration: 0.3,
-                              lightIntensity: 0.8,
-                              refractiveIndex: 1.59,
-                              saturation: 1.0,
-                              ambientStrength: 1,
-                              edgeAbsorption: 0.15,
-                            ),
-                          ),
-
-                          SizedBox(height: screenH * 0.022),
-
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: customText(
-                              text: AppLocalizations.of(context)!.stPassword,
-                              fontSize: DimensText.microText(context),
-                              fontWeight: FontWeight.w700,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-
-                          SizedBox(height: screenH * 0.01),
-
-                          Obx(() => GlassTextField(
-                            height: RecipeMateAppUtil.screenHeight * 0.065,
-                            focusNode: viewModel.passwordFocusNode,
-                            obscureText: viewModel.isObscureText.value,
-                            onChanged: viewModel.setPassword,
-                            placeholder: "••••••••",
-                            textStyle: TextStyle(
-                              fontSize: DimensText.captionText(context),
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontFamily: 'Poppins-Regular',
-                            ),
-                            placeholderStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                              fontSize: DimensText.captionText(context),
-                              fontFamily: 'Poppins-Regular',
-                            ),
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: screenW * 0.06,
-                            ),
-                            suffixIcon: Icon(
-                              viewModel.isObscureText.value
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            onSuffixTap: viewModel.togglePasswordVisibility,
-                            settings: const LiquidGlassSettings(
-                              glassColor: Colors.transparent,
-                              thickness: 60,
-                              blur: 3,
-                              chromaticAberration: 0.3,
-                              lightIntensity: 0.6,
-                              refractiveIndex: 1.59,
-                              saturation: 1.0,
-                              ambientStrength: 1,
-                            ),
-                          )),
-
-                          SizedBox(height: screenH * 0.025),
-
-                          Obx(() => SizedBox(
-                            child: GlassButton.custom(
-                              onTap: viewModel.onRegisterPressed,
-                              enabled: viewModel.isValidButton.value,
-                              width: double.infinity,
-                              height: screenH * 0.065,
-                              shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
-                              style: GlassButtonStyle.prominent,
-                              useOwnLayer: true,
-                              settings: LiquidGlassSettings(
-                                glassColor: viewModel.isValidButton.value
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                                thickness: 100,
-                                blur: 3,
-                                chromaticAberration: 0.3,
-                                lightIntensity: 0.8,
-                                refractiveIndex: 1.59,
-                                saturation: 1.0,
-                                ambientStrength: 1,
-                                edgeAbsorption: 0.15,
-                              ),
-                              child: Center(
-                                child: customText(
-                                  text: AppLocalizations.of(context)!.stSignUp,
-                                  fontSize: DimensText.buttonText(context),
-                                  color: viewModel.isValidButton.value
-                                      ? Theme.of(context).colorScheme.onPrimary
-                                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          )),
-
-                          SizedBox(height: screenH * 0.02),
+                          SizedBox(height: screenH * 0.06),
 
                           GlassButton.custom(
                             onTap: viewModel.onGoogleRegisterPressed,
                             enabled: true,
                             width: double.infinity,
-                            height: screenH * 0.065,
-                            shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
-                            style: GlassButtonStyle.prominent,
+                            height: screenH * 0.068,
+                            shape: LiquidRoundedRectangle(borderRadius: screenW * 0.06),
+                            style: GlassButtonStyle.filled,
                             useOwnLayer: true,
                             settings: LiquidGlassSettings(
-                              glassColor: Colors.white.withValues(alpha: 0.15),
-                              thickness: 100,
-                              blur: 3,
-                              chromaticAberration: 0.3,
-                              lightIntensity: 0.8,
-                              refractiveIndex: 1.59,
-                              saturation: 1.0,
-                              ambientStrength: 1,
-                              edgeAbsorption: 0.15,
+                              glassColor: Theme.of(context).cardColor,
+                              thickness: 10,
+                              blur: 8,
+                              chromaticAberration: 0.4,
+                              lightIntensity: 1.2,
+                              refractiveIndex: 1.68,
+                              saturation: 1.1,
+                              ambientStrength: 1.1,
+                              ambientRim: 0.3,
+                              edgeAbsorption: 0.12,
                             ),
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.login, size: 24, color: Colors.white),
-                                  SizedBox(width: screenW * 0.02),
+                                  Image.asset(
+                                    "assets/images/google_logo.png",
+                                    width: 24,
+                                    height: 24,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  SizedBox(width: screenW * 0.03),
                                   customText(
-                                    text: "Register with Google",
-                                    fontSize: DimensText.buttonText(context),
-                                    color: Colors.white,
+                                    text: "Sign Up with Google",
+                                    fontSize: DimensText.buttonSmallText(context),
+                                    color: Theme.of(context).colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ],
@@ -334,17 +156,28 @@ class RegisterView extends StatelessWidget {
                             ),
                           ),
 
+                          SizedBox(height: screenH * 0.02),
+
+                          customText(
+                            text: "By signing up, you agree to our Terms of Service and Privacy Policy.",
+                            fontSize: DimensText.microText(context),
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
+                            textAlign: TextAlign.center,
+                            intMaxLine: null,
+                          ),
+
                           const Spacer(),
 
                           Padding(
                             padding: EdgeInsets.only(
                               top: screenH * 0.02,
-                              bottom: screenH * 0.02,
+                              bottom: screenH * 0.04,
                             ),
                             child: RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
-                                text: AppLocalizations.of(context)!.stAlreadyHaveAccount,
+                                text: '${AppLocalizations.of(context)!.stAlreadyHaveAccount} ',
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                   fontSize: DimensText.captionText(context),
@@ -356,9 +189,10 @@ class RegisterView extends StatelessWidget {
                                       color: Theme.of(context).colorScheme.primary,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    recognizer: TapGestureRecognizer()..onTap = () {
-                                      Get.offNamed('/login');
-                                    },
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Get.offNamed('/login');
+                                      },
                                   ),
                                 ],
                               ),

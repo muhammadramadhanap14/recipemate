@@ -14,20 +14,11 @@ import '../../../utils/view_utils/view_dialog_util.dart';
 class RegisterViewModel extends GetxController {
   final ApiRepository apiRepository;
   final BuildContext context;
-  final fullnameFocusNode = FocusNode();
-  final emailFocusNode = FocusNode();
-  final passwordFocusNode = FocusNode();
 
   RegisterViewModel({required this.apiRepository, required this.context});
 
-  final fullname = ''.obs;
-  final email = ''.obs;
-  final password = ''.obs;
-
   final errMessage = ''.obs;
   final isLoading = false.obs;
-  final isValidButton = false.obs;
-  final isObscureText = true.obs;
 
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool _isDialogShowing = false;
@@ -41,9 +32,6 @@ class RegisterViewModel extends GetxController {
 
   @override
   void onClose() {
-    fullnameFocusNode.dispose();
-    emailFocusNode.dispose();
-    passwordFocusNode.dispose();
     _connectivitySubscription?.cancel();
     super.onClose();
   }
@@ -83,78 +71,6 @@ class RegisterViewModel extends GetxController {
     }
   }
 
-  void setFullname(String value) {
-    fullname.value = value.trim();
-    _validate();
-  }
-
-  void setEmail(String value) {
-    email.value = value.trim();
-    _validate();
-  }
-
-  void setPassword(String value) {
-    password.value = value;
-    _validate();
-  }
-
-  void togglePasswordVisibility() {
-    isObscureText.toggle();
-  }
-
-  bool _isValidEmail(String email) {
-    final emailRegex = RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-    );
-    return emailRegex.hasMatch(email.trim());
-  }
-
-  void _validate() {
-    final isEmailValid = _isValidEmail(email.value);
-
-    isValidButton.value =
-        fullname.value.trim().isNotEmpty && isEmailValid && password.value.length >= 6;
-  }
-
-  Future<void> onRegisterPressed() async {
-    final l10n = AppLocalizations.of(Get.context!)!;
-    if (isLoading.value) return;
-    errMessage.value = '';
-    isLoading.value = true;
-    try {
-      final hasConnection = await RecipeMateAppUtil.checkConnection();
-      if (!hasConnection) {
-        _fail(l10n.stNoConnectionMessage);
-        AppSnackbar.show(
-          title: l10n.stError,
-          message: l10n.stNoConnectionMessage,
-        );
-        return;
-      }
-
-      final authService = Get.find<FirebaseAuthService>();
-      final credential = await authService.registerWithEmail(
-        email.value,
-        password.value,
-      );
-
-      if (credential != null && credential.user != null) {
-        await credential.user!.updateDisplayName(fullname.value);
-        AppSnackbar.show(title: l10n.stSuccess, message: l10n.stSuccess);
-        Get.offNamed('/login');
-      } else {
-        _fail(l10n.stFailed);
-        AppSnackbar.show(title: l10n.stFailed, message: l10n.stFailed);
-      }
-    } catch (e) {
-      final message = e.toString().replaceAll('Exception: ', '');
-      _fail(message);
-      AppSnackbar.show(title: l10n.stError, message: message);
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
   Future<void> onGoogleRegisterPressed() async {
     final l10n = AppLocalizations.of(Get.context!)!;
     if (isLoading.value) return;
@@ -187,11 +103,13 @@ class RegisterViewModel extends GetxController {
         title: l10n.stSuccess,
         message: 'Berhasil daftar dengan Google',
       );
-      Get.offAllNamed('/home'); // arahkan ke halaman utama, bukan /login
+      Get.offAllNamed('/home');
     } catch (e) {
       final message = e.toString().replaceFirst('Exception: ', '');
-      _fail(message);
-      AppSnackbar.show(title: l10n.stError, message: message);
+      if (!message.contains('dibatalkan')) {
+        _fail(message);
+        AppSnackbar.show(title: l10n.stError, message: message);
+      }
     } finally {
       isLoading.value = false;
     }

@@ -56,19 +56,6 @@ class ApiRepository {
     _dioNews.interceptors.add(logger);
     _dioRestaurant.interceptors.add(logger);
   }
-  Future<dynamic> postApiLogin(String email, String password) async {
-    // Disabled: migrated to Firebase Authentication
-    throw UnsupportedError("postApiLogin disabled. Use FirebaseAuthService instead.");
-  }
-
-  Future<dynamic> postApiRegister(
-    String fullname,
-    String email,
-    String password,
-  ) async {
-    // Disabled: migrated to Firebase Authentication
-    throw UnsupportedError("postApiRegister disabled. Use FirebaseAuthService instead.");
-  }
 
   Future<dynamic> getRecipesComplexSearch({
     required String query,

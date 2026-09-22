@@ -30,7 +30,7 @@ class LoginView extends StatelessWidget {
 
     final double screenW = RecipeMateAppUtil.screenWidth;
     final double screenH = RecipeMateAppUtil.screenHeight;
-    final double logoSize = screenW * 0.45;
+    final double logoSize = screenW * 0.42;
 
     return GlassScaffold(
       edgeToEdge: true,
@@ -83,283 +83,133 @@ class LoginView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                        SizedBox(height: screenH * 0.03),
+                          SizedBox(height: screenH * 0.06),
 
-                        Image.asset(
-                          "assets/images/ic_logo_recipemate.png",
-                          width: logoSize,
-                          height: logoSize,
-                          fit: BoxFit.contain,
-                        ),
-
-                        SizedBox(height: screenH * 0.02),
-
-                        customText(
-                          text: AppLocalizations.of(context)!.stWelcomeBack,
-                          fontSize: DimensText.superHeaderText(context),
-                          fontWeight: FontWeight.w800,
-                          fontFamily: 'times_new_roman_med_italic',
-                          color: Theme.of(context).colorScheme.onSurface,
-                          textAlign: TextAlign.center,
-                          intMaxLine: null
-                        ),
-
-                        customText(
-                          text: AppLocalizations.of(context)!.stWelcomeGreet,
-                          fontSize: DimensText.captionText(context),
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                          textAlign: TextAlign.center,
-                        ),
-
-                        SizedBox(height: screenH * 0.05),
-
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: customText(
-                            text: AppLocalizations.of(context)!.stEmailAddress,
-                            fontSize: DimensText.microText(context),
-                            fontWeight: FontWeight.w700,
-                            color: Theme.of(context).colorScheme.primary,
+                          Image.asset(
+                            "assets/images/ic_logo_recipemate.png",
+                            width: logoSize,
+                            height: logoSize,
+                            fit: BoxFit.contain,
                           ),
-                        ),
 
-                        SizedBox(height: screenH * 0.01),
+                          SizedBox(height: screenH * 0.03),
 
-                        GlassTextField(
-                          height: RecipeMateAppUtil.screenHeight * 0.065,
-                          focusNode: viewModel.emailFocusNode,
-                          keyboardType: TextInputType.emailAddress,
-                          onChanged: viewModel.setEmail,
-                          placeholder: "alex@example.com",
-                          textStyle: TextStyle(
-                            fontSize: DimensText.captionText(context),
+                          customText(
+                            text: AppLocalizations.of(context)!.stWelcomeBack,
+                            fontSize: DimensText.superHeaderText(context) * 1.1,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'times_new_roman_med_italic',
                             color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                          placeholderStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                            fontSize: DimensText.captionText(context),
-                            fontFamily: 'Poppins-Regular',
-                          ),
-                          prefixIcon: Icon(
-                            Icons.email_rounded,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: screenW * 0.06,
-                          ),
-                          settings: const LiquidGlassSettings(
-                            glassColor: Colors.transparent,
-                            thickness: 100,
-                            blur: 3,
-                            chromaticAberration: 0.3,
-                            lightIntensity: 0.8,
-                            refractiveIndex: 1.59,
-                            saturation: 1.0,
-                            ambientStrength: 1,
-                            edgeAbsorption: 0.15,
-                          ),
-                        ),
-
-                        SizedBox(height: screenH * 0.022),
-
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            customText(
-                              text: AppLocalizations.of(context)!.stPassword,
-                              fontSize: DimensText.microText(context),
-                              fontWeight: FontWeight.w700,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            customText(
-                              text: AppLocalizations.of(context)!.stForgotPassword,
-                              fontSize: DimensText.microText(context),
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: screenH * 0.01),
-
-                        Obx(() => GlassTextField(
-                          height: RecipeMateAppUtil.screenHeight * 0.065,
-                          focusNode: viewModel.passwordFocusNode,
-                          obscureText: viewModel.isObscureText.value,
-                          onChanged: viewModel.setPassword,
-                          placeholder: "••••••••",
-                          textStyle: TextStyle(
-                            fontSize: DimensText.captionText(context),
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontFamily: 'Poppins-Regular',
-                          ),
-                          placeholderStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                            fontSize: DimensText.captionText(context),
-                            fontFamily: 'Poppins-Regular',
-                          ),
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: screenW * 0.06,
-                          ),
-                          suffixIcon: Icon(
-                            viewModel.isObscureText.value
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          onSuffixTap: viewModel.togglePasswordVisibility,
-                          settings: const LiquidGlassSettings(
-                            glassColor: Colors.transparent,
-                            thickness: 60,
-                            blur: 3,
-                            chromaticAberration: 0.3,
-                            lightIntensity: 0.6,
-                            refractiveIndex: 1.59,
-                            saturation: 1.0,
-                            ambientStrength: 1,
-                          ),
-                        )),
-
-                        SizedBox(height: screenH * 0.025),
-
-                        Obx(() => Row(
-                          children: [
-                            Expanded(
-                              child: GlassButton.custom(
-                                onTap: viewModel.onLoginPressed,
-                                enabled: viewModel.isValidButton.value,
-                                width: double.infinity,
-                                height: screenH * 0.065,
-                                shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
-                                style: GlassButtonStyle.prominent,
-                                useOwnLayer: true,
-                                settings: LiquidGlassSettings(
-                                  glassColor: viewModel.isValidButton.value
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                                  thickness: 100,
-                                  blur: 3,
-                                  chromaticAberration: 0.3,
-                                  lightIntensity: 0.8,
-                                  refractiveIndex: 1.59,
-                                  saturation: 1.0,
-                                  ambientStrength: 1,
-                                  edgeAbsorption: 0.15,
-                                ),
-                                child: Center(
-                                  child: customText(
-                                    text: AppLocalizations.of(context)!.stSignIn,
-                                    fontSize: DimensText.buttonText(context),
-                                    color: viewModel.isValidButton.value
-                                      ? Theme.of(context).colorScheme.onPrimary
-                                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (viewModel.canUseBiometric.value) ...[
-                              SizedBox(width: screenW * 0.03),
-                              GlassIconButton(
-                                onPressed: viewModel.loginWithBiometric,
-                                size: screenH * 0.065,
-                                iconSize: screenW * 0.08,
-                                icon: const Icon(Icons.fingerprint),
-                                useOwnLayer: true,
-                                settings: const LiquidGlassSettings(
-                                  glassColor: Colors.transparent,
-                                  thickness: 60,
-                                  blur: 3,
-                                  chromaticAberration: 0.3,
-                                  lightIntensity: 0.6,
-                                  refractiveIndex: 1.59,
-                                  saturation: 1.0,
-                                  ambientStrength: 1,
-                                ),
-                              )
-                            ]
-                          ],
-                        )),
-
-                        SizedBox(height: screenH * 0.02),
-
-                        GlassButton.custom(
-                          onTap: viewModel.onGoogleLoginPressed,
-                          enabled: true,
-                          width: double.infinity,
-                          height: screenH * 0.065,
-                          shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
-                          style: GlassButtonStyle.prominent,
-                          useOwnLayer: true,
-                          settings: LiquidGlassSettings(
-                            glassColor: Colors.white.withValues(alpha: 0.15),
-                            thickness: 100,
-                            blur: 3,
-                            chromaticAberration: 0.3,
-                            lightIntensity: 0.8,
-                            refractiveIndex: 1.59,
-                            saturation: 1.0,
-                            ambientStrength: 1,
-                            edgeAbsorption: 0.15,
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.login, size: 24, color: Colors.white),
-                                SizedBox(width: screenW * 0.02),
-                                customText(
-                                  text: "Sign In with Google",
-                                  fontSize: DimensText.buttonText(context),
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        const Spacer(),
-
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: screenH * 0.02,
-                            bottom: screenH * 0.02,
-                          ),
-                          child: RichText(
                             textAlign: TextAlign.center,
-                            text: TextSpan(
-                              text: AppLocalizations.of(context)!.stDontHaveAccount,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                                fontSize: DimensText.captionText(context),
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: AppLocalizations.of(context)!.stSignUp,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.primary,
+                            intMaxLine: null,
+                          ),
+
+                          SizedBox(height: screenH * 0.008),
+
+                          customText(
+                            text: "Your smart kitchen assistant awaits.",
+                            fontSize: DimensText.captionText(context),
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: screenH * 0.09),
+
+                          GlassButton.custom(
+                            onTap: viewModel.onGoogleLoginPressed,
+                            enabled: true,
+                            width: double.infinity,
+                            height: screenH * 0.068,
+                            shape: LiquidRoundedRectangle(borderRadius: screenW * 0.06),
+                            style: GlassButtonStyle.filled,
+                            useOwnLayer: true,
+                            settings: LiquidGlassSettings(
+                              glassColor: Theme.of(context).cardColor,
+                              thickness: 10,
+                              blur: 8,
+                              chromaticAberration: 0.4,
+                              lightIntensity: 1.2,
+                              refractiveIndex: 1.68,
+                              saturation: 1.1,
+                              ambientStrength: 1.1,
+                              ambientRim: 0.3,
+                              edgeAbsorption: 0.12,
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    "assets/images/google_logo.png",
+                                    width: 24,
+                                    height: 24,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  SizedBox(width: screenW * 0.03),
+                                  customText(
+                                    text: "Sign in with Google",
+                                    fontSize: DimensText.buttonSmallText(context),
+                                    color: Theme.of(context).colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  recognizer: TapGestureRecognizer()..onTap = () {
-                                    Get.offNamed('/register');
-                                  },
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+
+                          SizedBox(height: screenH * 0.02),
+
+                          customText(
+                            text: "By signing in, you agree to our Terms of Service and Privacy Policy.",
+                            fontSize: DimensText.microText(context),
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
+                            textAlign: TextAlign.center,
+                            intMaxLine: null,
+                          ),
+
+                          const Spacer(),
+
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: screenH * 0.02,
+                              bottom: screenH * 0.04,
+                            ),
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                text: '${AppLocalizations.of(context)!.stDontHaveAccount} ',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                                  fontSize: DimensText.captionText(context),
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: AppLocalizations.of(context)!.stSignUp,
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Get.offNamed('/register');
+                                      },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
-    ));
+    );
   }
 }
