@@ -57,27 +57,8 @@ class ApiRepository {
     _dioRestaurant.interceptors.add(logger);
   }
   Future<dynamic> postApiLogin(String email, String password) async {
-    try {
-      debugPrint('ApiRepository: POST ${ConstantUrl.authLogin}');
-      final response = await _dio.post(
-        ConstantUrl.authLogin,
-        data: {"email": email, "password": password},
-        options: Options(headers: {"Content-Type": "application/json"}),
-      );
-
-      debugPrint("ApiRepository response login status: ${response.statusCode}");
-      debugPrint("ApiRepository response login body: ${response.data}");
-
-      return response.data;
-    } on DioException catch (e) {
-      debugPrint(
-        "ApiRepository Dio error: ${e.response?.statusCode} ${e.response?.data}",
-      );
-      return e.response?.data;
-    } catch (e) {
-      debugPrint("ApiRepository error: $e");
-      return null;
-    }
+    // Disabled: migrated to Firebase Authentication
+    throw UnsupportedError("postApiLogin disabled. Use FirebaseAuthService instead.");
   }
 
   Future<dynamic> postApiRegister(
@@ -85,29 +66,8 @@ class ApiRepository {
     String email,
     String password,
   ) async {
-    try {
-      debugPrint('ApiRepository: POST ${ConstantUrl.authRegister}');
-      final response = await _dio.post(
-        ConstantUrl.authRegister,
-        data: {"name": fullname, "email": email, "password": password},
-        options: Options(headers: {"Content-Type": "application/json"}),
-      );
-
-      debugPrint(
-        "ApiRepository response register status: ${response.statusCode}",
-      );
-      debugPrint("ApiRepository response register body: ${response.data}");
-
-      return response.data;
-    } on DioException catch (e) {
-      debugPrint(
-        "ApiRepository Dio error: ${e.response?.statusCode} ${e.response?.data}",
-      );
-      return e.response?.data;
-    } catch (e) {
-      debugPrint("ApiRepository error: $e");
-      return null;
-    }
+    // Disabled: migrated to Firebase Authentication
+    throw UnsupportedError("postApiRegister disabled. Use FirebaseAuthService instead.");
   }
 
   Future<dynamic> getRecipesComplexSearch({

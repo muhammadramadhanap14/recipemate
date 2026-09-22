@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/03_register/view/register_view.dart';
@@ -13,6 +15,7 @@ import 'package:recipemate/menus/08_nfc_reader/view/nfc_view.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/repository/chat_api_repository.dart';
+import 'package:recipemate/repository/firebase_auth_service.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/data_session_util_controller.dart';
@@ -39,6 +42,11 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
+      // Inisialisasi Firebase
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+
       // Initialize Liquid Glass Widgets
       await LiquidGlassWidgets.initialize();
 
@@ -53,6 +61,7 @@ void main() async {
       final initialLang = await sessionUtil.getLastLanguage();
 
       //register dependency injection
+      Get.put<FirebaseAuthService>(FirebaseAuthService(), permanent: true);
       Get.put<ApiRepository>(ApiRepository(), permanent: true);
       Get.put<ChatApiRepository>(ChatApiRepository(), permanent: true);
       Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);

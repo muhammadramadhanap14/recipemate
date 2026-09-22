@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
@@ -33,6 +34,25 @@ class DataSessionUtilController extends GetxController {
     loadTheme();
     loadLanguage();
     loadNotifications();
+    listenToAuthChanges();
+  }
+
+  void listenToAuthChanges() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+      if (user != null) {
+        stUserId.value = user.uid;
+        await dataSessionUtil.setUserId(user.uid);
+        stEmail.value = user.email ?? "";
+        await dataSessionUtil.setEmail(user.email ?? "");
+        if (user.displayName != null && user.displayName!.isNotEmpty) {
+          stFullName.value = user.displayName!;
+          await dataSessionUtil.setFullName(user.displayName!);
+        }
+        final token = await user.getIdToken();
+        stToken.value = token ?? "";
+        await dataSessionUtil.setToken(token ?? "");
+      }
+    });
   }
 
   Future<void> loadEmail() async {

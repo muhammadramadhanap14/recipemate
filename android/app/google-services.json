@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "801253045616",
+    "project_id": "recipemate-745ff",
+    "storage_bucket": "recipemate-745ff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801253045616:android:331d4216e07f74a6a20bb5",
+        "android_client_info": {
+          "package_name": "com.recipemate.recipemate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "801253045616-0qncehkmjh26pe0bqo1n2i5og84g7q97.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.recipemate.recipemate",
+            "certificate_hash": "4da5f837a273f7766dfb104365dd34c9d38f231d"
+          }
+        },
+        {
+          "client_id": "801253045616-4gite422lhv9m3gmbugrqahv3g5783au.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBW_IZGMIYie2Vtx-SJr-fFCL6dGsT0eU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801253045616-4gite422lhv9m3gmbugrqahv3g5783au.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "801253045616-j5e20s2171n3gnjbu23gsinrflj4r37u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.recipemate.recipemate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

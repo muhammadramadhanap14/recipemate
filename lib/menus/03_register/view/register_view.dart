@@ -296,6 +296,44 @@ class RegisterView extends StatelessWidget {
                             ),
                           )),
 
+                          SizedBox(height: screenH * 0.02),
+
+                          GlassButton.custom(
+                            onTap: viewModel.onGoogleRegisterPressed,
+                            enabled: true,
+                            width: double.infinity,
+                            height: screenH * 0.065,
+                            shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
+                            style: GlassButtonStyle.prominent,
+                            useOwnLayer: true,
+                            settings: LiquidGlassSettings(
+                              glassColor: Colors.white.withValues(alpha: 0.15),
+                              thickness: 100,
+                              blur: 3,
+                              chromaticAberration: 0.3,
+                              lightIntensity: 0.8,
+                              refractiveIndex: 1.59,
+                              saturation: 1.0,
+                              ambientStrength: 1,
+                              edgeAbsorption: 0.15,
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.login, size: 24, color: Colors.white),
+                                  SizedBox(width: screenW * 0.02),
+                                  customText(
+                                    text: "Register with Google",
+                                    fontSize: DimensText.buttonText(context),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
                           const Spacer(),
 
                           Padding(

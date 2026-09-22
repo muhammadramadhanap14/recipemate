@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:recipemate/repository/firebase_auth_service.dart';
 import 'package:recipemate/utils/constant_var.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/view_utils/app_snackbar.dart';
@@ -230,6 +231,7 @@ class AccountViewModel extends GetxController {
       positiveTitle: AppLocalizations.of(context)!.confirmLogout,
       negativeTitle: AppLocalizations.of(context)!.stCancelTitle,
       onPositiveClick: () async {
+        await Get.find<FirebaseAuthService>().signOut();
         await session.logout();
         Get.offAllNamed('/login');
       },

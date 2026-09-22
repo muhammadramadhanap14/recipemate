@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recipemate/repository/firebase_auth_service.dart';
 import 'package:recipemate/utils/constant_var.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../models/model_response/register_response.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/recipemate_app_util.dart';
 import '../../../utils/view_utils/app_snackbar.dart';
@@ -131,32 +131,65 @@ class RegisterViewModel extends GetxController {
         );
         return;
       }
-      final result = await apiRepository.postApiRegister(
-        fullname.value,
+
+      final authService = Get.find<FirebaseAuthService>();
+      final credential = await authService.registerWithEmail(
         email.value,
         password.value,
       );
-      debugPrint("result: $result");
-      if (result == null) {
-        _fail(l10n.stInternalServerError);
+
+      if (credential != null && credential.user != null) {
+        await credential.user!.updateDisplayName(fullname.value);
+        AppSnackbar.show(title: l10n.stSuccess, message: l10n.stSuccess);
+        Get.offNamed('/login');
+      } else {
+        _fail(l10n.stFailed);
+        AppSnackbar.show(title: l10n.stFailed, message: l10n.stFailed);
+      }
+    } catch (e) {
+      final message = e.toString().replaceAll('Exception: ', '');
+      _fail(message);
+      AppSnackbar.show(title: l10n.stError, message: message);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> onGoogleRegisterPressed() async {
+    final l10n = AppLocalizations.of(Get.context!)!;
+    if (isLoading.value) return;
+    errMessage.value = '';
+    isLoading.value = true;
+    try {
+      final hasConnection = await RecipeMateAppUtil.checkConnection();
+      if (!hasConnection) {
+        _fail(l10n.stNoConnectionMessage);
         AppSnackbar.show(
           title: l10n.stError,
+          message: l10n.stNoConnectionMessage,
+        );
+        return;
+      }
+
+      final authService = Get.find<FirebaseAuthService>();
+      final userCredential = await authService.signInWithGoogle();
+
+      if (userCredential == null || userCredential.user == null) {
+        _fail(l10n.stInternalServerError);
+        AppSnackbar.show(
+          title: l10n.stFailed,
           message: l10n.stInternalServerError,
         );
         return;
       }
-      final response = RegisterResponse.fromJson(result);
-      final isSuccess = response.status == ConstantVar.stSuccess;
-      final message = response.message;
-      if (isSuccess) {
-        AppSnackbar.show(title: l10n.stSuccess, message: message);
-        Get.offNamed('/login');
-      } else {
-        _fail(message);
-        AppSnackbar.show(title: l10n.stFailed, message: message);
-      }
+
+      AppSnackbar.show(
+        title: l10n.stSuccess,
+        message: 'Berhasil daftar dengan Google',
+      );
+      Get.offAllNamed('/home'); // arahkan ke halaman utama, bukan /login
     } catch (e) {
-      final message = e.toString();
+      final message = e.toString().replaceFirst('Exception: ', '');
       _fail(message);
       AppSnackbar.show(title: l10n.stError, message: message);
     } finally {

@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
@@ -43,12 +44,15 @@ class SplashViewModel extends GetxController {
     if (valConnection) {
       isLoading.value = true;
       await Future.delayed(splashDuration);
-      final sessionUtil = Get.find<DataSessionUtil>();
-      final token = await sessionUtil.getToken();
-      if (token == null || token.isEmpty) {
+      
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+      if (firebaseUser == null) {
         Get.offAllNamed('/login');
         return;
       }
+      
+      final token = await firebaseUser.getIdToken() ?? '';
+      final sessionUtil = Get.find<DataSessionUtil>();
       await _handleLaunchFromNotification(
         token,
         sessionUtil,

@@ -3,9 +3,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:recipemate/repository/firebase_auth_service.dart';
 import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../models/model_response/login_response.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/constant_var.dart';
 import '../../../utils/data_session_util_controller.dart';
@@ -156,40 +156,61 @@ class LoginViewModel extends GetxController {
         );
         return;
       }
-      final result = await apiRepository.postApiLogin(
+
+      final authService = Get.find<FirebaseAuthService>();
+      final credential = await authService.signInWithEmail(
         email.value,
         password.value,
       );
-      if (result == null) {
-        _fail(l10n.stInternalServerError);
+
+      if (credential != null && credential.user != null) {
+        await sessionController.setSavedPassword(password.value);
+        await sessionController.onUserLoggedIn();
+        AppSnackbar.show(title: l10n.stSuccess, message: l10n.stSuccess);
+        Get.offNamed('/home');
+      } else {
+        _fail(l10n.stFailedLogin);
+        AppSnackbar.show(title: l10n.stFailedLogin, message: l10n.stFailedLogin);
+      }
+    } catch (e) {
+      final message = e.toString().replaceAll('Exception: ', '');
+      _fail(message);
+      AppSnackbar.show(title: l10n.stError, message: message);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> onGoogleLoginPressed() async {
+    final l10n = AppLocalizations.of(Get.context!)!;
+    if (isLoading.value) return;
+    errMessage.value = '';
+    isLoading.value = true;
+    try {
+      final hasConnection = await RecipeMateAppUtil.checkConnection();
+      if (!hasConnection) {
+        _fail(l10n.stNoConnectionMessage);
         AppSnackbar.show(
           title: l10n.stError,
-          message: l10n.stInternalServerError,
+          message: l10n.stNoConnectionMessage,
         );
         return;
       }
-      final response = LoginResponse.fromJson(result);
-      final isSuccess = response.status == ConstantVar.stSuccess;
-      final message = response.message ?? l10n.stFailedLogin;
-      if (isSuccess && response.data?.token != null) {
-        await sessionController.setToken(response.data?.token ?? '');
-        await sessionController.setUserId(
-          response.data?.user?.id?.toString() ?? '',
-        );
-        await sessionController.setFullName(response.data?.user?.name ?? '');
-        await sessionController.setEmail(response.data?.user?.email ?? '');
-        await sessionController.setSavedPassword(password.value);
+
+      final authService = Get.find<FirebaseAuthService>();
+      final credential = await authService.signInWithGoogle();
+
+      if (credential != null && credential.user != null) {
         await sessionController.onUserLoggedIn();
-        AppSnackbar.show(title: l10n.stSuccess, message: message);
+        AppSnackbar.show(title: l10n.stSuccess, message: l10n.stSuccess);
         Get.offNamed('/home');
-      } else {
-        _fail(message);
-        AppSnackbar.show(title: l10n.stFailedLogin, message: message);
       }
     } catch (e) {
-      final message = e.toString();
-      _fail(message);
-      AppSnackbar.show(title: l10n.stError, message: message);
+      final message = e.toString().replaceAll('Exception: ', '');
+      if (!message.contains('dibatalkan')) {
+        _fail(message);
+        AppSnackbar.show(title: l10n.stError, message: message);
+      }
     } finally {
       isLoading.value = false;
     }
