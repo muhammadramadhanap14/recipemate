@@ -9,6 +9,7 @@ import '../utils/token_interceptor.dart';
 class ApiRepository {
   late Dio _dio;
   late Dio _dioNews;
+  late Dio _dioRestaurant;
 
   ApiRepository() {
     BaseOptions options = BaseOptions(
@@ -25,8 +26,16 @@ class ApiRepository {
       receiveTimeout: const Duration(minutes: 1),
     );
 
+    BaseOptions restaurantsOptions = BaseOptions(
+      baseUrl: ConstantUrl.restaurantBaseUrl,
+      receiveDataWhenStatusError: true,
+      connectTimeout: const Duration(minutes: 1),
+      receiveTimeout: const Duration(minutes: 1),
+    );
+
     _dio = Dio(options);
     _dioNews = Dio(newsOptions);
+    _dioRestaurant = Dio(restaurantsOptions);
 
     _dio.interceptors.add(TokenInterceptor());
     final logger = InterceptorsWrapper(
@@ -45,6 +54,7 @@ class ApiRepository {
 
     _dio.interceptors.add(logger);
     _dioNews.interceptors.add(logger);
+    _dioRestaurant.interceptors.add(logger);
   }
   Future<dynamic> postApiLogin(String email, String password) async {
     try {
@@ -214,6 +224,42 @@ class ApiRepository {
       );
 
       log("response news: ${response.data}");
+
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Dio error news: ${e.response?.data}");
+      return e.response?.data;
+    } catch (e) {
+      debugPrint("Error news: $e");
+      return null;
+    }
+  }
+
+  Future<dynamic> getNearbyRestaurntsByCategory({
+    required double lat,
+    required double lon,
+    int radius = 1000,
+    String category = "restaurant",
+    int limit = 20,
+  }) async {
+    try{
+      final response = await _dioRestaurant.get(
+        "places/nearby",
+        queryParameters: {
+          "lat": lat,
+          "lon": lon,
+          "radius": radius,
+          "category": category,
+          "limit": limit,
+        },
+        options: Options(
+          headers: {
+            "X-Api-Key": ConstantUrl.restaurantApiKey,
+          },
+        ),
+      );
+
+      log("response restaurants: ${response.data}");
 
       return response.data;
     } on DioException catch (e) {

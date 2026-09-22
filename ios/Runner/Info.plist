@@ -47,6 +47,10 @@
 	<true/>
 	<key>NFCReaderUsageDescription</key>
 	<string>Aplikasi membutuhkan akses NFC untuk membaca saldo dan riwayat kartu e-money.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Aplikasi membutuhkan akses lokasi untuk mencari restoran terdekat dari posisi Anda.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Aplikasi membutuhkan akses lokasi untuk mencari restoran terdekat dari posisi Anda.</string>
 	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
 	<array>
 		<string>A00000000386980701</string>

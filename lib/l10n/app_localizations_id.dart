@@ -377,4 +377,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get stLoginAgainBtn => 'Masuk Lagi';
+
+  @override
+  String get stFindNearbyRestaurants => 'Cari Restaurants Terdekat';
 }

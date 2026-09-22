@@ -26,6 +26,7 @@ import 'menus/04_home/view/home_nav_view.dart';
 import 'menus/05_security/view/security_view.dart';
 import 'menus/06_chat/view/chat_view.dart';
 import 'menus/07_chat_session/view_model/chat_history_controller.dart';
+import 'menus/09_find_nearby_restaurants/view/find_nearby_restaurants_view.dart';
 import 'utils/view_utils/app_theme.dart';
 import 'utils/view_utils/transition_controller.dart';
 
@@ -243,6 +244,12 @@ class RecipemateApp extends StatelessWidget {
           GetPage(
             name: '/nfc_result',
             page: () => const NfcResultView(),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
+          ),
+          GetPage(
+            name: '/find_nearby_restaurants',
+            page: () => const FindNearbyRestaurantView(),
             customTransition: liquidGlassTransition(),
             transitionDuration: const Duration(milliseconds: 320),
           ),

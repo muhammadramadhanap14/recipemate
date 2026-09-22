@@ -6,6 +6,7 @@ import 'package:recipemate/menus/04_home/view_model/home_view_model.dart';
 import 'package:recipemate/menus/08_nfc_reader/view/nfc_view.dart';
 
 import '../../../utils/view_utils/app_snackbar.dart';
+import '../../09_find_nearby_restaurants/view/find_nearby_restaurants_view.dart';
 import '../view/account_view.dart';
 import '../view/home_view.dart';
 
@@ -16,6 +17,7 @@ class HomeNavViewModel extends GetxController {
   final List<Widget> _pages = [
     const HomeView(),
     const NfcView(),
+    const FindNearbyRestaurantView(),
     const AccountView()
   ];
 

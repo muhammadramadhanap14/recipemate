@@ -102,6 +102,16 @@ class HomeNavView extends StatelessWidget {
                           ),
                           GlassTab(
                             icon: Icon(
+                              Icons.table_restaurant,
+                              size: RecipeMateAppUtil.screenWidth * 0.065,
+                            ),
+                            activeIcon: Icon(
+                              Icons.table_restaurant,
+                              size: RecipeMateAppUtil.screenWidth * 0.07,
+                            ),
+                          ),
+                          GlassTab(
+                            icon: Icon(
                               Icons.person_rounded,
                               size: RecipeMateAppUtil.screenWidth * 0.065,
                             ),

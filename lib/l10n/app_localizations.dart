@@ -805,6 +805,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login Again'**
   String get stLoginAgainBtn;
+
+  /// No description provided for @stFindNearbyRestaurants.
+  ///
+  /// In en, this message translates to:
+  /// **'Find Nearby Restaurants'**
+  String get stFindNearbyRestaurants;
 }
 
 class _AppLocalizationsDelegate

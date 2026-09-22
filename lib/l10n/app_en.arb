@@ -116,5 +116,6 @@
   "stFoodArticles": "Food Articles",
   "stSessionExpiredTitle": "Session Expired",
   "stSessionExpiredMessage": "Your session has expired. Please login again to continue.",
-  "stLoginAgainBtn": "Login Again"
+  "stLoginAgainBtn": "Login Again",
+  "stFindNearbyRestaurants": "Find Nearby Restaurants"
 }

@@ -33,70 +33,72 @@ class HomeView extends StatelessWidget {
     return ConnectionWrapper(
       child: Material(
         color: Colors.transparent,
-        child: GlassScaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          edgeToEdge: true,
-          extendBody: true,
-          edgeFade: false,
-          background: Stack(
-            children: [
-              Container(color: Theme.of(context).scaffoldBackgroundColor),
-              Positioned(
-                top: -80,
-                right: -80,
-                child: buildBlurBlob(primary.withValues(alpha: 0.35), 420),
-              ),
-              Positioned(
-                top: 380,
-                left: -140,
-                child: buildBlurBlob(primary.withValues(alpha: 0.22), 380),
-              ),
-              Positioned(
-                bottom: 40,
-                right: -120,
-                child: buildBlurBlob(primary.withValues(alpha: 0.28), 400),
-              ),
-            ],
-          ),
-          body: SafeArea(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                await viewModel.getRecommendedRecipes();
-                await viewModel.getDynamicFoodArticles();
-              },
-              color: primary,
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                    _buildHeader(context, viewModel),
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+        child: SafeArea(
+          child: GlassScaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            edgeToEdge: true,
+            extendBody: true,
+            edgeFade: false,
+            background: Stack(
+              children: [
+                Container(color: Theme.of(context).scaffoldBackgroundColor),
+                Positioned(
+                  top: -80,
+                  right: -80,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.35), 420),
+                ),
+                Positioned(
+                  top: 380,
+                  left: -140,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.22), 380),
+                ),
+                Positioned(
+                  bottom: 40,
+                  right: -120,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.28), 400),
+                ),
+              ],
+            ),
+            body: SafeArea(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await viewModel.getRecommendedRecipes();
+                  await viewModel.getDynamicFoodArticles();
+                },
+                color: primary,
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      _buildHeader(context, viewModel),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSearchBar(context, viewModel),
+                            _buildAutoCompleteList(context, viewModel),
+                          ],
+                        ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSearchBar(context, viewModel),
-                          _buildAutoCompleteList(context, viewModel),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                    _CategoryChips(viewModel: viewModel),
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                    _buildContent(context, viewModel),
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.13),
-                  ],
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      _CategoryChips(viewModel: viewModel),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      _buildContent(context, viewModel),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.13),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+        )
       ),
     );
   }
