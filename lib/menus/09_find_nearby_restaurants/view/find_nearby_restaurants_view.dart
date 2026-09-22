@@ -5,11 +5,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:liquid_glass_widgets/widgets/surfaces/glass_app_bar.dart';
-import 'package:liquid_glass_widgets/widgets/surfaces/glass_scaffold.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/utils/color_var.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
-
 import '../../../l10n/app_localizations.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/data_session_util_controller.dart';
@@ -76,7 +74,6 @@ class FindNearbyRestaurantView extends StatelessWidget {
             
             return Stack(
               children: [
-                // 1. Map Layer (Interactive in body stack)
                 if (pos != null)
                   FlutterMap(
                     options: MapOptions(
@@ -217,7 +214,7 @@ class FindNearbyRestaurantView extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 20),
                               itemCount: restaurants.length,
                               itemBuilder: (context, index) {
-                                return _buildRestaurantCard(controller, index, primaryColor);
+                                return _buildRestaurantCard(controller, index, primaryColor, context);
                               },
                             ),
                           ),
@@ -288,141 +285,61 @@ class FindNearbyRestaurantView extends StatelessWidget {
     );
   }
 
-  Widget _buildRestaurantCard(FindNearbyRestaurantsController controller, int index, Color primaryColor) {
+  Widget _buildRestaurantCard(FindNearbyRestaurantsController controller, int index, Color primaryColor, BuildContext context) {
     final place = controller.restaurants[index];
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              if (index % 2 == 0)
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: primaryColor.withValues(alpha: 0.5)),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.stars, color: primaryColor, size: 14),
-                        const SizedBox(width: 4),
-                        customText(text: "Partner RecipeMate", color: Colors.white, fontSize: 10),
-                      ],
-                    ),
-                  ),
-                ),
-              Positioned(
-                top: 12,
-                right: 12,
-                child: customText(text: r"$$ • Buka", color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-              Positioned(
-                bottom: 12,
-                left: 12,
-                right: 12,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.access_time, color: Colors.white, size: 14),
-                        const SizedBox(width: 4),
-                        customText(text: "${place.distanceM?.toInt() ?? 0} m • 5 menit", color: Colors.white, fontSize: 12),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Color(0xFFE99D8B), size: 14),
-                        const SizedBox(width: 4),
-                        customText(text: "4.9 (1.2k)", color: Colors.white, fontSize: 12),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                customText(text: place.name ?? "Restaurant", fontSize: DimensText.bodyText(context), fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+                customText(text: place.category ?? "Healthy food integration...", fontSize: DimensText.microText(context), color: Theme.of(context).colorScheme.onSecondary, intMaxLine: 2),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          customText(
-            text: place.name ?? "Restaurant",
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontFamily: 'times_new_roman_bold',
-          ),
-          customText(
-            text: place.category ?? "Healthy food integration...",
-            fontSize: 14,
-            color: Colors.white70,
-            intMaxLine: 2,
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              _buildTag("🌱 Rendah Kalori"),
-              const SizedBox(width: 8),
-              _buildTag("⚡ Terintegrasi AI Nutrisi"),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: customElevatedButton(
-                  onPressed: () {},
-                  text: "Menu Resep",
-                  backgroundColor: primaryColor,
-                  fontColor: Colors.black,
-                  icon: const Icon(Icons.menu_book, color: Colors.black, size: 18),
-                  borderRadius: 12,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+          const SizedBox(width: 12),
+          GlassButton.custom(
+            onTap: () {
+              controller.openDirections(place.lat ?? 0, place.lon ?? 0, place.name ?? "");
+            },
+            enabled: true,
+            shape: LiquidRoundedRectangle(borderRadius: 10),
+            style: GlassButtonStyle.filled,
+            useOwnLayer: true,
+            settings: LiquidGlassSettings(
+              glassColor: Theme.of(context).cardColor,
+              thickness: 10,
+              blur: 8,
+              chromaticAberration: 0.4,
+              lightIntensity: 1.2,
+              refractiveIndex: 1.68,
+              saturation: 1.1,
+              ambientStrength: 1.1,
+              ambientRim: 0.3,
+              edgeAbsorption: 0.12,
+            ),
+            child: Row(
+              children:[
+                Icon(
+                  Icons.near_me,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  size: 18
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: customElevatedButton(
-                  onPressed: () => controller.openDirections(place.lat ?? 0, place.lon ?? 0, place.name ?? ""),
+                const SizedBox(width: 4),
+                customText(
                   text: "Petunjuk Arah",
-                  backgroundColor: Colors.white.withValues(alpha: 0.1),
-                  fontColor: Colors.white,
-                  icon: const Icon(Icons.near_me, color: Colors.white, size: 18),
-                  borderRadius: 12,
-                  fontSize: 14,
-                  sideColor: Colors.white24,
+                  fontSize: DimensText.captionText(context),
+                  color: Theme.of(context).colorScheme.onSurface
                 ),
-              ),
-            ],
-          ),
+              ]
+            ),
+          )
         ],
       ),
-    );
-  }
-
-  Widget _buildTag(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: customText(text: label, color: Colors.white70, fontSize: 12),
     );
   }
 }
