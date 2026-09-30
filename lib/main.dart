@@ -24,6 +24,7 @@ import 'package:recipemate/utils/view_utils/error_view.dart';
 import 'package:recipemate/utils/view_utils/theme_controller.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'menus/01_splash/view/splash_view.dart';
+import 'menus/02_login/view/email_verification_view.dart';
 import 'menus/02_login/view/login_view.dart';
 import 'menus/04_home/view/home_nav_view.dart';
 import 'menus/05_security/view/security_view.dart';
@@ -133,7 +134,7 @@ class RecipemateApp extends StatelessWidget {
           title: 'RecipeMate',
           routingCallback: (routing) {
           if (routing != null) {
-            final protectedRoutes = [
+            final _ = [
               '/home',
               '/home_detail',
               '/home_list',
@@ -186,6 +187,12 @@ class RecipemateApp extends StatelessWidget {
           GetPage(
             name: '/login',
             page: () => const LoginView(),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
+          ),
+          GetPage(
+            name: '/email_verification',
+            page: () => const EmailVerificationView(),
             customTransition: liquidGlassTransition(),
             transitionDuration: const Duration(milliseconds: 320),
           ),

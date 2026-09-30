@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
+import 'package:recipemate/utils/auth_interceptor.dart';
 import 'package:recipemate/utils/constant_url.dart';
-import 'package:recipemate/utils/token_interceptor.dart';
 
 class ChatApiRepository {
   late Dio _dio;
@@ -20,7 +20,7 @@ class ChatApiRepository {
     );
 
     _dio = Dio(options);
-    _dio.interceptors.add(TokenInterceptor());
+    _dio.interceptors.add(AuthInterceptor());
   }
 
   Future<List<ChatSession>> getChatSessions(
@@ -31,7 +31,6 @@ class ChatApiRepository {
       final response = await _dio.get(
         '/chat/sessions',
         queryParameters: {'includeMessages': includeMessages},
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       debugPrint(
@@ -56,6 +55,9 @@ class ChatApiRepository {
       debugPrint(
         'ChatApiRepository: Failed to fetch chat sessions: ${e.response?.statusCode} ${e.response?.data}',
       );
+      if (e.response?.statusCode == 401) {
+        rethrow;
+      }
       return [];
     } catch (e) {
       debugPrint('ChatApiRepository: Failed to fetch chat sessions: $e');
@@ -70,7 +72,6 @@ class ChatApiRepository {
     try {
       final response = await _dio.get(
         '/chat/session/$sessionId/messages',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       debugPrint(
@@ -96,6 +97,9 @@ class ChatApiRepository {
       debugPrint(
         'ChatApiRepository: Failed to fetch chat messages for $sessionId: ${e.response?.statusCode} ${e.response?.data}',
       );
+      if (e.response?.statusCode == 401) {
+        rethrow;
+      }
       return [];
     } catch (e) {
       debugPrint(
@@ -109,7 +113,6 @@ class ChatApiRepository {
     try {
       final response = await _dio.get(
         '/chat/session/$sessionId',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       final data = response.data;
@@ -120,6 +123,12 @@ class ChatApiRepository {
       if (sessionData is Map<String, dynamic>) {
         return ChatSession.fromJson(sessionData);
       }
+      return null;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        rethrow;
+      }
+      log('Failed to fetch chat session $sessionId: $e');
       return null;
     } catch (e) {
       log('Failed to fetch chat session $sessionId: $e');
@@ -151,10 +160,15 @@ class ChatApiRepository {
       await _dio.post(
         '/chat/session',
         data: payload,
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       return true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        rethrow;
+      }
+      log('Failed to save chat session: $e');
+      return false;
     } catch (e) {
       log('Failed to save chat session: $e');
       return false;
@@ -165,9 +179,14 @@ class ChatApiRepository {
     try {
       await _dio.delete(
         '/chat/session/$sessionId',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       return true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        rethrow;
+      }
+      log('Failed to delete chat session $sessionId: $e');
+      return false;
     } catch (e) {
       log('Failed to delete chat session $sessionId: $e');
       return false;

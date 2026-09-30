@@ -811,6 +811,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Find Nearby Restaurants'**
   String get stFindNearbyRestaurants;
+
+  /// No description provided for @stConfirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'CONFIRM PASSWORD'**
+  String get stConfirmPassword;
+
+  /// No description provided for @stSignInWithEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In with Email'**
+  String get stSignInWithEmail;
+
+  /// No description provided for @stSignUpWithEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up with Email'**
+  String get stSignUpWithEmail;
+
+  /// No description provided for @stOr.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get stOr;
+
+  /// No description provided for @stEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get stEmailRequired;
+
+  /// No description provided for @stEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email format'**
+  String get stEmailInvalid;
+
+  /// No description provided for @stPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get stPasswordRequired;
+
+  /// No description provided for @stPasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters'**
+  String get stPasswordTooShort;
+
+  /// No description provided for @stPasswordRequirements.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain letters and numbers'**
+  String get stPasswordRequirements;
+
+  /// No description provided for @stConfirmPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password is required'**
+  String get stConfirmPasswordRequired;
+
+  /// No description provided for @stPasswordNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get stPasswordNotMatch;
+
+  /// No description provided for @stEmailAlreadyInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is already in use. Please sign in or use another method.'**
+  String get stEmailAlreadyInUse;
+
+  /// No description provided for @stInvalidCredential.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or password.'**
+  String get stInvalidCredential;
+
+  /// No description provided for @stPasswordResetSent.
+  ///
+  /// In en, this message translates to:
+  /// **'If the email is registered, a password reset link has been sent.'**
+  String get stPasswordResetSent;
+
+  /// No description provided for @stVerifyEmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Your Email'**
+  String get stVerifyEmailTitle;
+
+  /// No description provided for @stVerifyEmailMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We have sent a verification link to your email. Please verify your email to continue.'**
+  String get stVerifyEmailMessage;
+
+  /// No description provided for @stAlreadyVerifiedBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve Verified'**
+  String get stAlreadyVerifiedBtn;
+
+  /// No description provided for @stResendEmailBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Email'**
+  String get stResendEmailBtn;
+
+  /// No description provided for @stEmailNotVerifiedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is not verified yet. Please check your inbox.'**
+  String get stEmailNotVerifiedYet;
+
+  /// No description provided for @stEmailVerificationSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification email sent successfully.'**
+  String get stEmailVerificationSent;
+
+  /// No description provided for @stAccountExistsDifferentCredential.
+  ///
+  /// In en, this message translates to:
+  /// **'An account already exists with the same email address but different sign-in credentials. Please sign in with your original method to link accounts.'**
+  String get stAccountExistsDifferentCredential;
+
+  /// No description provided for @stLinkAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Link Accounts'**
+  String get stLinkAccountTitle;
+
+  /// No description provided for @stLinkAccountPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password to link your Google account.'**
+  String get stLinkAccountPrompt;
+
+  /// No description provided for @stAddPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Password'**
+  String get stAddPassword;
+
+  /// No description provided for @stAddPasswordSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password successfully added to your account.'**
+  String get stAddPasswordSuccess;
+
+  /// No description provided for @stActiveProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in Methods'**
+  String get stActiveProviders;
+
+  /// No description provided for @stEmailVerifiedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Email successfully verified. Please sign in.'**
+  String get stEmailVerifiedSuccess;
 }
 
 class _AppLocalizationsDelegate

@@ -143,6 +143,40 @@ class SecurityView extends StatelessWidget {
                         ),
                       ],
                     ),
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+                    _buildSectionTitle(AppLocalizations.of(context)!.stActiveProviders, context),
+                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.015),
+                    GlassGroupedSection(
+                      settings: _glassSettings(context),
+                      children: [
+                        _buildMenuTile(
+                          context: context,
+                          icon: Icons.security_outlined,
+                          title: AppLocalizations.of(context)!.stActiveProviders,
+                          trailing: Obx(() => customText(
+                            text: viewModel.providerMethods.join(', '),
+                            fontSize: DimensText.captionText(context),
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          )),
+                        ),
+                        Obx(() {
+                          if (!viewModel.hasPasswordProvider.value) {
+                            return _buildMenuTile(
+                              context: context,
+                              icon: Icons.lock_reset,
+                              title: AppLocalizations.of(context)!.stAddPassword,
+                              trailing: Icon(
+                                Icons.keyboard_arrow_right,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                size: RecipeMateAppUtil.screenWidth * 0.05,
+                              ),
+                              onTap: () => _showAddPasswordDialog(context, viewModel),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        }),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -151,6 +185,30 @@ class SecurityView extends StatelessWidget {
                 ),
         ),
     ));
+  }
+
+  void _showAddPasswordDialog(BuildContext context, SecurityViewModel viewModel) {
+    final passwordController = TextEditingController();
+    final l10n = AppLocalizations.of(context)!;
+
+    Get.defaultDialog(
+      title: l10n.stAddPassword,
+      content: Column(
+        children: [
+          TextField(
+            controller: passwordController,
+            obscureText: true,
+            decoration: InputDecoration(labelText: l10n.stPassword),
+          ),
+        ],
+      ),
+      textConfirm: l10n.confirmBtn,
+      textCancel: l10n.stCancelTitle,
+      onConfirm: () async {
+        Get.back();
+        await viewModel.linkPassword(passwordController.text);
+      },
+    );
   }
 
   Widget _buildSectionTitle(String title, BuildContext context) {

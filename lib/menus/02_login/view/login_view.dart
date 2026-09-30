@@ -30,7 +30,7 @@ class LoginView extends StatelessWidget {
 
     final double screenW = RecipeMateAppUtil.screenWidth;
     final double screenH = RecipeMateAppUtil.screenHeight;
-    final double logoSize = screenW * 0.42;
+    final double logoSize = screenW * 0.35;
 
     return GlassScaffold(
       edgeToEdge: true,
@@ -83,7 +83,7 @@ class LoginView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(height: screenH * 0.06),
+                          SizedBox(height: screenH * 0.04),
 
                           Image.asset(
                             "assets/images/ic_logo_recipemate.png",
@@ -92,11 +92,11 @@ class LoginView extends StatelessWidget {
                             fit: BoxFit.contain,
                           ),
 
-                          SizedBox(height: screenH * 0.03),
+                          SizedBox(height: screenH * 0.02),
 
                           customText(
                             text: AppLocalizations.of(context)!.stWelcomeBack,
-                            fontSize: DimensText.superHeaderText(context) * 1.1,
+                            fontSize: DimensText.superHeaderText(context) * 1.0,
                             fontWeight: FontWeight.w800,
                             fontFamily: 'times_new_roman_med_italic',
                             color: Theme.of(context).colorScheme.onSurface,
@@ -104,7 +104,7 @@ class LoginView extends StatelessWidget {
                             intMaxLine: null,
                           ),
 
-                          SizedBox(height: screenH * 0.008),
+                          SizedBox(height: screenH * 0.005),
 
                           customText(
                             text: "Your smart kitchen assistant awaits.",
@@ -114,14 +114,184 @@ class LoginView extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
 
-                          SizedBox(height: screenH * 0.09),
+                          SizedBox(height: screenH * 0.04),
 
+                          // Email Field
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              customText(
+                                text: AppLocalizations.of(context)!.stEmailAddress,
+                                fontSize: DimensText.captionText(context),
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                              ),
+                              SizedBox(height: screenH * 0.008),
+                              GlassTextField(
+                                controller: viewModel.emailController,
+                                focusNode: viewModel.emailFocusNode,
+                                placeholder: 'name@example.com',
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                height: screenH * 0.065,
+                                shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
+                                prefixIcon: Icon(Icons.email_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                settings: const LiquidGlassSettings(
+                                  glassColor: Colors.transparent,
+                                  thickness: 100,
+                                  blur: 3,
+                                  chromaticAberration: 0.3,
+                                  lightIntensity: 0.8,
+                                  refractiveIndex: 1.59,
+                                  saturation: 1.0,
+                                  ambientStrength: 1,
+                                  edgeAbsorption: 0.15,
+                                ),
+                              ),
+                              Obx(() => viewModel.emailError.value.isNotEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 4, left: 8),
+                                      child: customText(
+                                        text: viewModel.emailError.value,
+                                        fontSize: DimensText.microText(context),
+                                        color: Colors.redAccent,
+                                      ),
+                                    )
+                                  : const SizedBox.shrink()),
+                            ],
+                          ),
+
+                          SizedBox(height: screenH * 0.02),
+
+                          // Password Field
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              customText(
+                                text: AppLocalizations.of(context)!.stPassword,
+                                fontSize: DimensText.captionText(context),
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                              ),
+                              SizedBox(height: screenH * 0.008),
+                              Obx(() => GlassTextField(
+                                controller: viewModel.passwordController,
+                                focusNode: viewModel.passwordFocusNode,
+                                placeholder: '••••••••',
+                                obscureText: viewModel.isPasswordHidden.value,
+                                textInputAction: TextInputAction.done,
+                                onSubmitted: (_) => viewModel.onEmailLoginPressed(),
+                                height: screenH * 0.065,
+                                shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
+                                prefixIcon: Icon(Icons.lock_outline, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                suffixIcon: Icon(
+                                  viewModel.isPasswordHidden.value ? Icons.visibility_off : Icons.visibility,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                                onSuffixTap: viewModel.togglePasswordVisibility,
+                                settings: const LiquidGlassSettings(
+                                  glassColor: Colors.transparent,
+                                  thickness: 100,
+                                  blur: 3,
+                                  chromaticAberration: 0.3,
+                                  lightIntensity: 0.8,
+                                  refractiveIndex: 1.59,
+                                  saturation: 1.0,
+                                  ambientStrength: 1,
+                                  edgeAbsorption: 0.15,
+                                ),
+                              )),
+                              Obx(() => viewModel.passwordError.value.isNotEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 4, left: 8),
+                                      child: customText(
+                                        text: viewModel.passwordError.value,
+                                        fontSize: DimensText.microText(context),
+                                        color: Colors.redAccent,
+                                      ),
+                                    )
+                                  : const SizedBox.shrink()),
+                            ],
+                          ),
+
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: viewModel.onForgotPasswordPressed,
+                              child: customText(
+                                text: AppLocalizations.of(context)!.stForgotPassword,
+                                fontSize: DimensText.captionText(context),
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: screenH * 0.01),
+
+                          // Email Login Button
+                          Obx(() => GlassButton.custom(
+                            onTap: () => viewModel.onEmailLoginPressed(),
+                            enabled: !viewModel.isLoading.value,
+                            width: double.infinity,
+                            height: screenH * 0.065,
+                            shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
+                            style: GlassButtonStyle.filled,
+                            useOwnLayer: true,
+                            settings: LiquidGlassSettings(
+                              glassColor: Theme.of(context).colorScheme.primary,
+                              thickness: 10,
+                              blur: 8,
+                              chromaticAberration: 0.4,
+                              lightIntensity: 1.2,
+                              refractiveIndex: 1.68,
+                              saturation: 1.1,
+                              ambientStrength: 1.1,
+                              ambientRim: 0.3,
+                              edgeAbsorption: 0.12,
+                            ),
+                            child: Center(
+                              child: viewModel.isLoading.value
+                                  ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                              )
+                                  : customText(
+                                text: AppLocalizations.of(context)!.stSignInWithEmail,
+                                fontSize: DimensText.buttonSmallText(context),
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )),
+
+                          SizedBox(height: screenH * 0.025),
+
+                          Row(
+                            children: [
+                              Expanded(child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: screenW * 0.03),
+                                child: customText(
+                                  text: AppLocalizations.of(context)!.stOr,
+                                  fontSize: DimensText.microText(context),
+                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                ),
+                              ),
+                              Expanded(child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
+                            ],
+                          ),
+
+                          SizedBox(height: screenH * 0.025),
+
+                          // Google Login Button
                           GlassButton.custom(
                             onTap: viewModel.onGoogleLoginPressed,
                             enabled: true,
                             width: double.infinity,
-                            height: screenH * 0.068,
-                            shape: LiquidRoundedRectangle(borderRadius: screenW * 0.06),
+                            height: screenH * 0.065,
+                            shape: LiquidRoundedRectangle(borderRadius: screenW * 0.04),
                             style: GlassButtonStyle.filled,
                             useOwnLayer: true,
                             settings: LiquidGlassSettings(

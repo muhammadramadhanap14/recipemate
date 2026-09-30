@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
@@ -38,6 +39,14 @@ class ChatHistoryController extends GetxController {
   Future<void> _loadSessions() async {
     final token = _sessionController.stToken.value;
     if (token.isEmpty) return;
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final isEmailUser = user.providerData.any((p) => p.providerId == 'password');
+      if (isEmailUser && !user.emailVerified) {
+        return;
+      }
+    }
 
     if (kDebugMode) {
       print("ChatHistoryController: Loading sessions from API...");

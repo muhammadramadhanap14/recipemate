@@ -378,4 +378,94 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stFindNearbyRestaurants => 'Find Nearby Restaurants';
+
+  @override
+  String get stConfirmPassword => 'CONFIRM PASSWORD';
+
+  @override
+  String get stSignInWithEmail => 'Sign In with Email';
+
+  @override
+  String get stSignUpWithEmail => 'Sign Up with Email';
+
+  @override
+  String get stOr => 'OR';
+
+  @override
+  String get stEmailRequired => 'Email is required';
+
+  @override
+  String get stEmailInvalid => 'Invalid email format';
+
+  @override
+  String get stPasswordRequired => 'Password is required';
+
+  @override
+  String get stPasswordTooShort => 'Password must be at least 8 characters';
+
+  @override
+  String get stPasswordRequirements =>
+      'Password must contain letters and numbers';
+
+  @override
+  String get stConfirmPasswordRequired => 'Confirm password is required';
+
+  @override
+  String get stPasswordNotMatch => 'Passwords do not match';
+
+  @override
+  String get stEmailAlreadyInUse =>
+      'Email is already in use. Please sign in or use another method.';
+
+  @override
+  String get stInvalidCredential => 'Incorrect email or password.';
+
+  @override
+  String get stPasswordResetSent =>
+      'If the email is registered, a password reset link has been sent.';
+
+  @override
+  String get stVerifyEmailTitle => 'Check Your Email';
+
+  @override
+  String get stVerifyEmailMessage =>
+      'We have sent a verification link to your email. Please verify your email to continue.';
+
+  @override
+  String get stAlreadyVerifiedBtn => 'I\'ve Verified';
+
+  @override
+  String get stResendEmailBtn => 'Resend Email';
+
+  @override
+  String get stEmailNotVerifiedYet =>
+      'Email is not verified yet. Please check your inbox.';
+
+  @override
+  String get stEmailVerificationSent => 'Verification email sent successfully.';
+
+  @override
+  String get stAccountExistsDifferentCredential =>
+      'An account already exists with the same email address but different sign-in credentials. Please sign in with your original method to link accounts.';
+
+  @override
+  String get stLinkAccountTitle => 'Link Accounts';
+
+  @override
+  String get stLinkAccountPrompt =>
+      'Enter your password to link your Google account.';
+
+  @override
+  String get stAddPassword => 'Add Password';
+
+  @override
+  String get stAddPasswordSuccess =>
+      'Password successfully added to your account.';
+
+  @override
+  String get stActiveProviders => 'Sign-in Methods';
+
+  @override
+  String get stEmailVerifiedSuccess =>
+      'Email successfully verified. Please sign in.';
 }
