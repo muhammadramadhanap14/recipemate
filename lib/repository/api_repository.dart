@@ -2,12 +2,14 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:recipemate/utils/auth_interceptor.dart';
 
 import '../utils/constant_url.dart';
-import '../utils/token_interceptor.dart';
 
 class ApiRepository {
   late Dio _dio;
+  late Dio _dioNews;
+  late Dio _dioRestaurant;
 
   ApiRepository() {
     BaseOptions options = BaseOptions(
@@ -17,81 +19,42 @@ class ApiRepository {
       receiveTimeout: const Duration(minutes: 4),
     );
 
-    _dio = Dio(options);
-    _dio.interceptors.add(TokenInterceptor());
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-          // Print request data
-          debugPrint('Request to: ${options.uri}');
-          debugPrint('Request data: ${options.data}');
-          return handler.next(options); // Continue with the request
-        },
-        onResponse: (Response response, ResponseInterceptorHandler handler) {
-          // Print response data
-          // debugPrint('Response data: ${response.data}');
-          return handler.next(response); // Continue with the response
-        },
-        onError: (DioException e, ErrorInterceptorHandler handler) {
-          // Print error
-          debugPrint('Error: ${e.response?.statusCode} ${e.response?.data}');
-          return handler.next(e);
-        },
-      ),
+    BaseOptions newsOptions = BaseOptions(
+      baseUrl: ConstantUrl.foodNewsUrl,
+      receiveDataWhenStatusError: true,
+      connectTimeout: const Duration(minutes: 1),
+      receiveTimeout: const Duration(minutes: 1),
     );
-  }
-  Future<dynamic> postApiLogin(String email, String password) async {
-    try {
-      debugPrint('ApiRepository: POST ${ConstantUrl.authLogin}');
-      final response = await _dio.post(
-        ConstantUrl.authLogin,
-        data: {"email": email, "password": password},
-        options: Options(headers: {"Content-Type": "application/json"}),
-      );
 
-      debugPrint("ApiRepository response login status: ${response.statusCode}");
-      debugPrint("ApiRepository response login body: ${response.data}");
+    BaseOptions restaurantsOptions = BaseOptions(
+      baseUrl: ConstantUrl.restaurantBaseUrl,
+      receiveDataWhenStatusError: true,
+      connectTimeout: const Duration(minutes: 1),
+      receiveTimeout: const Duration(minutes: 1),
+    );
 
-      return response.data;
-    } on DioException catch (e) {
-      debugPrint(
-        "ApiRepository Dio error: ${e.response?.statusCode} ${e.response?.data}",
-      );
-      return e.response?.data;
-    } catch (e) {
-      debugPrint("ApiRepository error: $e");
-      return null;
-    }
-  }
+    _dio = Dio(options);
+    _dioNews = Dio(newsOptions);
+    _dioRestaurant = Dio(restaurantsOptions);
 
-  Future<dynamic> postApiRegister(
-    String fullname,
-    String email,
-    String password,
-  ) async {
-    try {
-      debugPrint('ApiRepository: POST ${ConstantUrl.authRegister}');
-      final response = await _dio.post(
-        ConstantUrl.authRegister,
-        data: {"name": fullname, "email": email, "password": password},
-        options: Options(headers: {"Content-Type": "application/json"}),
-      );
+    _dio.interceptors.add(AuthInterceptor());
+    final logger = InterceptorsWrapper(
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
+        debugPrint('Request to: ${options.uri}');
+        return handler.next(options);
+      },
+      onResponse: (Response response, ResponseInterceptorHandler handler) {
+        return handler.next(response);
+      },
+      onError: (DioException e, ErrorInterceptorHandler handler) {
+        debugPrint('Error: ${e.response?.statusCode} ${e.response?.data}');
+        return handler.next(e);
+      },
+    );
 
-      debugPrint(
-        "ApiRepository response register status: ${response.statusCode}",
-      );
-      debugPrint("ApiRepository response register body: ${response.data}");
-
-      return response.data;
-    } on DioException catch (e) {
-      debugPrint(
-        "ApiRepository Dio error: ${e.response?.statusCode} ${e.response?.data}",
-      );
-      return e.response?.data;
-    } catch (e) {
-      debugPrint("ApiRepository error: $e");
-      return null;
-    }
+    _dio.interceptors.add(logger);
+    _dioNews.interceptors.add(logger);
+    _dioRestaurant.interceptors.add(logger);
   }
 
   Future<dynamic> getRecipesComplexSearch({
@@ -104,7 +67,7 @@ class ApiRepository {
         queryParameters: {
           "query": query,
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 
@@ -152,7 +115,7 @@ class ApiRepository {
         "/recipes/$recipeId/information",
         queryParameters: {
           "includeNutrition": true,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 
@@ -174,7 +137,7 @@ class ApiRepository {
         "/recipes/random",
         queryParameters: {
           "number": number,
-          "apiKey": ConstantUrl.spoonacularApiKey,
+          "apiKey": ConstantUrl.spoonacularApiKey2,
         },
       );
 
@@ -186,6 +149,71 @@ class ApiRepository {
       return e.response?.data;
     } catch (e) {
       debugPrint("Error: $e");
+      return null;
+    }
+  }
+
+  Future<dynamic> getFoodNews({
+    required String query,
+    int number = 5,
+    String sortBy = "relevancy",
+  }) async {
+    try {
+      final response = await _dioNews.get(
+        "everything",
+        queryParameters: {
+          "q": query,
+          "pageSize": number,
+          "apiKey": ConstantUrl.foodNewsApiKey,
+          "language": "en",
+          "sortBy": sortBy,
+        },
+      );
+
+      log("response news: ${response.data}");
+
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Dio error news: ${e.response?.data}");
+      return e.response?.data;
+    } catch (e) {
+      debugPrint("Error news: $e");
+      return null;
+    }
+  }
+
+  Future<dynamic> getNearbyRestaurntsByCategory({
+    required double lat,
+    required double lon,
+    int radius = 1000,
+    String category = "restaurant",
+    int limit = 20,
+  }) async {
+    try{
+      final response = await _dioRestaurant.get(
+        "places/nearby",
+        queryParameters: {
+          "lat": lat,
+          "lon": lon,
+          "radius": radius,
+          "category": category,
+          "limit": limit,
+        },
+        options: Options(
+          headers: {
+            "X-Api-Key": ConstantUrl.restaurantApiKey,
+          },
+        ),
+      );
+
+      log("response restaurants: ${response.data}");
+
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Dio error news: ${e.response?.data}");
+      return e.response?.data;
+    } catch (e) {
+      debugPrint("Error news: $e");
       return null;
     }
   }

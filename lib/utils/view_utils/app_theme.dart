@@ -17,9 +17,8 @@ class AppTheme {
       error: HexColor(ColorVar.red),
       onError: HexColor(ColorVar.white),
       onSecondary: HexColor(ColorVar.bgGray8),
-      onTertiary: HexColor(ColorVar.black)
-
-
+      onTertiary: HexColor(ColorVar.black),
+      surfaceContainer: Colors.transparent,
     ),
 
     scaffoldBackgroundColor: HexColor(ColorVar.white),
@@ -45,7 +44,8 @@ class AppTheme {
       error: HexColor(ColorVar.red),
       onError: HexColor(ColorVar.white),
       onSecondary: HexColor(ColorVar.bgGray8),
-      onTertiary: HexColor(ColorVar.black)
+      onTertiary: HexColor(ColorVar.black),
+      surfaceContainer: HexColor(ColorVar.black),
     ),
 
     scaffoldBackgroundColor: HexColor(ColorVar.black),

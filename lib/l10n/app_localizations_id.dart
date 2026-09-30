@@ -366,6 +366,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get stAskAI => 'Tanya AI';
 
   @override
+  String get stFoodArticles => 'Artikel Makanan';
+
+  @override
   String get stSessionExpiredTitle => 'Sesi Berakhir';
 
   @override
@@ -374,4 +377,97 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get stLoginAgainBtn => 'Masuk Lagi';
+
+  @override
+  String get stFindNearbyRestaurants => 'Cari Restaurants Terdekat';
+
+  @override
+  String get stConfirmPassword => 'KONFIRMASI KATA SANDI';
+
+  @override
+  String get stSignInWithEmail => 'Masuk dengan Email';
+
+  @override
+  String get stSignUpWithEmail => 'Daftar dengan Email';
+
+  @override
+  String get stOr => 'ATAU';
+
+  @override
+  String get stEmailRequired => 'Email wajib diisi';
+
+  @override
+  String get stEmailInvalid => 'Format email tidak valid';
+
+  @override
+  String get stPasswordRequired => 'Kata sandi wajib diisi';
+
+  @override
+  String get stPasswordTooShort => 'Kata sandi minimal 8 karakter';
+
+  @override
+  String get stPasswordRequirements =>
+      'Kata sandi harus mengandung huruf dan angka';
+
+  @override
+  String get stConfirmPasswordRequired => 'Konfirmasi kata sandi wajib diisi';
+
+  @override
+  String get stPasswordNotMatch => 'Konfirmasi kata sandi tidak cocok';
+
+  @override
+  String get stEmailAlreadyInUse =>
+      'Email sudah terdaftar. Silakan masuk atau gunakan metode lain.';
+
+  @override
+  String get stInvalidCredential => 'Email atau password salah.';
+
+  @override
+  String get stPasswordResetSent =>
+      'Jika email terdaftar, tautan reset telah dikirim.';
+
+  @override
+  String get stVerifyEmailTitle => 'Cek Email Anda';
+
+  @override
+  String get stVerifyEmailMessage =>
+      'Kami telah mengirim tautan verifikasi ke email Anda. Harap verifikasi email Anda untuk melanjutkan.';
+
+  @override
+  String get stAlreadyVerifiedBtn => 'Saya Sudah Verifikasi';
+
+  @override
+  String get stResendEmailBtn => 'Kirim Ulang Email';
+
+  @override
+  String get stEmailNotVerifiedYet =>
+      'Email belum terverifikasi. Silakan periksa kotak masuk Anda.';
+
+  @override
+  String get stEmailVerificationSent => 'Email verifikasi berhasil dikirim.';
+
+  @override
+  String get stAccountExistsDifferentCredential =>
+      'Akun dengan email ini sudah terdaftar menggunakan metode lain. Silakan masuk dengan metode asli untuk menautkan akun.';
+
+  @override
+  String get stLinkAccountTitle => 'Tautkan Akun';
+
+  @override
+  String get stLinkAccountPrompt =>
+      'Masukkan kata sandi untuk menautkan akun Google Anda.';
+
+  @override
+  String get stAddPassword => 'Tambah Kata Sandi';
+
+  @override
+  String get stAddPasswordSuccess =>
+      'Kata sandi berhasil ditambahkan ke akun Anda.';
+
+  @override
+  String get stActiveProviders => 'Metode Masuk';
+
+  @override
+  String get stEmailVerifiedSuccess =>
+      'Email berhasil diverifikasi. Silakan masuk.';
 }

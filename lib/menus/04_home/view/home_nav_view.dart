@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/utils/dimens_text.dart';
 
-import '../../../l10n/app_localizations.dart';
 import '../../../utils/recipemate_app_util.dart';
-import '../../07_chat_session/view/view_model/chat_history_controller.dart';
+import '../../../utils/view_utils/primary_global_view.dart';
+import '../../07_chat_session/view_model/chat_history_controller.dart';
 import '../view_model/home_nav_view_model.dart';
 
 class HomeNavView extends StatelessWidget {
@@ -18,10 +19,10 @@ class HomeNavView extends StatelessWidget {
       await RecipeMateAppUtil.lockToPortrait();
     });
 
-    final double fabSize = RecipeMateAppUtil.screenWidth * 0.192;
-    final double barHeight = RecipeMateAppUtil.screenHeight * 0.098;
     final double iconSizeCenter = RecipeMateAppUtil.screenWidth * 0.085;
     final bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    final primary = Theme.of(context).colorScheme.primary;
+    final cardColor = Theme.of(context).cardColor;
 
     return PopScope(
       canPop: false,
@@ -29,123 +30,156 @@ class HomeNavView extends StatelessWidget {
         if (didPop) return;
         await viewModel.onWillPop(context);
       },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        resizeToAvoidBottomInset: true,
-        body: SafeArea(child: Obx(() => viewModel.currentPage)),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: isKeyboardVisible
-            ? null
-            : Container(
-                height: fabSize,
-                width: fabSize,
-                margin: EdgeInsets.only(
-                  top: RecipeMateAppUtil.screenHeight * 0.029,
-                ),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.7),
-                      blurRadius: RecipeMateAppUtil.screenWidth * 0.04,
-                      spreadRadius: 2,
-                      offset: Offset(0, RecipeMateAppUtil.screenHeight * 0.006),
-                    ),
-                  ],
-                ),
-                child: FloatingActionButton(
-                  heroTag: null,
-                  onPressed: () {
-                    final historyController = Get.find<ChatHistoryController>();
-                    final session = historyController.createNewSession();
-                    Get.toNamed('/chat', arguments: session);
-                  },
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: CircleBorder(
-                    side: BorderSide(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      width: RecipeMateAppUtil.screenWidth * 0.01,
-                    ),
-                  ),
-                  elevation: 0,
-                  child: Icon(
-                    Icons.auto_awesome,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    size: iconSizeCenter,
-                  ),
-                ),
+      child: Material(
+        child: GlassScaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          edgeToEdge: true,
+          extendBody: true,
+          edgeFade: false,
+          resizeToAvoidBottomInset: true,
+          background: Stack(
+            children: [
+              Container(color: Theme.of(context).scaffoldBackgroundColor),
+              Positioned(
+                top: -60,
+                right: -60,
+                child: buildBlurBlob(primary.withValues(alpha: 0.32), 380),
               ),
-        bottomNavigationBar: isKeyboardVisible
+              Positioned(
+                bottom: 180,
+                left: -120,
+                child: buildBlurBlob(primary.withValues(alpha: 0.22), 400),
+              ),
+              Positioned(
+                top: 260,
+                left: -60,
+                child: buildBlurBlob(primary.withValues(alpha: 0.18), 260),
+              ),
+            ],
+          ),
+          body: Obx(() => viewModel.currentPage),
+          bottomBar: isKeyboardVisible
             ? const SizedBox.shrink()
-            : BottomAppBar(
-                height: barHeight,
-                color: Theme.of(context).scaffoldBackgroundColor,
-                elevation: 20,
-                padding: EdgeInsets.symmetric(
-                  horizontal: RecipeMateAppUtil.screenWidth * 0.04,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildNavItem(
-                      context: context,
-                      viewModel: viewModel,
-                      index: 0,
-                      icon: Icons.home_rounded,
-                      label: AppLocalizations.of(context)!.home,
+            : Padding(
+            padding: EdgeInsets.only(
+              bottom: RecipeMateAppUtil.screenHeight * 0.04,
+              left: RecipeMateAppUtil.screenWidth * 0.08,
+              right: RecipeMateAppUtil.screenWidth * 0.08,
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Obx(
+                      () => GlassTabBar.inline(
+                        selectedIndex: viewModel.selectedIndex.value,
+                        onTabSelected: (index) {
+                          viewModel.changePage(index);
+                        },
+                        tabs: [
+                          GlassTab(
+                            icon: Icon(
+                              Icons.home_rounded,
+                              size: RecipeMateAppUtil.screenWidth * 0.065,
+                            ),
+                            activeIcon: Icon(
+                              Icons.home_rounded,
+                              size: RecipeMateAppUtil.screenWidth * 0.07,
+                            ),
+                          ),
+                          GlassTab(
+                            icon: Icon(
+                              Icons.nfc_rounded,
+                              size: RecipeMateAppUtil.screenWidth * 0.065,
+                            ),
+                            activeIcon: Icon(
+                              Icons.nfc_rounded,
+                              size: RecipeMateAppUtil.screenWidth * 0.07,
+                            ),
+                          ),
+                          GlassTab(
+                            icon: Icon(
+                              Icons.table_restaurant,
+                              size: RecipeMateAppUtil.screenWidth * 0.065,
+                            ),
+                            activeIcon: Icon(
+                              Icons.table_restaurant,
+                              size: RecipeMateAppUtil.screenWidth * 0.07,
+                            ),
+                          ),
+                          GlassTab(
+                            icon: Icon(
+                              Icons.person_rounded,
+                              size: RecipeMateAppUtil.screenWidth * 0.065,
+                            ),
+                            activeIcon: Icon(
+                              Icons.person_rounded,
+                              size: RecipeMateAppUtil.screenWidth * 0.07,
+                            ),
+                          ),
+                        ],
+                        selectedIconColor: Theme.of(context).colorScheme.onPrimary,
+                        unselectedIconColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                        indicatorColor: primary,
+                        labelFontSize: DimensText.buttonMicroText(context),
+                        barHeight: RecipeMateAppUtil.screenHeight * 0.075,
+                        barBorderRadius: 35,
+                        enableBlend: true,
+                        settings: LiquidGlassSettings(
+                          glassColor: cardColor,
+                          backerColor: Colors.black.withValues(alpha: 0.06),
+                          thickness: 10,
+                          blur: 8,
+                          chromaticAberration: 0.4,
+                          lightIntensity: 1.2,
+                          refractiveIndex: 1.68,
+                          saturation: 1.1,
+                          ambientStrength: 1.1,
+                          ambientRim: 0.3,
+                          edgeAbsorption: 0.12,
+                        ),
+                      ),
                     ),
-                    SizedBox(width: RecipeMateAppUtil.screenWidth * 0.12),
-                    _buildNavItem(
-                      context: context,
-                      viewModel: viewModel,
-                      index: 1,
-                      icon: Icons.person_rounded,
-                      label: AppLocalizations.of(context)!.account,
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  GlassIconButton(
+                    size: RecipeMateAppUtil.screenHeight * 0.075,
+                    iconSize: iconSizeCenter,
+                    shape: GlassIconButtonShape.circle,
+                    onPressed: () {
+                      final historyController = Get.find<ChatHistoryController>();
+                      final session = historyController.createNewSession();
+                      Get.toNamed('/chat', arguments: session);
+                    },
+                    icon: Icon(
+                      Icons.auto_awesome,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
-                  ],
-                ),
-              ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem({
-    required BuildContext context,
-    required HomeNavViewModel viewModel,
-    required int index,
-    required IconData icon,
-    required String label,
-  }) {
-    final double iconSize = RecipeMateAppUtil.screenWidth * 0.075;
-
-    return Obx(() {
-      final isSelected = viewModel.selectedIndex.value == index;
-      final color = isSelected
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.onSecondary;
-
-      return GestureDetector(
-        onTap: () => viewModel.changePage(index),
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: iconSize),
-            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.005),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: DimensText.buttonMicroText(context),
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    settings: LiquidGlassSettings(
+                      glassColor: primary.withValues(alpha: 0.95),
+                      backerColor: Colors.black.withValues(alpha: 0.02),
+                      thickness: 80,
+                      blur: 6,
+                      chromaticAberration: 0.2,
+                      lightIntensity: 1.3,
+                      refractiveIndex: 1.7,
+                      saturation: 1.1,
+                      ambientStrength: 1.2,
+                      ambientRim: 0.35,
+                      edgeAbsorption: 0.15,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
-      );
-    });
+      ),
+    );
   }
 }

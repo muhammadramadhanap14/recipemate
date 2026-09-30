@@ -2,14 +2,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
 import 'package:recipemate/menus/03_register/view/register_view.dart';
 import 'package:recipemate/menus/04_home/view/home_detail_view.dart';
 import 'package:recipemate/menus/04_home/view/home_list_view.dart';
 import 'package:recipemate/menus/04_home/view/notification_view.dart';
+import 'package:recipemate/menus/08_nfc_reader/view/nfc_result_view.dart';
+import 'package:recipemate/menus/08_nfc_reader/view/nfc_view.dart';
 import 'package:recipemate/models/model/chat_session.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/repository/chat_api_repository.dart';
+import 'package:recipemate/repository/firebase_auth_service.dart';
 import 'package:recipemate/utils/connection_util.dart';
 import 'package:recipemate/utils/data_session_util.dart';
 import 'package:recipemate/utils/data_session_util_controller.dart';
@@ -18,12 +24,15 @@ import 'package:recipemate/utils/view_utils/error_view.dart';
 import 'package:recipemate/utils/view_utils/theme_controller.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'menus/01_splash/view/splash_view.dart';
+import 'menus/02_login/view/email_verification_view.dart';
 import 'menus/02_login/view/login_view.dart';
 import 'menus/04_home/view/home_nav_view.dart';
 import 'menus/05_security/view/security_view.dart';
 import 'menus/06_chat/view/chat_view.dart';
-import 'menus/07_chat_session/view/view_model/chat_history_controller.dart';
+import 'menus/07_chat_session/view_model/chat_history_controller.dart';
+import 'menus/09_find_nearby_restaurants/view/find_nearby_restaurants_view.dart';
 import 'utils/view_utils/app_theme.dart';
+import 'utils/view_utils/transition_controller.dart';
 
 final talker = TalkerFlutter.init(); // Initialize Talker instance here
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -33,6 +42,14 @@ void main() async {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      // Inisialisasi Firebase
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+
+      // Initialize Liquid Glass Widgets
+      await LiquidGlassWidgets.initialize();
 
       // Inisialisasi Notifikasi
       await NotificationUtil.init();
@@ -45,6 +62,7 @@ void main() async {
       final initialLang = await sessionUtil.getLastLanguage();
 
       //register dependency injection
+      Get.put<FirebaseAuthService>(FirebaseAuthService(), permanent: true);
       Get.put<ApiRepository>(ApiRepository(), permanent: true);
       Get.put<ChatApiRepository>(ChatApiRepository(), permanent: true);
       Get.put<ConnectionUtil>(ConnectionUtil(), permanent: true);
@@ -83,7 +101,13 @@ void main() async {
         });
       };
 
-      runApp(const RecipemateApp());
+      runApp(
+        LiquidGlassWidgets.wrap(
+          child: const RecipemateApp(),
+          brightnessResolver: Theme.maybeBrightnessOf,
+          adaptiveQuality: true,
+        ),
+      );
     },
     (error, stackTrace) {
       talker.handle(error, stackTrace);
@@ -103,13 +127,14 @@ class RecipemateApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
-    return Obx(() {
-      return GetMaterialApp(
-        title: 'RecipeMate',
-        routingCallback: (routing) {
+    // final themeController = Get.find<ThemeController>();
+    // return Obx(() {
+      return LiquidGlassWidgets.wrap(
+        child: GetMaterialApp(
+          title: 'RecipeMate',
+          routingCallback: (routing) {
           if (routing != null) {
-            final protectedRoutes = [
+            final _ = [
               '/home',
               '/home_detail',
               '/home_list',
@@ -117,10 +142,6 @@ class RecipemateApp extends StatelessWidget {
               '/security',
               '/notification'
             ];
-            if (protectedRoutes.contains(routing.current)) {
-              final sessionController = Get.find<DataSessionUtilController>();
-              sessionController.checkSession();
-            }
           }
         },
         builder: (context, child) {
@@ -145,53 +166,59 @@ class RecipemateApp extends StatelessWidget {
         ],
         supportedLocales: const [Locale('en'), Locale('id')],
         locale: appLocale,
-        theme: AppTheme.lightTheme,
+        theme: AppTheme.darkTheme,
         darkTheme: AppTheme.darkTheme,
-        themeMode: themeController.themeMode.value,
+        themeMode: ThemeMode.dark,
         initialRoute: '/',
         getPages: [
           //GOTO FORM
           GetPage(
             name: '/',
             page: () => const SplashView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/error',
             page: () => ErrorView(errorMessage: Get.arguments as String),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/login',
             page: () => const LoginView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
+          ),
+          GetPage(
+            name: '/email_verification',
+            page: () => const EmailVerificationView(),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/register',
             page: () => const RegisterView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/home',
             page: () => const HomeNavView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/home_detail',
             page: () => const HomeDetailView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/home_list',
             page: () => const HomeListView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/chat',
@@ -211,17 +238,35 @@ class RecipemateApp extends StatelessWidget {
           GetPage(
             name: '/security',
             page: () => const SecurityView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
           GetPage(
             name: '/notification',
             page: () => const NotificationView(),
-            transition: Transition.rightToLeftWithFade,
-            transitionDuration: const Duration(milliseconds: 600),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
+          ),
+          GetPage(
+            name: '/nfc',
+            page: () => const NfcView(),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
+          ),
+          GetPage(
+            name: '/nfc_result',
+            page: () => const NfcResultView(),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
+          ),
+          GetPage(
+            name: '/find_nearby_restaurants',
+            page: () => const FindNearbyRestaurantView(),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
           ),
         ],
-      );
-    });
+      ));
+    // });
   }
 }

@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:recipemate/repository/firebase_auth_service.dart';
+import 'package:recipemate/utils/auth_route_resolver.dart';
+import 'package:recipemate/utils/auth_validator.dart';
 import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../models/model_response/login_response.dart';
 import '../../../repository/api_repository.dart';
 import '../../../utils/constant_var.dart';
 import '../../../utils/data_session_util_controller.dart';
@@ -16,11 +18,19 @@ class LoginViewModel extends GetxController {
   final ApiRepository apiRepository;
   final DataSessionUtilController sessionController;
   final BuildContext context;
-  final LocalAuthentication auth = LocalAuthentication();
-  final emailFocusNode = FocusNode();
-  final passwordFocusNode = FocusNode();
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool _isDialogShowing = false;
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final emailFocusNode = FocusNode();
+  final passwordFocusNode = FocusNode();
+
+  final isPasswordHidden = true.obs;
+  final emailError = ''.obs;
+  final passwordError = ''.obs;
+  final errMessage = ''.obs;
+  final isLoading = false.obs;
 
   LoginViewModel({
     required this.apiRepository,
@@ -28,27 +38,20 @@ class LoginViewModel extends GetxController {
     required this.context,
   });
 
-  final email = ''.obs;
-  final password = ''.obs;
-  final errMessage = ''.obs;
-  final isLoading = false.obs;
-  final isValidButton = false.obs;
-  final isObscureText = true.obs;
-  final canUseBiometric = false.obs;
-
   @override
   void onInit() {
     super.onInit();
     _startConnectivityListener();
     checkInitialConnection();
-    _checkBiometricSupport();
   }
 
   @override
   void onClose() {
+    _connectivitySubscription?.cancel();
+    emailController.dispose();
+    passwordController.dispose();
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
-    _connectivitySubscription?.cancel();
     super.onClose();
   }
 
@@ -87,61 +90,73 @@ class LoginViewModel extends GetxController {
     }
   }
 
-  Future<void> _checkBiometricSupport() async {
-    final bool hasFingerprint = sessionController.isFingerprintEnabled.value;
-    final bool canCheck =
-        await auth.canCheckBiometrics || await auth.isDeviceSupported();
-    canUseBiometric.value = hasFingerprint && canCheck;
-  }
-
-  void setEmail(String value) {
-    email.value = value.trim();
-    _validate();
-  }
-
-  void setPassword(String value) {
-    password.value = value;
-    _validate();
-  }
-
   void togglePasswordVisibility() {
-    isObscureText.toggle();
+    isPasswordHidden.value = !isPasswordHidden.value;
   }
 
-  void _validate() {
-    isValidButton.value = email.value.isNotEmpty && password.value.length >= 4;
+  bool _validateInput(AppLocalizations l10n) {
+    emailError.value = AuthValidator.validateEmail(emailController.text, l10n) ?? '';
+    passwordError.value = AuthValidator.validatePassword(passwordController.text, l10n) ?? '';
+    return emailError.value.isEmpty && passwordError.value.isEmpty;
   }
 
-  Future<void> loginWithBiometric() async {
+  Future<void> onEmailLoginPressed() async {
     final l10n = AppLocalizations.of(Get.context!)!;
+    if (!_validateInput(l10n)) return;
+    if (isLoading.value) return;
+    errMessage.value = '';
+    isLoading.value = true;
+
     try {
-      final bool authenticated = await auth.authenticate(
-        localizedReason: l10n.stLoginFingerprint,
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: true,
-        ),
+      final hasConnection = await RecipeMateAppUtil.checkConnection();
+      if (!hasConnection) {
+        _fail(l10n.stNoConnectionMessage);
+        AppSnackbar.show(title: l10n.stError, message: l10n.stNoConnectionMessage);
+        return;
+      }
+
+      final authService = Get.find<FirebaseAuthService>();
+      final credential = await authService.signInWithEmail(
+        emailController.text,
+        passwordController.text,
       );
-      if (authenticated) {
-        final savedEmail = sessionController.stEmail.value;
-        final savedPassword = await sessionController.getSavedPassword();
-        if (savedEmail.isNotEmpty && savedPassword != null) {
-          email.value = savedEmail;
-          password.value = savedPassword;
-          await onLoginPressed();
-        } else {
-          AppSnackbar.show(
-            title: l10n.stError,
-            message: l10n.stLoginFingerprintErrorMessage,
-          );
+
+      if (credential != null && credential.user != null) {
+        final route = await AuthRouteResolver.resolveRoute(credential.user);
+        if (route == '/home') {
+          await sessionController.onUserLoggedIn();
+          AppSnackbar.show(title: l10n.stSuccess, message: l10n.stSuccess);
         }
+        Get.offAllNamed(route);
       }
     } catch (e) {
-      AppSnackbar.show(title: l10n.stError, message: e.toString());
+      final message = e.toString().replaceFirst('Exception: ', '');
+      _fail(message);
+      AppSnackbar.show(title: l10n.stError, message: message);
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  Future<void> onLoginPressed() async {
+  Future<void> onForgotPasswordPressed() async {
+    final l10n = AppLocalizations.of(Get.context!)!;
+    final emailErr = AuthValidator.validateEmail(emailController.text, l10n);
+    if (emailErr != null) {
+      emailError.value = emailErr;
+      AppSnackbar.show(title: l10n.stError, message: emailErr);
+      return;
+    }
+    try {
+      final authService = Get.find<FirebaseAuthService>();
+      await authService.sendPasswordReset(emailController.text);
+      AppSnackbar.show(title: l10n.stSuccess, message: l10n.stPasswordResetSent);
+    } catch (e) {
+      final message = e.toString().replaceFirst('Exception: ', '');
+      AppSnackbar.show(title: l10n.stError, message: message);
+    }
+  }
+
+  Future<void> onGoogleLoginPressed() async {
     final l10n = AppLocalizations.of(Get.context!)!;
     if (isLoading.value) return;
     errMessage.value = '';
@@ -156,43 +171,74 @@ class LoginViewModel extends GetxController {
         );
         return;
       }
-      final result = await apiRepository.postApiLogin(
-        email.value,
-        password.value,
-      );
-      if (result == null) {
-        _fail(l10n.stInternalServerError);
-        AppSnackbar.show(
-          title: l10n.stError,
-          message: l10n.stInternalServerError,
-        );
-        return;
+
+      final authService = Get.find<FirebaseAuthService>();
+      final credential = await authService.signInWithGoogle();
+
+      if (credential != null && credential.user != null) {
+        final route = await AuthRouteResolver.resolveRoute(credential.user);
+        if (route == '/home') {
+          await sessionController.onUserLoggedIn();
+          AppSnackbar.show(title: l10n.stSuccess, message: l10n.stSuccess);
+        }
+        Get.offAllNamed(route);
       }
-      final response = LoginResponse.fromJson(result);
-      final isSuccess = response.status == ConstantVar.stSuccess;
-      final message = response.message ?? l10n.stFailedLogin;
-      if (isSuccess && response.data?.token != null) {
-        await sessionController.setToken(response.data?.token ?? '');
-        await sessionController.setUserId(
-          response.data?.user?.id?.toString() ?? '',
-        );
-        await sessionController.setFullName(response.data?.user?.name ?? '');
-        await sessionController.setEmail(response.data?.user?.email ?? '');
-        await sessionController.setSavedPassword(password.value);
-        await sessionController.onUserLoggedIn();
-        AppSnackbar.show(title: l10n.stSuccess, message: message);
-        Get.offNamed('/home');
-      } else {
-        _fail(message);
-        AppSnackbar.show(title: l10n.stFailedLogin, message: message);
-      }
+    } on AccountExistsException catch (e) {
+      isLoading.value = false;
+      _showAccountLinkingDialog(e.email, e.pendingCredential);
     } catch (e) {
-      final message = e.toString();
-      _fail(message);
-      AppSnackbar.show(title: l10n.stError, message: message);
+      final message = e.toString().replaceAll('Exception: ', '');
+      if (!message.contains('dibatalkan')) {
+        _fail(message);
+        AppSnackbar.show(title: l10n.stError, message: message);
+      }
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void _showAccountLinkingDialog(String email, AuthCredential? pendingCredential) {
+    final context = Get.context;
+    if (context == null || pendingCredential == null) return;
+    final l10n = AppLocalizations.of(context)!;
+    final passwordController = TextEditingController();
+
+    Get.defaultDialog(
+      title: l10n.stLinkAccountTitle,
+      content: Column(
+        children: [
+          Text('${l10n.stLinkAccountPrompt}\n($email)', textAlign: TextAlign.center),
+          const SizedBox(height: 12),
+          TextField(
+            controller: passwordController,
+            obscureText: true,
+            decoration: InputDecoration(labelText: l10n.stPassword),
+          ),
+        ],
+      ),
+      textConfirm: l10n.confirmBtn,
+      textCancel: l10n.stCancelTitle,
+      onConfirm: () async {
+        Get.back();
+        try {
+          isLoading.value = true;
+          final authService = Get.find<FirebaseAuthService>();
+          await authService.signInWithEmail(email, passwordController.text);
+          await authService.linkPendingCredential(pendingCredential);
+          final route = await AuthRouteResolver.resolveRoute(FirebaseAuth.instance.currentUser);
+          if (route == '/home') {
+            await sessionController.onUserLoggedIn();
+            AppSnackbar.show(title: l10n.stSuccess, message: l10n.stSuccess);
+          }
+          Get.offAllNamed(route);
+        } catch (e) {
+          final message = e.toString().replaceFirst('Exception: ', '');
+          AppSnackbar.show(title: l10n.stError, message: message);
+        } finally {
+          isLoading.value = false;
+        }
+      },
+    );
   }
 
   void _fail(String message) {

@@ -1,6 +1,6 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/utils/view_utils/no_data_util.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../repository/api_repository.dart';
@@ -27,37 +27,78 @@ class HomeView extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await RecipeMateAppUtil.lockToPortrait();
     });
-    return ConnectionWrapper(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                _buildHeader(context, viewModel),
-                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
 
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-                  ),
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return ConnectionWrapper(
+      child: Material(
+        color: Colors.transparent,
+        child: SafeArea(
+          child: GlassScaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            edgeToEdge: true,
+            extendBody: true,
+            edgeFade: false,
+            background: Stack(
+              children: [
+                Container(color: Theme.of(context).scaffoldBackgroundColor),
+                Positioned(
+                  top: -80,
+                  right: -80,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.35), 420),
+                ),
+                Positioned(
+                  top: 380,
+                  left: -140,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.22), 380),
+                ),
+                Positioned(
+                  bottom: 40,
+                  right: -120,
+                  child: buildBlurBlob(primary.withValues(alpha: 0.28), 400),
+                ),
+              ],
+            ),
+            body: SafeArea(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await viewModel.getRecommendedRecipes();
+                  await viewModel.getDynamicFoodArticles();
+                },
+                color: primary,
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSearchBar(context, viewModel),
-                      _buildAutoCompleteList(context, viewModel),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      _buildHeader(context, viewModel),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSearchBar(context, viewModel),
+                            _buildAutoCompleteList(context, viewModel),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      _CategoryChips(viewModel: viewModel),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      _buildContent(context, viewModel),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.13),
                     ],
                   ),
                 ),
-                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-                _buildContent(context, viewModel),
-                SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-              ],
+              ),
             ),
           ),
-        ),
+        )
       ),
     );
   }
@@ -76,6 +117,10 @@ class HomeView extends StatelessWidget {
               height: avatarSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
+                  width: 1.5,
+                ),
                 image: DecorationImage(
                   image: viewModel.session.profileImage.value != null
                       ? FileImage(viewModel.session.profileImage.value!)
@@ -94,8 +139,8 @@ class HomeView extends StatelessWidget {
                 customText(
                   text: GreetingUtil.getGreeting(context),
                   fontSize: DimensText.bodySmallText(context),
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 Obx(
                   () => customText(
@@ -109,21 +154,25 @@ class HomeView extends StatelessWidget {
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Get.toNamed('/notification');
-            },
-            child: Container(
-              padding: EdgeInsets.all(RecipeMateAppUtil.screenWidth * 0.025),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.notifications,
-                color: Theme.of(context).colorScheme.primary,
-                size: RecipeMateAppUtil.screenWidth * 0.07,
-              ),
+          GlassIconButton(
+            onPressed: () => Get.toNamed('/notification'),
+            size: RecipeMateAppUtil.screenWidth * 0.12,
+            iconSize: RecipeMateAppUtil.screenWidth * 0.06,
+            shape: GlassIconButtonShape.circle,
+            icon: Icon(
+              Icons.notifications_none_rounded,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            settings: LiquidGlassSettings(
+              glassColor: Theme.of(context).cardColor,
+              backerColor: Colors.black.withValues(alpha: 0.05),
+              thickness: 70,
+              blur: 6,
+              chromaticAberration: 0.35,
+              lightIntensity: 1.2,
+              refractiveIndex: 1.65,
+              ambientRim: 0.3,
+              edgeAbsorption: 0.12,
             ),
           ),
         ],
@@ -132,85 +181,79 @@ class HomeView extends StatelessWidget {
   }
 
   Widget _buildSearchBar(BuildContext context, HomeViewModel viewModel) {
-    return Container(
+    return GlassTextField.search(
+      controller: viewModel.searchController,
+      focusNode: viewModel.searchFocusNode,
+      placeholder: AppLocalizations.of(context)!.stSearchRecipes,
+      onSubmitted: (value) => viewModel.searchRecipes(value),
+      onChanged: (value) {
+        if (value.isEmpty) {
+          viewModel.searchResults.clear();
+          viewModel.autoCompleteResults.clear();
+        }
+      },
       height: RecipeMateAppUtil.screenHeight * 0.07,
-      padding: EdgeInsets.symmetric(
-        horizontal: RecipeMateAppUtil.screenWidth * 0.04,
+      prefixIcon: Icon(
+        Icons.search_rounded,
+        color: Theme.of(context).colorScheme.primary,
+        size: RecipeMateAppUtil.screenWidth * 0.06,
       ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(
-          RecipeMateAppUtil.screenWidth * 0.04,
-        ),
+      suffixIcon: Obx(() {
+        if (viewModel.searchText.value.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        return Icon(
+          Icons.close_rounded,
+          color: Theme.of(context).colorScheme.primary,
+          size: RecipeMateAppUtil.screenWidth * 0.05,
+        );
+      }),
+      onSuffixTap: () => viewModel.resetSearch(),
+      textStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
+        fontSize: DimensText.bodyText(context),
+        fontFamily: 'Poppins-Regular',
       ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.search,
-            color: Theme.of(context).colorScheme.primary,
-            size: RecipeMateAppUtil.screenWidth * 0.06,
-          ),
-          SizedBox(width: RecipeMateAppUtil.screenWidth * 0.03),
-          Expanded(
-            child: TextField(
-              controller: viewModel.searchController,
-              focusNode: viewModel.searchFocusNode,
-              // // Uncomment kalau mau pakai autocomplete cuma boros token api nya, cepat kena daily limit
-              // onChanged: (value) {
-              //   viewModel.getAutoComplete(value);
-              // },
-              onSubmitted: (value) => viewModel.searchRecipes(value),
-              decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.stSearchRecipes,
-                hintStyle: TextStyle(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.4),
-                  fontSize: DimensText.captionText(context),
-                ),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-          Obx(() {
-            if (viewModel.searchText.value.isEmpty) {
-              return const SizedBox();
-            }
-            return GestureDetector(
-              onTap: () => viewModel.resetSearch(),
-              child: Icon(
-                Icons.close,
-                color: Theme.of(context).colorScheme.primary,
-                size: RecipeMateAppUtil.screenWidth * 0.05,
-              ),
-            );
-          }),
-        ],
+      placeholderStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+        fontSize: DimensText.captionText(context),
+        fontFamily: 'Poppins-Regular',
+      ),
+      settings: LiquidGlassSettings(
+        glassColor: Theme.of(context).cardColor,
+        backerColor: Colors.black.withValues(alpha: 0.05),
+        thickness: 120,
+        blur: 8,
+        chromaticAberration: 0.4,
+        lightIntensity: 1.25,
+        refractiveIndex: 1.68,
+        ambientRim: 0.3,
+        edgeAbsorption: 0.12,
       ),
     );
   }
 
-  // JANGAN DIHAPUS, INI AUTOCOMPLETE
   Widget _buildAutoCompleteList(BuildContext context, HomeViewModel viewModel) {
     return Obx(() {
       if (viewModel.autoCompleteResults.isEmpty) {
         return const SizedBox();
       }
-      return Container(
-        margin: EdgeInsets.only(top: RecipeMateAppUtil.screenHeight * 0.01),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+      return Padding(
+        padding: EdgeInsets.only(top: RecipeMateAppUtil.screenHeight * 0.01),
+        child: GlassCard(
+          padding: EdgeInsets.zero,
+          shape: LiquidRoundedRectangle(borderRadius: 16),
+          settings: LiquidGlassSettings(
+            glassColor: Theme.of(context).cardColor,
+            backerColor: Colors.black.withValues(alpha: 0.05),
+            thickness: 100,
+            blur: 8,
+            chromaticAberration: 0.4,
+            lightIntensity: 1.2,
+            refractiveIndex: 1.68,
+            ambientRim: 0.3,
+            edgeAbsorption: 0.12,
+          ),
           child: ListView.separated(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
@@ -220,9 +263,7 @@ class HomeView extends StatelessWidget {
               height: 1,
               indent: 16,
               endIndent: 16,
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.05),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
             ),
             itemBuilder: (context, index) {
               final item = viewModel.autoCompleteResults[index];
@@ -231,9 +272,7 @@ class HomeView extends StatelessWidget {
                 onTap: () {
                   viewModel.searchController.text = title;
                   viewModel.searchController.selection =
-                      TextSelection.fromPosition(
-                        TextPosition(offset: title.length),
-                      );
+                      TextSelection.fromPosition(TextPosition(offset: title.length));
                   viewModel.searchRecipes(title);
                 },
                 child: Padding(
@@ -246,9 +285,7 @@ class HomeView extends StatelessWidget {
                       Icon(
                         Icons.history_rounded,
                         size: 18,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.4),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -262,9 +299,7 @@ class HomeView extends StatelessWidget {
                       Icon(
                         Icons.north_west_rounded,
                         size: 16,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.2),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                       ),
                     ],
                   ),
@@ -283,31 +318,145 @@ class HomeView extends StatelessWidget {
       if (viewModel.isSearching.value || viewModel.searchResults.isNotEmpty) {
         return _buildSearchResultsSection(context, viewModel);
       }
-      // Default view: recommended + top searching food
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildRecommendedForYouSection(context, viewModel),
-            SizedBox(height: RecipeMateAppUtil.screenHeight * 0.04),
-            _buildTopSearchingFoodSection(context, viewModel),
-          ],
-        ),
+      return Column(
+        children: [
+          _buildRecommendedForYouSection(context, viewModel),
+          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.03),
+          _buildFoodArticlesCarousel(context, viewModel),
+        ],
       );
     });
   }
 
-  Widget _buildSearchResultsSection(
-    BuildContext context,
-    HomeViewModel viewModel,
-  ) {
+  Widget _buildFoodArticlesCarousel(BuildContext context, HomeViewModel viewModel) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+          ),
+          child: customText(
+            text: AppLocalizations.of(context)!.stFoodArticles,
+            fontSize: DimensText.headerMenusText(context),
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'times_new_roman_bold',
+          ),
+        ),
+        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+        Obx(() {
+          if (viewModel.isLoadingArticles.value) {
+            return SizedBox(
+              height: RecipeMateAppUtil.screenHeight * 0.22,
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (viewModel.foodArticles.isEmpty) {
+            return const SizedBox.shrink();
+          }
+
+          return SizedBox(
+            height: RecipeMateAppUtil.screenHeight * 0.22,
+            child: PageView.builder(
+              controller: PageController(viewportFraction: 0.85),
+              itemCount: viewModel.foodArticles.length,
+              itemBuilder: (context, index) {
+                final article = viewModel.foodArticles[index];
+                final String title = article['title'] ?? "No Title";
+                final String image = article['image'] ?? "";
+                final String url = article['link'] ?? "";
+
+                return Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: GestureDetector(
+                    onTap: () {
+                      if (url.isNotEmpty) {
+                        viewModel.launchBrowser(url);
+                      }
+                    },
+                    child: GlassCard(
+                      padding: EdgeInsets.zero,
+                      shape: LiquidRoundedRectangle(
+                        borderRadius: RecipeMateAppUtil.screenWidth * 0.05,
+                      ),
+                      settings: LiquidGlassSettings(
+                        glassColor: Colors.white.withValues(alpha: 0.05),
+                        backerColor: Colors.black.withValues(alpha: 0.1),
+                        thickness: 100,
+                        blur: 8,
+                        chromaticAberration: 0.4,
+                        lightIntensity: 1.2,
+                        refractiveIndex: 1.68,
+                        ambientRim: 0.3,
+                        edgeAbsorption: 0.15,
+                      ),
+                      child: Stack(
+                        children: [
+                          if (image.isNotEmpty)
+                            Positioned.fill(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  RecipeMateAppUtil.screenWidth * 0.05,
+                                ),
+                                child: Image.network(
+                                  image,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Container(color: Colors.grey[900]),
+                                ),
+                              ),
+                            ),
+                          Positioned.fill(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withValues(alpha: 0.7),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  RecipeMateAppUtil.screenWidth * 0.05,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 16,
+                            left: 16,
+                            right: 16,
+                            child: customText(
+                              text: title,
+                              fontSize: DimensText.bodyText(context),
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              intMaxLine: 2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildSearchResultsSection(BuildContext context, HomeViewModel viewModel) {
     return Obx(() {
       if (viewModel.isSearching.value) {
         return SizedBox(
           height: RecipeMateAppUtil.screenHeight * 0.48,
           child: Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
           ),
         );
       }
@@ -321,9 +470,7 @@ class HomeView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
             child: customText(
               text: "Search Results",
               fontSize: DimensText.headerMenusText(context),
@@ -334,9 +481,7 @@ class HomeView extends StatelessWidget {
           ),
           SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
             child: GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -345,12 +490,12 @@ class HomeView extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: RecipeMateAppUtil.screenWidth * 0.04,
                 mainAxisSpacing: RecipeMateAppUtil.screenHeight * 0.02,
-                childAspectRatio: 0.72,
+                childAspectRatio: 0.68,
               ),
-              itemBuilder: (context, index) {
-                final recipe = viewModel.searchResults[index];
-                return _buildRecommendedCard(context, recipe);
-              },
+              itemBuilder: (context, index) => _buildRecommendedCard(
+                context,
+                viewModel.searchResults[index],
+              ),
             ),
           ),
         ],
@@ -358,17 +503,12 @@ class HomeView extends StatelessWidget {
     });
   }
 
-  Widget _buildRecommendedForYouSection(
-    BuildContext context,
-    HomeViewModel viewModel,
-  ) {
+  Widget _buildRecommendedForYouSection(BuildContext context, HomeViewModel viewModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -380,9 +520,7 @@ class HomeView extends StatelessWidget {
                 fontFamily: 'times_new_roman_bold',
               ),
               GestureDetector(
-                onTap: () {
-                  Get.toNamed('/home_list', arguments: {'mode': 'recommended'});
-                },
+                onTap: () => Get.toNamed('/home_list', arguments: {'mode': 'recommended'}),
                 child: customText(
                   text: AppLocalizations.of(context)!.stSeeAll,
                   fontSize: DimensText.bodySmallText(context),
@@ -397,15 +535,11 @@ class HomeView extends StatelessWidget {
         Obx(() {
           if (viewModel.isLoadingRecommended.value) {
             return Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
               child: SizedBox(
                 height: RecipeMateAppUtil.screenHeight * 0.25,
                 child: Center(
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
                 ),
               ),
             );
@@ -417,18 +551,14 @@ class HomeView extends StatelessWidget {
 
           if (recipes.isEmpty) {
             return Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
               child: SizedBox(
                 height: RecipeMateAppUtil.screenHeight * 0.25,
                 child: Center(
                   child: customText(
                     text: "No recommended recipes available",
                     fontSize: DimensText.bodySmallText(context),
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -436,9 +566,7 @@ class HomeView extends StatelessWidget {
           }
 
           return Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
             child: GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -447,12 +575,9 @@ class HomeView extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: RecipeMateAppUtil.screenWidth * 0.04,
                 mainAxisSpacing: RecipeMateAppUtil.screenHeight * 0.02,
-                childAspectRatio: 0.72,
+                childAspectRatio: 0.68,
               ),
-              itemBuilder: (context, index) {
-                final recipe = recipes[index];
-                return _buildRecommendedCard(context, recipe);
-              },
+              itemBuilder: (context, index) => _buildRecommendedCard(context, recipes[index]),
             ),
           );
         }),
@@ -460,282 +585,97 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildTopSearchingFoodSection(
-    BuildContext context,
-    HomeViewModel viewModel,
-  ) {
-    final topSearchingFoods = [
-      {
-        'name': 'Salad',
-        'icon': Icons.eco_rounded,
-        'color': const Color(0xFFE8F5E9),
-      },
-      {
-        'name': 'Pasta',
-        'icon': Icons.restaurant_rounded,
-        'color': const Color(0xFFEDE7F6),
-      },
-      {
-        'name': 'Pizza',
-        'icon': Icons.local_pizza_rounded,
-        'color': const Color(0xFFFFF3E0),
-      },
-      {
-        'name': 'Burger',
-        'icon': Icons.lunch_dining_rounded,
-        'color': const Color(0xFFFFF8E1),
-      },
-      {
-        'name': 'Steak',
-        'icon': Icons.local_fire_department_rounded,
-        'color': const Color(0xFFFFEBEE),
-      },
-      {
-        'name': 'Dessert',
-        'icon': Icons.icecream_rounded,
-        'color': const Color(0xFFFCE4EC),
-      },
-      {
-        'name': 'Sushi',
-        'icon': Icons.set_meal_rounded,
-        'color': const Color(0xFFE0F2F1),
-      },
-      {
-        'name': 'Tacos',
-        'icon': Icons.local_activity_rounded,
-        'color': const Color(0xFFF1F8E9),
-      },
-      {
-        'name': 'Drink',
-        'icon': Icons.local_bar_rounded,
-        'color': const Color(0xFFE1F5FE),
-      },
-    ];
-
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: RecipeMateAppUtil.screenWidth * 0.05,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              customText(
-                text: AppLocalizations.of(context)!.stTopSearching,
-                fontSize: DimensText.headerMenusText(context),
-                color: Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'times_new_roman_bold',
-              ),
-              GestureDetector(
-                onTap: () {
-                  Get.toNamed('/home_list', arguments: {'mode': 'popular'});
-                },
-                child: customText(
-                  text: AppLocalizations.of(context)!.stViewPopular,
-                  fontSize: DimensText.bodySmallText(context),
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
-          SizedBox(
-            height: RecipeMateAppUtil.screenHeight * 0.16,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: topSearchingFoods.length,
-              itemBuilder: (context, index) {
-                final food = topSearchingFoods[index];
-                final bool isDark = Theme.of(context).brightness == Brightness.dark;
-                final Color baseColor = food['color'] as Color;
-                return Padding(
-                  padding: EdgeInsets.only(
-                    right: RecipeMateAppUtil.screenWidth * 0.04,
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      viewModel.searchController.text = food['name'] as String;
-                      viewModel.searchRecipes(food['name'] as String);
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          width: RecipeMateAppUtil.screenWidth * 0.18,
-                          height: RecipeMateAppUtil.screenWidth * 0.18,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: isDark
-                                    ? baseColor.withValues(alpha: 0.15)
-                                    : Colors.black.withValues(alpha: 0.08),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: ClipOval(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: isDark
-                                        ? [
-                                            baseColor.withValues(alpha: 0.4),
-                                            baseColor.withValues(alpha: 0.1),
-                                          ]
-                                        : [
-                                            Colors.white.withValues(alpha: 0.7),
-                                            baseColor.withValues(alpha: 0.8),
-                                          ],
-                                  ),
-                                  border: Border.all(
-                                    color: isDark
-                                        ? baseColor.withValues(alpha: 0.25)
-                                        : Colors.white.withValues(alpha: 0.5),
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    food['icon'] as IconData,
-                                    size: RecipeMateAppUtil.screenWidth * 0.09,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: RecipeMateAppUtil.screenHeight * 0.01),
-                        customText(
-                          text: food['name'] as String,
-                          fontSize: DimensText.bodySmallText(context),
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildRecommendedCard(BuildContext context, dynamic recipe) {
-    final double borderRadius = RecipeMateAppUtil.screenWidth * 0.04;
+    final double borderRadius = RecipeMateAppUtil.screenWidth * 0.045;
 
-    // Handle both dynamic map and object
-    final String title = recipe is Map
-        ? (recipe['title'] ?? "")
-        : (recipe.title ?? "");
-    final String image = recipe is Map
-        ? (recipe['image'] ?? "")
-        : (recipe.image ?? "");
+    final String title = recipe is Map ? (recipe['title'] ?? "") : (recipe.title ?? "");
+    final String image = recipe is Map ? (recipe['image'] ?? "") : (recipe.image ?? "");
     final dynamic id = recipe is Map ? (recipe['id'] ?? 0) : (recipe.id ?? 0);
-    final dynamic readyInMinutes = recipe is Map
-        ? (recipe['readyInMinutes'] ?? 0)
-        : (recipe.readyInMinutes ?? 0);
-    final dynamic aggregateLikes = recipe is Map
-        ? (recipe['aggregateLikes'] ?? 0)
-        : (recipe.aggregateLikes ?? 0);
+    final dynamic readyInMinutes =
+    recipe is Map ? (recipe['readyInMinutes'] ?? 0) : (recipe.readyInMinutes ?? 0);
+    final dynamic aggregateLikes =
+    recipe is Map ? (recipe['aggregateLikes'] ?? 0) : (recipe.aggregateLikes ?? 0);
 
     return GestureDetector(
       onTap: () => Get.toNamed('/home_detail', arguments: id),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(borderRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
+      child: GlassCard(
+        padding: EdgeInsets.zero,
+        shape: LiquidRoundedRectangle(borderRadius: borderRadius),
+        settings: LiquidGlassSettings(
+          glassColor: Theme.of(context).cardColor,
+          backerColor: Colors.black.withValues(alpha: 0.06),
+          thickness: 100,
+          blur: 8,
+          chromaticAberration: 0.4,
+          lightIntensity: 1.2,
+          refractiveIndex: 1.68,
+          ambientRim: 0.3,
+          edgeAbsorption: 0.12,
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(borderRadius),
-          child: Stack(
-            children: [
-              Positioned.fill(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 4 / 4,
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(borderRadius),
+                  topRight: Radius.circular(borderRadius),
+                ),
                 child: Image.network(
                   image,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
-                    color: Theme.of(context).colorScheme.primary,
-                    child: const Icon(Icons.broken_image),
-                  ),
-                ),
-              ),
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.65),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    child: Icon(
+                      Icons.broken_image_rounded,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
               ),
-              Positioned(
-                left: 10,
-                right: 10,
-                bottom: 10,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     customText(
                       text: title,
                       fontSize: DimensText.bodySmallText(context),
                       intMaxLine: 2,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(height: RecipeMateAppUtil.screenHeight * 0.008),
                     Row(
                       children: [
                         if (readyInMinutes != 0) ...[
                           Icon(
                             Icons.schedule_rounded,
-                            size: 14,
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            size: 13,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 4),
                           customText(
                             text: "$readyInMinutes min",
                             fontSize: DimensText.captionText(context),
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 10),
                         ],
                         if (aggregateLikes != 0) ...[
                           Icon(
                             Icons.favorite_rounded,
-                            size: 14,
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            size: 13,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 4),
                           customText(
                             text: "$aggregateLikes",
                             fontSize: DimensText.captionText(context),
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                         ],
                       ],
@@ -743,9 +683,97 @@ class HomeView extends StatelessWidget {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class _CategoryChips extends StatefulWidget {
+  final HomeViewModel viewModel;
+  const _CategoryChips({required this.viewModel});
+
+  @override
+  State<_CategoryChips> createState() => _CategoryChipsState();
+}
+
+class _CategoryChipsState extends State<_CategoryChips> {
+  int _selectedIndex = 0;
+
+  static const List<Map<String, dynamic>> _categories = [
+    {'label': 'All', 'icon': Icons.apps_rounded},
+    {'label': 'Breakfast', 'icon': Icons.free_breakfast_rounded},
+    {'label': 'Lunch', 'icon': Icons.lunch_dining_rounded},
+    {'label': 'Dinner', 'icon': Icons.dinner_dining_rounded},
+    {'label': 'Dessert', 'icon': Icons.icecream_rounded},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
+    return SizedBox(
+      height: RecipeMateAppUtil.screenHeight * 0.055,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.05),
+        itemCount: _categories.length,
+        itemBuilder: (context, index) {
+          final bool selected = index == _selectedIndex;
+          final category = _categories[index];
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: GestureDetector(
+              onTap: () {
+                setState(() => _selectedIndex = index);
+                if (index == 0) {
+                  widget.viewModel.resetSearch();
+                } else {
+                  widget.viewModel.searchController.text = category['label'] as String;
+                  widget.viewModel.searchRecipes(category['label'] as String);
+                }
+              },
+              child: GlassCard(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                shape: LiquidRoundedRectangle(borderRadius: 30),
+                settings: LiquidGlassSettings(
+                  glassColor: selected
+                      ? primary.withValues(alpha: 0.9)
+                      : Theme.of(context).cardColor,
+                  backerColor: Colors.black.withValues(alpha: selected ? 0.02 : 0.06),
+                  thickness: 90,
+                  blur: 7,
+                  chromaticAberration: selected ? 0.15 : 0.4,
+                  lightIntensity: 1.2,
+                  refractiveIndex: 1.65,
+                  ambientRim: 0.3,
+                  edgeAbsorption: 0.12,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      category['icon'] as IconData,
+                      size: 16,
+                      color: selected ? Theme.of(context).colorScheme.onPrimary : onSurface,
+                    ),
+                    const SizedBox(width: 6),
+                    customText(
+                      text: category['label'] as String,
+                      fontSize: DimensText.captionText(context),
+                      fontWeight: FontWeight.w600,
+                      color: selected ? Theme.of(context).colorScheme.onPrimary : onSurface,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

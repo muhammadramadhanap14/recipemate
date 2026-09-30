@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
+import 'package:recipemate/repository/firebase_auth_service.dart';
 
 import '../../../utils/constant_var.dart';
 import '../../../utils/data_session_util_controller.dart';
@@ -16,6 +16,9 @@ class SecurityViewModel extends GetxController {
   final DataSessionUtilController session;
   final fullName = ''.obs;
   final emailId = ''.obs;
+  final providerMethods = <String>[].obs;
+  final hasPasswordProvider = false.obs;
+
   final LocalAuthentication auth = LocalAuthentication();
   bool _canCheckBiometrics = false;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
@@ -31,6 +34,7 @@ class SecurityViewModel extends GetxController {
     _initBiometric();
     getUserFullName();
     getUserEmail();
+    _loadProviders();
     _startConnectivityListener();
     checkInitialConnection();
   }
@@ -39,6 +43,31 @@ class SecurityViewModel extends GetxController {
   void onClose() {
     _connectivitySubscription?.cancel();
     super.onClose();
+  }
+
+  void _loadProviders() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final providers = user.providerData.map((p) => p.providerId).toList();
+      providerMethods.value = providers;
+      hasPasswordProvider.value = providers.contains('password');
+    }
+  }
+
+  Future<void> linkPassword(String password) async {
+    final l10n = AppLocalizations.of(Get.context!)!;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && user.email != null) {
+        final authService = Get.find<FirebaseAuthService>();
+        await authService.linkEmailPassword(user.email!, password);
+        _loadProviders();
+        AppSnackbar.show(title: l10n.stSuccess, message: l10n.stAddPasswordSuccess);
+      }
+    } catch (e) {
+      final message = e.toString().replaceFirst('Exception: ', '');
+      AppSnackbar.show(title: l10n.stError, message: message);
+    }
   }
 
   void _startConnectivityListener() {

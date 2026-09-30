@@ -319,3 +319,20 @@ Widget customTextButton({
       )
   );
 }
+
+Widget buildBlurBlob(Color color, double size) {
+  return Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      boxShadow: [
+        BoxShadow(
+          color: color,
+          blurRadius: size * 0.6,
+          spreadRadius: size * 0.2,
+        ),
+      ],
+    ),
+  );
+}

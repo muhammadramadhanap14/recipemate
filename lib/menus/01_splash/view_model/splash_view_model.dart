@@ -1,8 +1,10 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
+import 'package:recipemate/utils/auth_route_resolver.dart';
 import 'package:recipemate/utils/data_session_util.dart';
 import '../../../models/model/chat_session.dart';
 import '../../../repository/chat_api_repository.dart';
@@ -43,29 +45,41 @@ class SplashViewModel extends GetxController {
     if (valConnection) {
       isLoading.value = true;
       await Future.delayed(splashDuration);
-      final sessionUtil = Get.find<DataSessionUtil>();
-      final token = await sessionUtil.getToken();
-      if (token == null || token.isEmpty) {
-        Get.offAllNamed('/login');
+      
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+      final targetRoute = await AuthRouteResolver.resolveRoute(firebaseUser);
+
+      if (firebaseUser != null && targetRoute == '/home') {
+        final token = await firebaseUser.getIdToken() ?? '';
+        final sessionUtil = Get.find<DataSessionUtil>();
+        await _handleLaunchFromNotification(
+          token,
+          sessionUtil,
+        );
         return;
       }
-      await _handleLaunchFromNotification(
-        token,
-        sessionUtil,
-      );
+      
+      Get.offAllNamed(targetRoute);
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ViewDialogUtil().showOneButtonActionDialog(
-          AppLocalizations.of(context)!.stNoConnectionMessage,
-          AppLocalizations.of(context)!.backBtnTitle,
-          ConstantVar.noConnectionGif,
-          context,
-          null,
-            (dynamic) {
-              initCheckConnection();
-            },
-        );
-      });
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+      if (firebaseUser != null) {
+        isLoading.value = true;
+        await Future.delayed(splashDuration);
+        Get.offAllNamed('/home');
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ViewDialogUtil().showOneButtonActionDialog(
+            AppLocalizations.of(context)!.stNoConnectionMessage,
+            AppLocalizations.of(context)!.backBtnTitle,
+            ConstantVar.noConnectionGif,
+            context,
+            null,
+              (dynamic) {
+                initCheckConnection();
+              },
+          );
+        });
+      }
     }
   }
 
