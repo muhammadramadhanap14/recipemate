@@ -55,7 +55,7 @@ class EmailVerificationView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      "assets/images/ic_logo_recipemate.png",
+                      "assets/images/ic_logo_recipemate.webp",
                       width: logoSize,
                       height: logoSize,
                       fit: BoxFit.contain,

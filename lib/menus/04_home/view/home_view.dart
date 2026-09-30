@@ -124,7 +124,7 @@ class HomeView extends StatelessWidget {
                 image: DecorationImage(
                   image: viewModel.session.profileImage.value != null
                       ? FileImage(viewModel.session.profileImage.value!)
-                      : const AssetImage("assets/images/profile_pict_icon.png")
+                      : const AssetImage("assets/images/profile_pict_icon.webp")
                             as ImageProvider,
                   fit: BoxFit.cover,
                 ),
