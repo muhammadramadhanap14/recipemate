@@ -973,6 +973,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Email successfully verified. Please sign in.'**
   String get stEmailVerifiedSuccess;
+
+  /// No description provided for @stFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite Recipes'**
+  String get stFavorites;
+
+  /// No description provided for @stSearchFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Search in favorites...'**
+  String get stSearchFavorites;
+
+  /// No description provided for @stNoFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'No favorite recipes yet'**
+  String get stNoFavorites;
 }
 
 class _AppLocalizationsDelegate

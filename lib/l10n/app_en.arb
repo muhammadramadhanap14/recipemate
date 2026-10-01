@@ -144,5 +144,8 @@
   "stAddPassword": "Add Password",
   "stAddPasswordSuccess": "Password successfully added to your account.",
   "stActiveProviders": "Sign-in Methods",
-  "stEmailVerifiedSuccess": "Email successfully verified. Please sign in."
+  "stEmailVerifiedSuccess": "Email successfully verified. Please sign in.",
+  "stFavorites": "Favorite Recipes",
+  "stSearchFavorites": "Search in favorites...",
+  "stNoFavorites": "No favorite recipes yet"
 }

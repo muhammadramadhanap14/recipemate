@@ -49,8 +49,7 @@ class SecurityView extends StatelessWidget {
     return ConnectionWrapper(
       child: Material(
         color: Colors.transparent,
-        child: SafeArea(
-          child: GlassScaffold(
+        child: GlassScaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             edgeToEdge: true,
             extendBody: true,
@@ -183,7 +182,6 @@ class SecurityView extends StatelessWidget {
             ),
           ),
                 ),
-        ),
     ));
   }
 

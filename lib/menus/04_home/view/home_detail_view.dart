@@ -3,6 +3,8 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_texture/liquid_glass_texture.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'package:recipemate/menus/04_home/view_model/favorites_controller.dart';
+import 'package:recipemate/models/favorite_recipe.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../models/model_response/detail_recipe_response.dart';
 import '../../../repository/api_repository.dart';
@@ -125,7 +127,7 @@ class HomeDetailView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildImageHeader(context, recipe.image ?? ""),
+                      _buildImageHeader(context, recipe.image ?? "", viewModel),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: RecipeMateAppUtil.screenWidth * 0.06),
                         child: Column(
@@ -158,7 +160,7 @@ class HomeDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildImageHeader(BuildContext context, String imageUrl) {
+  Widget _buildImageHeader(BuildContext context, String imageUrl, HomeDetailViewModel viewModel) {
     return Stack(
       children: [
         Container(
@@ -198,8 +200,40 @@ class HomeDetailView extends StatelessWidget {
                     ambientRim: 0.3,
                     edgeAbsorption: 0.1,
                   ),
-                  useOwnLayer: true
-                )
+                  useOwnLayer: true,
+                ),
+                Obx(() {
+                  final favoritesController = Get.find<FavoritesController>();
+                  final recipe = viewModel.recipeDetail.value;
+                  if (recipe == null || recipe.id == null) return const SizedBox.shrink();
+                  final isFav = favoritesController.isFavorite(recipe.id!);
+                  return GlassIconButton(
+                    onPressed: () {
+                      final favRecipe = FavoriteRecipe.fromDetail(recipe);
+                      favoritesController.toggleFavorite(favRecipe);
+                    },
+                    icon: Icon(
+                      isFav ? Icons.favorite : Icons.favorite_border,
+                      color: isFav ? Colors.red : Theme.of(context).colorScheme.onSurface,
+                    ),
+                    size: RecipeMateAppUtil.screenWidth * 0.12,
+                    iconSize: RecipeMateAppUtil.screenWidth * 0.06,
+                    settings: const LiquidGlassSettings(
+                      glassColor: Colors.transparent,
+                      backerColor: Colors.black38,
+                      thickness: 90,
+                      blur: 6,
+                      chromaticAberration: 0.4,
+                      lightIntensity: 1.1,
+                      refractiveIndex: 1.65,
+                      saturation: 1.0,
+                      ambientStrength: 1.1,
+                      ambientRim: 0.3,
+                      edgeAbsorption: 0.1,
+                    ),
+                    useOwnLayer: true,
+                  );
+                }),
               ],
             ),
           ),

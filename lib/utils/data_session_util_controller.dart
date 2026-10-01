@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:recipemate/repository/chat_api_repository.dart';
 import 'data_session_util.dart';
 import 'notification_util.dart';
 

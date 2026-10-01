@@ -144,5 +144,8 @@
   "stAddPassword": "Tambah Kata Sandi",
   "stAddPasswordSuccess": "Kata sandi berhasil ditambahkan ke akun Anda.",
   "stActiveProviders": "Metode Masuk",
-  "stEmailVerifiedSuccess": "Email berhasil diverifikasi. Silakan masuk."
+  "stEmailVerifiedSuccess": "Email berhasil diverifikasi. Silakan masuk.",
+  "stFavorites": "Resep Favorit",
+  "stSearchFavorites": "Cari di favorit...",
+  "stNoFavorites": "Belum ada resep favorit"
 }

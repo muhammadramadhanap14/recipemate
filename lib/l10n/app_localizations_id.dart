@@ -470,4 +470,13 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get stEmailVerifiedSuccess =>
       'Email berhasil diverifikasi. Silakan masuk.';
+
+  @override
+  String get stFavorites => 'Resep Favorit';
+
+  @override
+  String get stSearchFavorites => 'Cari di favorit...';
+
+  @override
+  String get stNoFavorites => 'Belum ada resep favorit';
 }

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 class AuthRouteResolver {
   static Future<String> resolveRoute(User? user) async {
@@ -14,7 +15,10 @@ class AuthRouteResolver {
         if (refreshedUser != null && !refreshedUser.emailVerified) {
           return '/email_verification';
         }
-      } catch (_) {}
+      } catch (e) {
+        debugPrint("AuthRouteResolver reload failed: $e");
+        return '/email_verification';
+      }
     }
 
     return '/home';

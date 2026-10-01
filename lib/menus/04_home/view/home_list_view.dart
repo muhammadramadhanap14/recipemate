@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
+import 'package:recipemate/menus/04_home/view_model/favorites_controller.dart';
+import 'package:recipemate/models/favorite_recipe.dart';
 import 'package:recipemate/repository/api_repository.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/dimens_text.dart';
@@ -315,27 +317,63 @@ class HomeListView extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 4 / 4,
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(
-                    borderRadius,
-                  ),
-                  topRight: Radius.circular(
-                    borderRadius,
-                  ),
-                ),
-                child: Image.network(
-                  image,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                    Container(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                      child: Icon(
-                        Icons.broken_image_rounded,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(borderRadius),
+                      topRight: Radius.circular(borderRadius),
                     ),
-                ),
+                    child: Image.network(
+                      image,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      errorBuilder: (context, error, stackTrace) =>
+                        Container(
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                          child: Icon(
+                            Icons.broken_image_rounded,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Obx(() {
+                      final favoritesController = Get.find<FavoritesController>();
+                      final recipeId = id is int ? id : int.tryParse(id.toString()) ?? 0;
+                      final isFav = favoritesController.isFavorite(recipeId);
+                      return GestureDetector(
+                        onTap: () {
+                          final favRecipe = FavoriteRecipe(
+                            id: recipeId,
+                            title: title,
+                            image: image,
+                            readyInMinutes: readyInMinutes is int ? readyInMinutes : int.tryParse(readyInMinutes.toString()),
+                            aggregateLikes: aggregateLikes is int ? aggregateLikes : int.tryParse(aggregateLikes.toString()),
+                            savedAt: DateTime.now().millisecondsSinceEpoch,
+                          );
+                          favoritesController.toggleFavorite(favRecipe);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.4),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            isFav ? Icons.favorite : Icons.favorite_border,
+                            color: isFav ? Colors.red : Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ],
               ),
             ),
 
