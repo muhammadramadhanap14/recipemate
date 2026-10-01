@@ -241,7 +241,7 @@ class SecurityView extends StatelessWidget {
               child: CircleAvatar(
                 backgroundImage: viewModel.session.profileImage.value != null
                     ? FileImage(viewModel.session.profileImage.value!)
-                    : const AssetImage("assets/images/profile_pict_icon.png") as ImageProvider,
+                    : const AssetImage("assets/images/profile_pict_icon.webp") as ImageProvider,
                 backgroundColor: Colors.transparent,
               ),
             )),

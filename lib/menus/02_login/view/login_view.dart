@@ -86,7 +86,7 @@ class LoginView extends StatelessWidget {
                           SizedBox(height: screenH * 0.04),
 
                           Image.asset(
-                            "assets/images/ic_logo_recipemate.png",
+                            "assets/images/ic_logo_recipemate.webp",
                             width: logoSize,
                             height: logoSize,
                             fit: BoxFit.contain,
@@ -311,7 +311,7 @@ class LoginView extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    "assets/images/google_logo.png",
+                                    "assets/images/google_logo.webp",
                                     width: 24,
                                     height: 24,
                                     fit: BoxFit.contain,
