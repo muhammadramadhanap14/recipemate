@@ -97,7 +97,7 @@ class SplashViewModel extends GetxController {
     }
     try {
       final repository = ChatApiRepository();
-      final sessions = await repository.getChatSessions(token);
+      final sessions = await repository.getChatSessions();
       final ChatSession session = sessions.firstWhere(
             (e) => e.id == sessionId,
       );

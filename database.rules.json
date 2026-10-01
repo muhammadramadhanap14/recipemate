@@ -1,0 +1,35 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid && auth.token.email_verified === true",
+        "chat_sessions": {
+          ".indexOn": ["updatedAt"],
+          "$sessionId": {
+            ".validate": "data.exists() || newData.hasChildren(['title','createdAt','updatedAt'])",
+            "title": { ".validate": "newData.isString() && newData.val().length <= 100" },
+            "lastMessage": { ".validate": "newData.isString() && newData.val().length <= 200" }
+          }
+        },
+        "chat_messages": {
+          "$sessionId": {
+            "$messageId": {
+              ".validate": "newData.hasChildren(['role','content','createdAt'])",
+              "role": { ".validate": "newData.val() === 'user' || newData.val() === 'assistant'" },
+              "content": { ".validate": "newData.isString() && newData.val().length <= 20000" }
+            }
+          }
+        },
+        "favorites": {
+          ".indexOn": ["savedAt"],
+          "$recipeId": {
+            ".validate": "newData.hasChildren(['id','title','savedAt'])",
+            "title": { ".validate": "newData.isString() && newData.val().length <= 300" },
+            "image": { ".validate": "newData.isString() && newData.val().length <= 600" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -23,8 +23,7 @@ class ChatApiRepository {
     _dio.interceptors.add(AuthInterceptor());
   }
 
-  Future<List<ChatSession>> getChatSessions(
-    String token, {
+  Future<List<ChatSession>> getChatSessions({
     bool includeMessages = true,
   }) async {
     try {
@@ -55,19 +54,18 @@ class ChatApiRepository {
       debugPrint(
         'ChatApiRepository: Failed to fetch chat sessions: ${e.response?.statusCode} ${e.response?.data}',
       );
-      if (e.response?.statusCode == 401) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         rethrow;
       }
-      return [];
+      rethrow;
     } catch (e) {
       debugPrint('ChatApiRepository: Failed to fetch chat sessions: $e');
-      return [];
+      rethrow;
     }
   }
 
   Future<List<ChatMessage>> getChatMessages(
     String sessionId,
-    String token,
   ) async {
     try {
       final response = await _dio.get(
@@ -97,19 +95,19 @@ class ChatApiRepository {
       debugPrint(
         'ChatApiRepository: Failed to fetch chat messages for $sessionId: ${e.response?.statusCode} ${e.response?.data}',
       );
-      if (e.response?.statusCode == 401) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         rethrow;
       }
-      return [];
+      rethrow;
     } catch (e) {
       debugPrint(
         'ChatApiRepository: Failed to fetch chat messages for $sessionId: $e',
       );
-      return [];
+      rethrow;
     }
   }
 
-  Future<ChatSession?> getChatSession(String sessionId, String token) async {
+  Future<ChatSession?> getChatSession(String sessionId) async {
     try {
       final response = await _dio.get(
         '/chat/session/$sessionId',
@@ -125,21 +123,20 @@ class ChatApiRepository {
       }
       return null;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         rethrow;
       }
       log('Failed to fetch chat session $sessionId: $e');
-      return null;
+      rethrow;
     } catch (e) {
       log('Failed to fetch chat session $sessionId: $e');
-      return null;
+      rethrow;
     }
   }
 
   Future<bool> saveChatSession(
     String userId,
     ChatSession session,
-    String token,
   ) async {
     try {
       final payload = {
@@ -164,7 +161,7 @@ class ChatApiRepository {
 
       return true;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         rethrow;
       }
       log('Failed to save chat session: $e');
@@ -175,14 +172,14 @@ class ChatApiRepository {
     }
   }
 
-  Future<bool> deleteChatSession(String sessionId, String token) async {
+  Future<bool> deleteChatSession(String sessionId) async {
     try {
       await _dio.delete(
         '/chat/session/$sessionId',
       );
       return true;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         rethrow;
       }
       log('Failed to delete chat session $sessionId: $e');

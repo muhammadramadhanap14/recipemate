@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'firebase_options.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/l10n/app_localizations.dart';
@@ -26,7 +27,9 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'menus/01_splash/view/splash_view.dart';
 import 'menus/02_login/view/email_verification_view.dart';
 import 'menus/02_login/view/login_view.dart';
+import 'menus/04_home/view/favorites_view.dart';
 import 'menus/04_home/view/home_nav_view.dart';
+import 'menus/04_home/view_model/favorites_controller.dart';
 import 'menus/05_security/view/security_view.dart';
 import 'menus/06_chat/view/chat_view.dart';
 import 'menus/07_chat_session/view_model/chat_history_controller.dart';
@@ -47,6 +50,7 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+      FirebaseDatabase.instance.setPersistenceEnabled(true);
 
       // Initialize Liquid Glass Widgets
       await LiquidGlassWidgets.initialize();
@@ -83,6 +87,9 @@ void main() async {
 
       // Initialize ChatHistoryController
       Get.put<ChatHistoryController>(ChatHistoryController(), permanent: true);
+
+      // Initialize FavoritesController
+      Get.put<FavoritesController>(FavoritesController(), permanent: true);
 
       // init Language
       if (initialLang != null && initialLang.isNotEmpty) {
@@ -238,6 +245,12 @@ class RecipemateApp extends StatelessWidget {
           GetPage(
             name: '/security',
             page: () => const SecurityView(),
+            customTransition: liquidGlassTransition(),
+            transitionDuration: const Duration(milliseconds: 320),
+          ),
+          GetPage(
+            name: '/favorites',
+            page: () => const FavoritesView(),
             customTransition: liquidGlassTransition(),
             transitionDuration: const Duration(milliseconds: 320),
           ),

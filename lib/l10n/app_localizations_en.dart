@@ -468,4 +468,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get stEmailVerifiedSuccess =>
       'Email successfully verified. Please sign in.';
+
+  @override
+  String get stFavorites => 'Favorite Recipes';
+
+  @override
+  String get stSearchFavorites => 'Search in favorites...';
+
+  @override
+  String get stNoFavorites => 'No favorite recipes yet';
 }

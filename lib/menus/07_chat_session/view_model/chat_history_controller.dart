@@ -1,10 +1,10 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
-import 'package:recipemate/repository/chat_api_repository.dart';
-import 'package:recipemate/utils/data_session_util_controller.dart';
+import 'package:recipemate/repository/chat_realtime_repository.dart';
 import 'package:uuid/uuid.dart';
 
 const String _initialAiGreeting =
@@ -14,61 +14,46 @@ class ChatHistoryController extends GetxController {
   var sessions = <ChatSession>[].obs;
 
   final uuid = Uuid();
-  late final ChatApiRepository _chatApi;
-  late final DataSessionUtilController _sessionController;
+  late final ChatRealtimeRepository _chatRepo;
+  StreamSubscription? _sessionsSubscription;
 
   @override
   void onInit() {
     super.onInit();
-    _chatApi = Get.find<ChatApiRepository>();
-    _sessionController = Get.find<DataSessionUtilController>();
+    _chatRepo = ChatRealtimeRepository();
+    _initListener();
 
-    // Initial load
-    _loadSessions();
-
-    // Listen for login/logout to refresh history
-    ever(_sessionController.stToken, (String token) {
-      if (token.isNotEmpty) {
-        _loadSessions();
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      _sessionsSubscription?.cancel();
+      if (user != null) {
+        _initListener();
       } else {
         sessions.clear();
       }
     });
   }
 
-  Future<void> _loadSessions() async {
-    final token = _sessionController.stToken.value;
-    if (token.isEmpty) return;
+  @override
+  void onClose() {
+    _sessionsSubscription?.cancel();
+    super.onClose();
+  }
 
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+  void _initListener() {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
       final isEmailUser = user.providerData.any((p) => p.providerId == 'password');
-      if (isEmailUser && !user.emailVerified) {
-        return;
-      }
-    }
+      if (isEmailUser && !user.emailVerified) return;
 
-    if (kDebugMode) {
-      print("ChatHistoryController: Loading sessions from API...");
-    }
-    final loaded = await _chatApi.getChatSessions(token);
-    if (kDebugMode) {
-      print("ChatHistoryController: Received ${loaded.length} sessions");
-    }
-
-    if (loaded.isNotEmpty) {
-      for (var s in loaded) {
-        if (kDebugMode) {
-          print("Session ID: ${s.id}, Messages count: ${s.messages.length}");
-        }
-      }
-      // Sort by date descending (newest first)
-      loaded.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      sessions.assignAll(loaded);
+      _sessionsSubscription = _chatRepo.watchSessions().listen((list) {
+        sessions.assignAll(list);
+      });
+    } catch (e) {
+      debugPrint("ChatHistoryController error listening sessions: $e");
     }
   }
 
-  /// CREATE NEW CHAT
   ChatSession createNewSession() {
     return ChatSession(
       id: uuid.v4(),
@@ -78,57 +63,12 @@ class ChatHistoryController extends GetxController {
     );
   }
 
-  /// UPDATE SESSION
-  void updateSession(ChatSession session, List<ChatMessage> messages) {
-    session.messages.clear();
-    session.messages.addAll(messages);
-
-    // Cek apakah ada pesan dari user
-    final bool hasUserMessage = messages.any((m) => m.isUser);
-
-    // Jika belum ada pesan user, jangan simpan dulu
-    if (!hasUserMessage) return;
-
-    /// update title dari message pertama user jika title masih "New Chat"
-    if (session.title == "New Chat") {
-      final userMsg = messages.firstWhereOrNull((m) => m.isUser);
-      if (userMsg != null) {
-        session.title = userMsg.text.length > 30
-            ? "${userMsg.text.substring(0, 30)}..."
-            : userMsg.text;
-      }
-    }
-
-    // Masukkan ke list lokal jika belum ada (sesi baru)
-    if (!sessions.any((s) => s.id == session.id)) {
-      sessions.insert(0, session);
-    }
-
-    // Gunakan microtask untuk menghindari error "markNeedsBuild during build"
-    // Ini memastikan UI diupdate setelah fase build selesai
-    Future.microtask(() {
-      sessions.refresh();
-      _saveSession(session);
-    });
-  }
-
-  Future<void> _saveSession(ChatSession session) async {
-    final token = _sessionController.stToken.value;
-    final userId = _sessionController.stUserId.value;
-    if (token.isEmpty || userId.isEmpty) return;
-
-    await _chatApi.saveChatSession(userId, session, token);
-  }
-
-  /// DELETE SESSION
   Future<void> deleteSession(ChatSession session) async {
-    final token = _sessionController.stToken.value;
-    if (token.isEmpty) return;
-
-    final success = await _chatApi.deleteChatSession(session.id, token);
-    if (success) {
+    try {
+      await _chatRepo.deleteSession(session.id);
       sessions.removeWhere((s) => s.id == session.id);
-      sessions.refresh();
+    } catch (e) {
+      debugPrint("Error deleting session: $e");
     }
   }
 }

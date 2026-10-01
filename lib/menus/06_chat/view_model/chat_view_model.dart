@@ -5,14 +5,14 @@ import 'package:get/get.dart';
 
 import 'package:recipemate/models/model/chat_message.dart';
 import 'package:recipemate/models/model/chat_session.dart';
+import 'package:recipemate/repository/chat_realtime_repository.dart';
 import 'package:recipemate/services/openai_service.dart';
 import 'package:recipemate/utils/notification_util.dart';
+import 'package:recipemate/utils/recipemate_app_util.dart';
+import 'package:recipemate/utils/view_utils/app_snackbar.dart';
 import 'package:vibration/vibration.dart';
 
-import '../../../../repository/chat_api_repository.dart';
 import '../../../../utils/data_session_util.dart';
-import '../../../../utils/data_session_util_controller.dart';
-import '../../07_chat_session/view_model/chat_history_controller.dart';
 
 const String _initialAiGreeting =
     "Halo! Saya RecipeMate AI. Selamat datang di asisten memasakmu. Mau cari resep, minta ide menu, atau langsung tanya tips dapur?";
@@ -41,6 +41,8 @@ class ChatViewModel extends GetxController {
   Timer? timer;
 
   final OpenAiService _openAiService = OpenAiService();
+  final ChatRealtimeRepository _chatRepo = ChatRealtimeRepository();
+  bool _isSessionPersisted = false;
 
   String _sanitizeQuickReply(String option) {
     return option.replaceAll(RegExp(r'(\*\*|\*|__|_)'), '').trim();
@@ -66,51 +68,33 @@ class ChatViewModel extends GetxController {
     );
 
     dev.log("ChatViewModel: Initializing with session ID: ${session.id}");
-    dev.log("ChatViewModel: Session has ${session.messages.length} messages");
 
-    /// load existing messages dari session
-    if (session.messages.isNotEmpty) {
+    final hasUserMessage = session.messages.any((m) => m.isUser);
+    if (hasUserMessage) {
       messages.assignAll(session.messages);
-      dev.log(
-        "ChatViewModel: Loaded ${messages.length} messages into observable list",
-      );
+      _isSessionPersisted = true;
+    } else {
+      if (session.messages.isNotEmpty) {
+        messages.assignAll(session.messages);
+      } else {
+        messages.add(ChatMessage(text: _initialAiGreeting, isUser: false));
+      }
+      _isSessionPersisted = false;
     }
 
-    // Selalu coba muat pesan terbaru dari server untuk memastikan data sinkron
     _fetchLatestMessages();
   }
 
   Future<void> _fetchLatestMessages() async {
-    // Jika ini sesi baru (ID UUID v4), tidak perlu fetch ke server dulu
-    if (messages.isEmpty && session.title == "New Chat") {
-      messages.add(ChatMessage(text: _initialAiGreeting, isUser: false));
-      Future.microtask(() => _saveToHistory());
-      return;
-    }
-
     isLoading.value = true;
     try {
-      final token = Get.find<DataSessionUtilController>().stToken.value;
-      final historyController = Get.find<ChatHistoryController>();
-      final chatApi = Get.find<ChatApiRepository>();
-
-      dev.log("ChatViewModel: Fetching latest messages for ${session.id}");
-      final remoteMessages = await chatApi.getChatMessages(session.id, token);
+      final remoteMessages = await _chatRepo.loadMessages(session.id);
 
       if (remoteMessages.isNotEmpty) {
-        dev.log(
-          "ChatViewModel: Received ${remoteMessages.length} messages from server",
-        );
         messages.assignAll(remoteMessages);
-
-        // Sync balik ke objek session lokal
         session.messages.clear();
         session.messages.addAll(remoteMessages);
-        historyController.sessions.refresh();
-      } else if (messages.isEmpty) {
-        dev.log("ChatViewModel: No messages found on server, adding greeting");
-        messages.add(ChatMessage(text: _initialAiGreeting, isUser: false));
-        _saveToHistory();
+        _isSessionPersisted = true;
       }
     } catch (e) {
       dev.log("ChatViewModel: Error fetching messages: $e");
@@ -125,6 +109,28 @@ class ChatViewModel extends GetxController {
   Future<void> sendMessage(String text) async {
     if (text.isEmpty) return;
 
+    final hasConn = await RecipeMateAppUtil.checkConnection();
+    if (!hasConn) {
+      AppSnackbar.show(title: "Error", message: "Tidak ada koneksi internet.");
+      return;
+    }
+
+    // 1. Try writing user message to Realtime Database first
+    try {
+      if (!_isSessionPersisted) {
+        final title = text.length > 30 ? "${text.substring(0, 30)}..." : text;
+        await _chatRepo.createSessionWithSpecificId(session.id, title, text);
+        _isSessionPersisted = true;
+      } else {
+        await _chatRepo.addMessage(session.id, 'user', text);
+      }
+    } catch (e) {
+      dev.log("ChatViewModel: Failed to save user message to DB: $e");
+      AppSnackbar.show(title: "Error", message: "Gagal menyimpan pesan: $e");
+      return;
+    }
+
+    // 2. If DB write succeeded, add to local messages
     messages.add(ChatMessage(text: text, isUser: true));
 
     // Handle Cooking Navigation via Quick Replies
@@ -135,7 +141,6 @@ class ChatViewModel extends GetxController {
       }
 
       if (text == "Belum") {
-        // Repeat the current step and remove the old confirmation prompt.
         _clearOptionsForStep(currentStep.value);
 
         final currentStepText = steps.isNotEmpty
@@ -156,18 +161,21 @@ class ChatViewModel extends GetxController {
             stepIndex: currentStep.value,
           ),
         );
-        _saveToHistory();
+        try {
+          await _chatRepo.addMessage(session.id, 'assistant', currentStepText);
+        } catch (e) {
+          dev.log("ChatViewModel: Failed to save assistant message: $e");
+        }
         return;
       }
 
-      messages.add(
-        ChatMessage(
-          text:
-              "Selesaikan resep yang sedang berjalan dulu, baru bisa chat lagi.",
-          isUser: false,
-        ),
-      );
-      _saveToHistory();
+      final msg = "Selesaikan resep yang sedang berjalan dulu, baru bisa chat lagi.";
+      messages.add(ChatMessage(text: msg, isUser: false));
+      try {
+        await _chatRepo.addMessage(session.id, 'assistant', msg);
+      } catch (e) {
+        dev.log("ChatViewModel: Failed to save assistant message: $e");
+      }
       return;
     }
 
@@ -176,19 +184,24 @@ class ChatViewModel extends GetxController {
     try {
       final response = await _openAiService.sendChatMessage(messages);
 
+      String replyText = response.reply;
+      messages.add(
+        ChatMessage(
+          text: replyText,
+          isUser: false,
+          options: response.ready ? null : (response.options != null ? _sanitizeQuickReplies(response.options!) : null),
+        ),
+      );
+
+      try {
+        await _chatRepo.addMessage(session.id, 'assistant', replyText);
+      } catch (e) {
+        dev.log("ChatViewModel: Failed to save assistant response to DB: $e");
+        AppSnackbar.show(title: "Warning", message: "Pesan dibalas AI tetapi gagal disimpan ke riwayat.");
+      }
+
       if (response.ready) {
         isReady.value = true;
-        messages.add(ChatMessage(text: response.reply, isUser: false));
-      } else {
-        messages.add(
-          ChatMessage(
-            text: response.reply,
-            isUser: false,
-            options: response.options != null
-                ? _sanitizeQuickReplies(response.options!)
-                : null,
-          ),
-        );
       }
     } catch (e) {
       final message = e.toString().replaceAll('Exception: ', '');
@@ -196,15 +209,18 @@ class ChatViewModel extends GetxController {
     }
 
     isLoading.value = false;
-
-    /// SAVE TO HISTORY
-    _saveToHistory();
   }
 
   /// =========================
   /// START COOKING (GENERATE RESEP VIA OPENAI)
   /// =========================
   Future<void> startCooking() async {
+    final hasConn = await RecipeMateAppUtil.checkConnection();
+    if (!hasConn) {
+      AppSnackbar.show(title: "Error", message: "Tidak ada koneksi internet.");
+      return;
+    }
+
     isLoading.value = true;
     try {
       final recipeResponse = await _openAiService.generateRecipe(messages);
@@ -218,39 +234,29 @@ class ChatViewModel extends GetxController {
         updateTimerForStep(steps[0]);
       }
 
-      messages.add(
-        ChatMessage(
-          text: "Kita mulai masak ${recipeName.value} 👨‍🍳",
-          isUser: false,
-        ),
-      );
+      final startMsg = "Kita mulai masak ${recipeName.value} 👨‍🍳";
+      messages.add(ChatMessage(text: startMsg, isUser: false));
+      if (_isSessionPersisted) await _chatRepo.addMessage(session.id, 'assistant', startMsg);
 
-      // Send first step
-      messages.add(ChatMessage(text: steps[0], isUser: false, stepIndex: 0));
+      final stepMsg = steps[0];
+      messages.add(ChatMessage(text: stepMsg, isUser: false, stepIndex: 0));
+      if (_isSessionPersisted) await _chatRepo.addMessage(session.id, 'assistant', stepMsg);
 
-      // Send confirmation with quick reply
-      messages.add(
-        ChatMessage(
-          text: "Lanjut ke langkah berikutnya?",
-          isUser: false,
-          options: ["Sudah", "Belum"],
-          stepIndex: 0,
-        ),
-      );
+      final promptMsg = "Lanjut ke langkah berikutnya?";
+      messages.add(ChatMessage(text: promptMsg, isUser: false, options: ["Sudah", "Belum"], stepIndex: 0));
+      if (_isSessionPersisted) await _chatRepo.addMessage(session.id, 'assistant', promptMsg);
     } catch (e) {
       final message = e.toString().replaceAll('Exception: ', '');
       messages.add(ChatMessage(text: "Gagal generate resep: $message 😢", isUser: false));
     } finally {
       isLoading.value = false;
     }
-
-    _saveToHistory();
   }
 
   /// =========================
   /// END COOKING
   /// =========================
-  void endCooking() {
+  void endCooking() async {
     timer?.cancel();
     isTimerRunning.value = false;
     remainingSeconds.value = 0;
@@ -262,55 +268,36 @@ class ChatViewModel extends GetxController {
     currentStep.value = 0;
     recipeName.value = "";
 
-    messages.add(
-      ChatMessage(
-        text: "Masak selesai! 🎉 Apakah anda ingin mencoba resep lain?",
-        isUser: false,
-      ),
-    );
-
-    _saveToHistory();
+    final endMsg = "Masak selesai! 🎉 Apakah anda ingin mencoba resep lain?";
+    messages.add(ChatMessage(text: endMsg, isUser: false));
+    if (_isSessionPersisted) {
+      await _chatRepo.addMessage(session.id, 'assistant', endMsg);
+    }
   }
 
   /// =========================
   /// NEXT STEP
   /// =========================
-  void nextStep() {
+  void nextStep() async {
     if (currentStep.value < steps.length - 1) {
-      // clear options for the current step so previous widget disappears
       _clearOptionsForStep(currentStep.value);
-
       currentStep.value++;
 
       final stepText = steps[currentStep.value];
+      messages.add(ChatMessage(text: stepText, isUser: false, stepIndex: currentStep.value));
+      if (_isSessionPersisted) await _chatRepo.addMessage(session.id, 'assistant', stepText);
 
-      messages.add(
-        ChatMessage(
-          text: stepText,
-          isUser: false,
-          stepIndex: currentStep.value,
-        ),
-      );
-
-      // Add confirmation with quick reply
-      messages.add(
-        ChatMessage(
-          text: "Lanjut ke langkah berikutnya?",
-          isUser: false,
-          options: ["Sudah", "Belum"],
-          stepIndex: currentStep.value,
-        ),
-      );
+      final promptMsg = "Lanjut ke langkah berikutnya?";
+      messages.add(ChatMessage(text: promptMsg, isUser: false, options: ["Sudah", "Belum"], stepIndex: currentStep.value));
+      if (_isSessionPersisted) await _chatRepo.addMessage(session.id, 'assistant', promptMsg);
 
       updateTimerForStep(stepText);
-      _saveToHistory();
     } else {
       endCooking();
     }
   }
 
   void _clearOptionsForStep(int stepIndex) {
-    // Remove confirmation message with options for the previous step
     messages.removeWhere(
       (m) =>
           !m.isUser &&
@@ -339,9 +326,8 @@ class ChatViewModel extends GetxController {
     return 0;
   }
 
-  void toggleTimerFromStep(String step) {
+  void toggleTimerFromStep(String step) async {
     final seconds = extractTimeInSeconds(step);
-
     if (seconds == 0) return;
 
     if (remainingSeconds.value == 0) {
@@ -369,9 +355,11 @@ class ChatViewModel extends GetxController {
           }
           NotificationUtil.cancelTimerNotifications();
 
-          messages.add(ChatMessage(text: "⏰ Waktu selesai!", isUser: false));
-
-          _saveToHistory();
+          final timeMsg = "⏰ Waktu selesai!";
+          messages.add(ChatMessage(text: timeMsg, isUser: false));
+          if (_isSessionPersisted) {
+            await _chatRepo.addMessage(session.id, 'assistant', timeMsg);
+          }
         }
       });
     }
@@ -389,14 +377,6 @@ class ChatViewModel extends GetxController {
     } else {
       remainingSeconds.value = 0;
     }
-  }
-
-  /// =========================
-  /// SAVE HISTORY
-  /// =========================
-  void _saveToHistory() {
-    final historyController = Get.find<ChatHistoryController>();
-    historyController.updateSession(session, messages);
   }
 
   @override

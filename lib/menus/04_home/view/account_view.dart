@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'package:recipemate/menus/04_home/view_model/favorites_controller.dart';
 import 'package:recipemate/utils/view_utils/connection_wrapper.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/data_session_util_controller.dart';
@@ -98,6 +99,29 @@ class AccountView extends StatelessWidget {
                     GlassGroupedSection(
                       settings: _glassSettings(context),
                       children: [
+                        _buildMenuTile(
+                          context: context,
+                          icon: Icons.favorite,
+                          iconColor: Colors.red,
+                          title: AppLocalizations.of(context)!.stFavorites,
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Obx(() => customText(
+                                text: "${Get.find<FavoritesController>().favorites.length}",
+                                fontSize: DimensText.captionText(context),
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              )),
+                              SizedBox(width: RecipeMateAppUtil.screenWidth * 0.02),
+                              Icon(
+                                Icons.keyboard_arrow_right,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                size: RecipeMateAppUtil.screenWidth * 0.05,
+                              ),
+                            ],
+                          ),
+                          onTap: () => Get.toNamed('/favorites'),
+                        ),
                         _buildMenuTile(
                           context: context,
                           icon: Icons.security,
