@@ -7,6 +7,11 @@
 -keep class io.flutter.plugin.common.** { *; }
 -keep class io.flutter.plugins.** { *; }
 
+# Google Play Core (Deferred Components) - Not used by app, ignore missing references from Flutter Engine
+-dontwarn com.google.android.play.core.splitcompat.**
+-dontwarn com.google.android.play.core.splitinstall.**
+-dontwarn com.google.android.play.core.tasks.**
+
 # Firebase & Google Play Services
 -keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
 -keep class com.google.firebase.** { *; }
