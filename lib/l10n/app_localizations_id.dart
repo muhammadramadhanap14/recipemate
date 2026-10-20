@@ -479,4 +479,44 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get stNoFavorites => 'Belum ada resep favorit';
+
+  @override
+  String get trackingTitleActivity => 'Location Tracking';
+
+  @override
+  String get trackingTitle => 'Location Tracking Active';
+
+  @override
+  String get trackingStart => 'Mulai';
+
+  @override
+  String get trackingFinish => 'Selesai';
+
+  @override
+  String get trackingCancel => 'Batal';
+
+  @override
+  String get trackingStartTitle => 'Mulai Pelacakan';
+
+  @override
+  String get trackingStartMessage =>
+      'Aktifkan Pelacakan untuk mencatat aktivitasmu saat melakukan checking di lapangan, dimulai saat ';
+
+  @override
+  String get trackingFinishTitle => 'Akhiri Pelacakan';
+
+  @override
+  String get trackingFinishMessage =>
+      'Kamu akan mengakhiri sesi pelacakan saat ';
+
+  @override
+  String get trackingFinishMessageSuffix =>
+      '. Pastikan semua aktivitas checking/inspeksi sudah selesai.';
+
+  @override
+  String get trackingGettingLocation =>
+      'Sedang mendapatkan lokasi, silakan coba lagi...';
+
+  @override
+  String get trackingStopped => 'Location Tracking Berhenti';
 }

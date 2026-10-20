@@ -173,6 +173,24 @@ class NotificationUtil {
     await _notificationsPlugin.cancel(id: 2);
   }
 
+  static Future<void> showTrackingStoppedNotification() async {
+    await _notificationsPlugin.show(
+      id: 100,
+      title: 'Location Tracking',
+      body: 'Location Tracking Berhenti',
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'recipemate_tracking_channel',
+          'Location Tracking',
+          channelDescription: 'Notifications for location tracking session',
+          importance: Importance.defaultImportance,
+          priority: Priority.defaultPriority,
+          icon: 'ic_notification',
+        ),
+      ),
+    );
+  }
+
   // ================= SHOW INSTANT =================
   static Future<void> _showReminderNow() async {
     await _notificationsPlugin.show(

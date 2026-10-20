@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 class ColorVar {
   // ini main color dari design
   static const String appColor = "#ec5b13";
@@ -13,4 +14,8 @@ class ColorVar {
   static const String red = "#F52B02";
   static const String bgDtlDataTable = "#F5F3F3";
   static const String redStatus = "#E76262";
+  static const String lightGreen = "#E8F5E9";
+  static const String darkGreen = '#2E7D32';
+  static const String orangeColor = '#FFB74D';
+  static const String redColor = '#E53935';
 }

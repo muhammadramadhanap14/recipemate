@@ -3,19 +3,29 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:recipemate/utils/recipemate_app_util.dart';
 import 'package:recipemate/utils/constant_var.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../models/model/user_tracking.dart';
 import '../../../models/model_response/search_recipes_response.dart';
 import '../../../repository/api_repository.dart';
+import '../../../repository/tracking_repository.dart';
+import '../../../services/tracking_service.dart';
 import '../../../utils/data_session_util_controller.dart';
+import '../../../utils/location_util.dart';
+import '../../../utils/notification_util.dart';
 import '../../../utils/view_utils/view_dialog_util.dart';
 import '../../../utils/view_utils/app_snackbar.dart';
 
 class HomeViewModel extends GetxController {
   final ApiRepository apiRepository;
   final DataSessionUtilController session;
+  final TrackingRepository _trackingRepository = TrackingRepository();
+  late final TrackingEngine _engine = TrackingEngineFactory.create();
+
   final RxString userName = ''.obs;
   final RxList<Results> searchResults = <Results>[].obs;
   final RxList<dynamic> recommendedRecipes = <dynamic>[].obs;
@@ -27,6 +37,11 @@ class HomeViewModel extends GetxController {
   final RxString searchText = ''.obs;
   final RxList<dynamic> foodArticles = <dynamic>[].obs;
   final RxBool isLoadingArticles = false.obs;
+
+  // Tracking state
+  final RxBool isTrackingActive = false.obs;
+  int? activeIdTracking;
+
   final List<String> articleKeywords = [
     'cooking',
     'healthy',
@@ -51,6 +66,7 @@ class HomeViewModel extends GetxController {
   void onInit() {
     super.onInit();
     getUserName();
+    checkActiveSession();
     _startConnectivityListener();
     checkInitialConnection();
     getRecommendedRecipes();
@@ -66,6 +82,161 @@ class HomeViewModel extends GetxController {
     Future.delayed(const Duration(seconds: 1), () {
       checkAndShowFingerprintReminder();
     });
+  }
+
+  Future<void> checkActiveSession() async {
+    final nik = session.stUserId.value.isNotEmpty ? session.stUserId.value : 'default_user';
+    final now = DateTime.now();
+    final todayStr = DateFormat(ConstantVar.stYearLineFormat).format(now);
+    final active = await _trackingRepository.getActiveTracking(nik, todayStr);
+    if (active != null) {
+      isTrackingActive.value = true;
+      activeIdTracking = active.idTrc;
+    } else {
+      isTrackingActive.value = false;
+      activeIdTracking = null;
+    }
+  }
+
+  Future<void> handleStartTracking(BuildContext context) async {
+    final gpsActive = await LocationUtil.isGPsActive();
+    if (!gpsActive) {
+      await LocationUtil.openLocationSettings();
+      return;
+    }
+
+    final position = await LocationUtil.getCurrentPosition(10);
+    if (position == null || (position.latitude == 0.0 && position.longitude == 0.0)) {
+      AppSnackbar.show(
+        title: "Info",
+        message: "Sedang mendapatkan lokasi, silakan coba lagi...",
+      );
+      return;
+    }
+
+    final now = DateTime.now();
+    final displayFormat = DateFormat("dd MMM yyyy, HH:mm");
+    final formattedTime = displayFormat.format(now);
+
+    await ViewDialogUtil.showTrackingBottomSheet(
+      context,
+      icon: const Icon(Icons.radar_rounded, color: Color(0xFF5B8C3E), size: 28),
+      title: "Mulai Pelacakan",
+      message: TextSpan(
+        children: [
+          const TextSpan(text: "Aktifkan Pelacakan untuk mencatat aktivitasmu saat melakukan checking di lapangan, dimulai saat "),
+          TextSpan(
+            text: formattedTime,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const TextSpan(text: "."),
+        ],
+      ),
+      positiveText: "Mulai",
+      negativeText: "Batal",
+      onPositiveClick: () async {
+        var permission = await LocationUtil.checkPermission();
+        if (permission == LocationPermission.denied) {
+          permission = await LocationUtil.requestPermission();
+        }
+        if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+          if (permission == LocationPermission.deniedForever) {
+            await LocationUtil.openAppSettings();
+          }
+          return;
+        }
+
+        final nik = session.stUserId.value.isNotEmpty ? session.stUserId.value : 'default_user';
+        final formatter = DateFormat(ConstantVar.stYearDateTimeLineFormat);
+        final dateStr = formatter.format(now);
+
+        final trackingModel = UserTracking(
+          idTrc: 0,
+          nik: nik,
+          createDate: dateStr,
+          startDate: dateStr,
+          startLat: position.latitude,
+          startLng: position.longitude,
+          trackingStatus: 0,
+        );
+
+        final idTrc = await _trackingRepository.insertUserTracking(trackingModel);
+
+        if (idTrc > 0) {
+          activeIdTracking = idTrc;
+          await Future.delayed(const Duration(milliseconds: 500));
+
+          await _engine.start(
+            nik: nik,
+            idTracking: idTrc,
+            startLat: position.latitude,
+            startLng: position.longitude,
+          );
+
+          isTrackingActive.value = true;
+          AppSnackbar.show(title: "Sukses", message: "Pelacakan dimulai.");
+        }
+      },
+    );
+  }
+
+  Future<void> handleStopTracking(BuildContext context) async {
+    final gpsActive = await LocationUtil.isGPsActive();
+    if (!gpsActive) {
+      await LocationUtil.openLocationSettings();
+      return;
+    }
+
+    final position = await LocationUtil.getCurrentPosition(10);
+    if (position == null || (position.latitude == 0.0 && position.longitude == 0.0)) {
+      AppSnackbar.show(
+        title: "Info",
+        message: "Sedang mendapatkan lokasi, silakan coba lagi...",
+      );
+      return;
+    }
+
+    final now = DateTime.now();
+    final displayFormat = DateFormat("dd MMM yyyy, HH:mm");
+    final formattedTime = displayFormat.format(now);
+
+    await ViewDialogUtil.showTrackingBottomSheet(
+      context,
+      icon: const Icon(Icons.stop_rounded, color: Colors.red, size: 28),
+      title: "Akhiri Pelacakan",
+      message: TextSpan(
+        children: [
+          const TextSpan(text: "Kamu akan mengakhiri sesi pelacakan saat "),
+          TextSpan(
+            text: formattedTime,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const TextSpan(text: ". Pastikan semua aktivitas checking/inspeksi sudah selesai."),
+        ],
+      ),
+      positiveText: "Selesai",
+      negativeText: "Batal",
+      onPositiveClick: () async {
+        final formatter = DateFormat(ConstantVar.stYearDateTimeLineFormat);
+        final endDateStr = formatter.format(now);
+
+        if (activeIdTracking != null) {
+          await _trackingRepository.updateFinishTracking(
+            activeIdTracking!,
+            position.latitude,
+            position.longitude,
+            endDateStr,
+          );
+        }
+
+        await _engine.stop();
+        await NotificationUtil.showTrackingStoppedNotification();
+
+        isTrackingActive.value = false;
+        activeIdTracking = null;
+        AppSnackbar.show(title: "Sukses", message: "Pelacakan diakhiri.");
+      },
+    );
   }
 
   void _startConnectivityListener() {

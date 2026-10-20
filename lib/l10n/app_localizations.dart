@@ -991,6 +991,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No favorite recipes yet'**
   String get stNoFavorites;
+
+  /// No description provided for @trackingTitleActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Tracking'**
+  String get trackingTitleActivity;
+
+  /// No description provided for @trackingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Tracking Active'**
+  String get trackingTitle;
+
+  /// No description provided for @trackingStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Mulai'**
+  String get trackingStart;
+
+  /// No description provided for @trackingFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Selesai'**
+  String get trackingFinish;
+
+  /// No description provided for @trackingCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Batal'**
+  String get trackingCancel;
+
+  /// No description provided for @trackingStartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mulai Pelacakan'**
+  String get trackingStartTitle;
+
+  /// No description provided for @trackingStartMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Aktifkan Pelacakan untuk mencatat aktivitasmu saat melakukan checking di lapangan, dimulai saat '**
+  String get trackingStartMessage;
+
+  /// No description provided for @trackingFinishTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Akhiri Pelacakan'**
+  String get trackingFinishTitle;
+
+  /// No description provided for @trackingFinishMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Kamu akan mengakhiri sesi pelacakan saat '**
+  String get trackingFinishMessage;
+
+  /// No description provided for @trackingFinishMessageSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'. Pastikan semua aktivitas checking/inspeksi sudah selesai.'**
+  String get trackingFinishMessageSuffix;
+
+  /// No description provided for @trackingGettingLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Sedang mendapatkan lokasi, silakan coba lagi...'**
+  String get trackingGettingLocation;
+
+  /// No description provided for @trackingStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Tracking Berhenti'**
+  String get trackingStopped;
 }
 
 class _AppLocalizationsDelegate

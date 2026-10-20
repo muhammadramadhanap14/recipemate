@@ -374,4 +374,157 @@ class ViewDialogUtil {
         }
     );
   }
+
+  static Future<void> showTrackingBottomSheet(
+      BuildContext context, {
+        required Widget icon,
+        required String title,
+        required InlineSpan message,
+        required String positiveText,
+        required String negativeText,
+        required VoidCallback onPositiveClick,
+        VoidCallback? onNegativeClick,
+      }) async {
+    RecipeMateAppUtil.init(context);
+    final screenW = RecipeMateAppUtil.screenWidth;
+    final screenH = RecipeMateAppUtil.screenHeight;
+    final colorScheme = Theme.of(context).colorScheme;
+    final primaryGreen = const Color(0xFF5B8C3E);
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: screenW * 0.05,
+            right: screenW * 0.05,
+            bottom: MediaQuery.of(context).viewInsets.bottom + screenH * 0.03,
+          ),
+          child: GlassCard(
+            padding: EdgeInsets.all(screenW * 0.05),
+            shape: LiquidRoundedRectangle(borderRadius: screenW * 0.06),
+            settings: LiquidGlassSettings(
+              glassColor: Theme.of(context).cardColor,
+              backerColor: Colors.black.withValues(alpha: 0.05),
+              thickness: 100,
+              blur: 8,
+              chromaticAberration: 0.4,
+              lightIntensity: 1.2,
+              refractiveIndex: 1.68,
+              ambientRim: 0.3,
+              edgeAbsorption: 0.12,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: primaryGreen.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(child: icon),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: DimensText.headerMenusText(context),
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: screenH * 0.02),
+                Text.rich(
+                  message,
+                  style: TextStyle(
+                    fontSize: DimensText.bodyText(context),
+                    color: colorScheme.onSurface.withValues(alpha: 0.8),
+                    height: 1.4,
+                  ),
+                ),
+                SizedBox(height: screenH * 0.03),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          if (onNegativeClick != null) {
+                            onNegativeClick();
+                          }
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          side: BorderSide(color: Colors.grey.withValues(alpha: 0.5)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          negativeText,
+                          style: TextStyle(
+                            fontSize: DimensText.bodySmallText(context),
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          onPositiveClick();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryGreen,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          positiveText,
+                          style: TextStyle(
+                            fontSize: DimensText.bodySmallText(context),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

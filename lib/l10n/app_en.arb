@@ -147,5 +147,17 @@
   "stEmailVerifiedSuccess": "Email successfully verified. Please sign in.",
   "stFavorites": "Favorite Recipes",
   "stSearchFavorites": "Search in favorites...",
-  "stNoFavorites": "No favorite recipes yet"
+  "stNoFavorites": "No favorite recipes yet",
+  "trackingTitleActivity": "Location Tracking",
+  "trackingTitle": "Location Tracking Active",
+  "trackingStart": "Mulai",
+  "trackingFinish": "Selesai",
+  "trackingCancel": "Batal",
+  "trackingStartTitle": "Mulai Pelacakan",
+  "trackingStartMessage": "Aktifkan Pelacakan untuk mencatat aktivitasmu saat melakukan checking di lapangan, dimulai saat ",
+  "trackingFinishTitle": "Akhiri Pelacakan",
+  "trackingFinishMessage": "Kamu akan mengakhiri sesi pelacakan saat ",
+  "trackingFinishMessageSuffix": ". Pastikan semua aktivitas checking/inspeksi sudah selesai.",
+  "trackingGettingLocation": "Sedang mendapatkan lokasi, silakan coba lagi...",
+  "trackingStopped": "Location Tracking Berhenti"
 }

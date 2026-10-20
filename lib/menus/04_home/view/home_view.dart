@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:recipemate/utils/view_utils/no_data_util.dart';
 import '../../../l10n/app_localizations.dart';
@@ -11,6 +12,7 @@ import '../../../utils/data_session_util_controller.dart';
 import '../../../utils/view_utils/primary_global_view.dart';
 import '../../../utils/view_utils/connection_wrapper.dart';
 import '../view_model/home_view_model.dart';
+import '../../../utils/color_var.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -75,6 +77,8 @@ class HomeView extends StatelessWidget {
                       SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
                       _buildHeader(context, viewModel),
                       SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
+                      _buildTrackingCard(context, viewModel),
+                      SizedBox(height: RecipeMateAppUtil.screenHeight * 0.02),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: RecipeMateAppUtil.screenWidth * 0.05,
@@ -100,6 +104,111 @@ class HomeView extends StatelessWidget {
           ),
         )
       ),
+    );
+  }
+
+  Widget _buildTrackingCard(BuildContext context, HomeViewModel viewModel) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: RecipeMateAppUtil.screenWidth * 0.05,
+      ),
+      child: Obx(() {
+        final isActive = viewModel.isTrackingActive.value;
+        return SizedBox(
+          height: RecipeMateAppUtil.screenHeight * 0.07,
+          child: GlassCard(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            shape: LiquidRoundedRectangle(borderRadius: 16),
+            settings: LiquidGlassSettings(
+              glassColor: Theme.of(context).cardColor,
+              backerColor: Colors.black.withValues(alpha: 0.05),
+              thickness: 120,
+              blur: 8,
+              chromaticAberration: 0.4,
+              lightIntensity: 1.25,
+              refractiveIndex: 1.68,
+              ambientRim: 0.3,
+              edgeAbsorption: 0.12,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: HexColor(ColorVar.lightGreen),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.radar_rounded,
+                      color: HexColor(ColorVar.darkGreen),
+                      size: 18,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        isActive ? "Location Tracking Active" : "Location Tracking",
+                        style: TextStyle(
+                          fontSize: DimensText.bodySmallText(context),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        isActive ? "Sesi pelacakan aktif" : "Ketuk mulai untuk melacak",
+                        style: TextStyle(
+                          fontSize: DimensText.captionText(context),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    if (isActive) {
+                      viewModel.handleStopTracking(context);
+                    } else {
+                      viewModel.handleStartTracking(context);
+                    }
+                  },
+                  icon: Icon(
+                    isActive ? Icons.stop_rounded : Icons.play_arrow_rounded,
+                    size: 16,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    isActive ? "Selesai" : "Mulai",
+                    style: TextStyle(
+                      fontSize: DimensText.captionText(context),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isActive ? HexColor(ColorVar.redColor) : HexColor(ColorVar.orangeColor),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 
